@@ -27,23 +27,22 @@ struct SubscriptionSettings: View {
 
     var body: some View {
         Form {
-            Section("筛选") {
-                Picker("未更新时长", selection: $filter.notUpdated) {
+            Section(L("settings.subscriptions.filter")) {
+                Picker(L("settings.subscriptions.notUpdated"), selection: $filter.notUpdated) {
                     ForEach(StaleWindow.allCases) { Text($0.label).tag($0) }
                 }
-                Picker("近期未读", selection: $filter.notRead) {
+                Picker(L("settings.subscriptions.notRead"), selection: $filter.notRead) {
                     ForEach(StaleWindow.allCases) { Text($0.label).tag($0) }
                 }
-                Toggle("仅显示抓取失败的订阅", isOn: $filter.failing)
-                Text("未更新时长按最后一篇文章计算，近期未读按最后一篇已读文章计算。"
-                     + "从未收到文章或从未读过的订阅在任何档位下均会列出。")
+                Toggle(L("settings.subscriptions.failingOnly"), isOn: $filter.failing)
+                Text(L("settings.subscriptions.filter.note"))
                     .font(.system(size: DesignTokens.Typography.caption))
                     .foregroundStyle(.secondary)
             }
 
             Section {
                 if visible.isEmpty {
-                    Text("无符合条件的订阅。")
+                    Text(L("settings.subscriptions.empty"))
                         .foregroundStyle(.secondary)
                 } else {
                     ForEach(visible) { row in
@@ -59,9 +58,13 @@ struct SubscriptionSettings: View {
                 }
             } header: {
                 HStack {
-                    Text("符合条件的订阅（\(visible.count)）")
+                    Text(L("settings.subscriptions.matched", visible.count))
                     Spacer()
-                    Button(selected.isEmpty ? "全选" : "取消选择") {
+                    Button(
+                        selected.isEmpty
+                            ? L("settings.subscriptions.selectAll")
+                            : L("settings.subscriptions.deselectAll")
+                    ) {
                         selected = selected.isEmpty ? Set(visible.map(\.id)) : []
                     }
                     .font(.system(size: 11))
@@ -69,27 +72,30 @@ struct SubscriptionSettings: View {
                 }
             }
 
-            Section("退订") {
-                Toggle("保留星标文章", isOn: $keepStarred)
+            Section(L("common.unsubscribe")) {
+                Toggle(L("settings.subscriptions.keepStarred"), isOn: $keepStarred)
                 Text(keepStarred
-                     ? "星标文章继续保留在「星标」中，其余文章随订阅删除。"
-                     : "订阅及其全部文章一并删除，星标不保留。")
+                     ? L("settings.subscriptions.keepStarred.on")
+                     : L("settings.subscriptions.keepStarred.off"))
                     .font(.system(size: DesignTokens.Typography.caption))
                     .foregroundStyle(.secondary)
-                Button("退订所选（\(picked.count)）", role: .destructive) { confirming = true }
+                Button(
+                    L("settings.subscriptions.unsubscribeSelected", picked.count),
+                    role: .destructive
+                ) { confirming = true }
                     .disabled(picked.isEmpty)
-                Text("退订不可撤销。")
+                Text(L("settings.subscriptions.irreversible"))
                     .font(.system(size: DesignTokens.Typography.caption))
                     .foregroundStyle(.secondary)
             }
         }
         .formStyle(.grouped)
-        .alert("退订 \(picked.count) 个订阅？", isPresented: $confirming) {
-            Button("取消", role: .cancel) {}
-            Button("退订", role: .destructive) { unsubscribe() }
+        .alert(L("settings.subscriptions.unsubscribe.confirm", picked.count), isPresented: $confirming) {
+            Button(L("common.cancel"), role: .cancel) {}
+            Button(L("common.unsubscribe"), role: .destructive) { unsubscribe() }
         } message: {
             Text(picked.prefix(8).map(\.title).joined(separator: "\n")
-                 + (picked.count > 8 ? "\n…… 共 \(picked.count) 个" : ""))
+                 + (picked.count > 8 ? "\n" + L("settings.subscriptions.andMore", picked.count) : ""))
         }
     }
 
@@ -102,12 +108,14 @@ struct SubscriptionSettings: View {
     }
 
     private func detail(_ row: FeedHealthRow) -> String {
-        let updated = row.staleDays().map { "未更新 \($0) 天" } ?? "从未收到文章"
-        let read = row.readIdleDays().map { "未读 \($0) 天" } ?? "从未读过"
+        let updated = row.staleDays().map { L("settings.subscriptions.detail.staleDays", $0) }
+            ?? L("settings.subscriptions.detail.neverUpdated")
+        let read = row.readIdleDays().map { L("settings.subscriptions.detail.unreadDays", $0) }
+            ?? L("settings.subscriptions.detail.neverRead")
         let volume = row.recentCount == 0
-            ? "近 30 天无新文章"
-            : "近 30 天 \(row.recentCount) 篇 / 已读 \(row.recentReadCount) 篇"
-        let status = row.status == "正常" ? "" : " · \(row.status)"
+            ? L("settings.subscriptions.detail.noRecent")
+            : L("settings.subscriptions.detail.recent", row.recentCount, row.recentReadCount)
+        let status = row.status == L("feed.health.status.ok") ? "" : " · \(row.status)"
         return "\(updated) · \(read) · \(volume)\(status)"
     }
 

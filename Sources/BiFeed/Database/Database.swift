@@ -130,7 +130,8 @@ final class AppDatabase: Sendable {
                 CREATE VIRTUAL TABLE articleSearch USING fts5(title, summary, content='', tokenize='unicode61')
                 """)
             // 存量文章初始回填
-            try db.execute(sql: "INSERT INTO articleSearch(rowid, title, summary) SELECT id, title, summary FROM article")
+            try db.execute(
+                sql: "INSERT INTO articleSearch(rowid, title, summary) SELECT id, title, summary FROM article")
         }
         m.registerMigration("v6") { db in
             try db.execute(sql: "ALTER TABLE feed ADD COLUMN lastHTTPStatus INTEGER")
@@ -139,7 +140,8 @@ final class AppDatabase: Sendable {
         m.registerMigration("v7-mute-rules") { db in
             try db.execute(sql: "ALTER TABLE muteRule ADD COLUMN matchType TEXT NOT NULL DEFAULT 'contains'")
             try db.execute(sql: "ALTER TABLE muteRule ADD COLUMN field TEXT NOT NULL DEFAULT 'title'")
-            try db.execute(sql: "ALTER TABLE muteRule ADD COLUMN scopeFolderId INTEGER REFERENCES folder ON DELETE CASCADE")
+            try db.execute(
+                sql: "ALTER TABLE muteRule ADD COLUMN scopeFolderId INTEGER REFERENCES folder ON DELETE CASCADE")
             try db.execute(sql: "ALTER TABLE muteRule ADD COLUMN exceptions TEXT NOT NULL DEFAULT ''")
             try db.execute(sql: "ALTER TABLE muteRule ADD COLUMN action TEXT NOT NULL DEFAULT 'hide'")
             try db.execute(sql: "UPDATE muteRule SET field = 'all' WHERE titleOnly = 0")
@@ -214,6 +216,13 @@ final class AppDatabase: Sendable {
         m.registerMigration("v13-youtube") { db in
             // 按源过滤 Shorts（需求 18）。只影响之后新抓的条目，已入库的不回扫。
             try db.execute(sql: "ALTER TABLE feed ADD COLUMN filterShorts BOOLEAN NOT NULL DEFAULT 0")
+        }
+        m.registerMigration("v14-auto-translate") { db in
+            // 按源的自动翻译三态。v1 留下的 autoTranslate 布尔列语义是两态、且早已没人写，
+            // 不复用它——布尔表达不了「跟随全局」，而那正是默认值。
+            try db.execute(sql: """
+                ALTER TABLE feed ADD COLUMN autoTranslateMode TEXT NOT NULL DEFAULT 'inherit'
+                """)
         }
         return m
     }
@@ -308,7 +317,7 @@ extension AppDatabase {
     }
 
     static let starredArchiveURL = "bifeed://starred-archive"
-    static let starredArchiveTitle = "已退订"
+    static var starredArchiveTitle: String { L("feed.container.starredArchive") }
 
     func renameFeed(id: Int64, to title: String) async throws {
         try await pool.write { db in
@@ -410,6 +419,13 @@ extension AppDatabase {
     }
 
     /// nil = 跟随全局设置。
+    func setAutoTranslate(feedId: Int64, _ mode: AutoTranslateMode) async throws {
+        try await pool.write { db in
+            try db.execute(sql: "UPDATE feed SET autoTranslateMode = ? WHERE id = ?",
+                           arguments: [mode.rawValue, feedId])
+        }
+    }
+
     func setRetention(feedId: Int64, keepCount: Int?, keepDays: Int?) async throws {
         try await pool.write { db in
             try db.execute(sql: "UPDATE feed SET keepCount = ?, keepDays = ? WHERE id = ?",
@@ -660,7 +676,7 @@ extension AppDatabase {
         try await pool.read { db in
             guard let row = try Row.fetchOne(db, sql: """
                 SELECT article.*, feed.title AS feedTitle,
-                       feed.fullTextMode, feed.fullTextSelector
+                       feed.fullTextMode, feed.fullTextSelector, feed.autoTranslateMode
                 FROM article JOIN feed ON feed.id = article.feedId
                 WHERE article.id = ?
                 """, arguments: [articleId]) else { return nil }
@@ -674,7 +690,8 @@ extension AppDatabase {
                 html: contentRow?["html"] ?? "",
                 extractedHTML: mode == .never ? nil : contentRow?["extractedHTML"],
                 fullTextMode: mode,
-                fullTextSelector: row["fullTextSelector"])
+                fullTextSelector: row["fullTextSelector"],
+                autoTranslateMode: AutoTranslateMode(rawValue: row["autoTranslateMode"]) ?? .inherit)
         }
     }
 }
@@ -704,13 +721,18 @@ struct ReaderData {
     var extractedHTML: String?
     var fullTextMode: FullTextMode
     var fullTextSelector: String?
+    var autoTranslateMode: AutoTranslateMode
     var commentsURL: String? { article.commentsURL }
 }
 
 // MARK: - 译文缓存
 
 extension AppDatabase {
-    func fetchTranslations(articleId: Int64, lang: String, engine: String) async throws -> [Int: (hash: String, text: String)] {
+    func fetchTranslations(
+        articleId: Int64,
+        lang: String,
+        engine: String
+    ) async throws -> [Int: (hash: String, text: String)] {
         try await pool.read { db in
             var result: [Int: (hash: String, text: String)] = [:]
             let rows = try Row.fetchAll(
@@ -730,7 +752,12 @@ extension AppDatabase {
     }
 
     /// 主键 (articleId, blockIndex, targetLang, engine)，INSERT OR REPLACE 让重译覆盖旧译文。
-    func storeTranslations(articleId: Int64, lang: String, engine: String, rows: [(i: Int, hash: String, text: String)]) async throws {
+    func storeTranslations(
+        articleId: Int64,
+        lang: String,
+        engine: String,
+        rows: [(i: Int, hash: String, text: String)]
+    ) async throws {
         try await pool.write { db in
             for r in rows {
                 try db.execute(

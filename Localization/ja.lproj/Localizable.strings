@@ -1,0 +1,503 @@
+/* 複数の画面で共用するボタンと名称。ここを変更するとサイドバー、リスト、設定、各ダイアログに同時に影響する。 */
+"common.ok"= "OK";
+"common.cancel"= "キャンセル";
+"common.confirm"= "確定";
+"common.save"= "保存";
+"common.delete"= "削除";
+"common.rename"= "名前を変更…";
+"common.retry"= "再試行";
+"common.unsubscribe"= "購読解除";
+"common.name"= "名前";
+"common.feeds"= "フィード";
+"common.folder"= "フォルダ";
+"common.folders"= "フォルダ";
+"common.noFolder"= "フォルダなし";
+"common.allFeeds"= "すべてのフィード";
+"common.followGlobal"= "全体設定に従う";
+"common.markAllRead"= "すべて既読にする";
+"common.openInBrowser"= "ブラウザで開く";
+
+/* サイドバー：スマート項目、セクション見出し、ツールバー、下部バー */
+"sidebar.smart.today"= "今日";
+"sidebar.smart.starred"= "スター付き";
+"sidebar.smart.muted"= "ミュート済み";
+"sidebar.smart.all"= "すべての記事";
+"sidebar.section.smart"= "スマート";
+"sidebar.section.savedSearches"= "保存した検索";
+"sidebar.toolbar.toggleSidebar"= "サイドバーの表示/非表示";
+"sidebar.toolbar.refreshAll"= "すべて更新";
+"sidebar.toolbar.refreshAll.help"= "すべて更新 (⌘R)";
+"sidebar.bottomBar.add.help"= "フィードまたはフォルダを追加";
+"sidebar.bottomBar.settings.help"= "設定 (⌘,)";
+
+/* サイドバーのフィード行に表示するステータスアイコンのツールチップ */
+"sidebar.feed.hardError.help"= "HTTP %lld、自動再試行を停止しました。右クリックで手動更新すると再試行できます";
+"sidebar.feed.deferred.help"= "%1$@ まで延期：%2$@";
+"sidebar.feed.fetchFailed"= "取得失敗";
+"sidebar.feed.stale.help"= "最終更新は %lld 日前";
+
+/* サイドバーのフォルダ：名前の変更、新規作成、右クリックメニュー */
+"sidebar.folder.rename.title"= "フォルダの名前を変更";
+"sidebar.folder.new.title"= "新規フォルダ";
+"sidebar.folder.new.namePlaceholder"= "フォルダ名";
+"sidebar.folder.new.create"= "作成";
+"sidebar.folder.new.menu"= "新規フォルダ…";
+"sidebar.folder.menu.hideBadge"= "未読バッジをオフ";
+"sidebar.folder.menu.showBadge"= "未読バッジをオン";
+"sidebar.folder.menu.delete"= "フォルダを削除";
+
+/* 記事リスト：空の状態 */
+"list.empty.unread"= "未読の記事はありません";
+"list.empty.starred"= "スター付きの記事はありません";
+"list.empty.filtered.description"= "「すべて」に切り替えるとすべての記事を確認できます。";
+"list.empty.muted"= "ミュート済みの記事はありません";
+"list.empty.muted.description"= "ミュートルールに一致した記事はここに表示されます。";
+"list.empty.none"= "記事はありません";
+"list.empty.none.description"= "フィードを追加するか更新すると、記事はここに表示されます。";
+
+/* 記事リスト：ツールバー、タイトル、ヘッダー統計、未読フィルター */
+"list.toolbar.undoMarkAllRead"= "すべて既読を取り消す";
+"list.toolbar.undoMarkAllRead.help"= "直前の「すべて既読にする」を取り消します";
+"list.toolbar.markAllRead"= "すべて既読にする";
+"list.toolbar.markAllRead.help"= "現在のリストをすべて既読にします";
+"list.title.allUnread"= "すべての未読";
+"list.title.articles"= "記事";
+"list.filter.showAll"= "すべて表示";
+"list.filter.unreadOnly"= "未読のみ表示";
+"list.header.unreadOnly"= "未読のみ表示・%lld 件";
+"list.header.summary"= "%1$lld 件、未読 %2$lld 件";
+
+/* 記事リスト：行の右クリックメニュー */
+"list.menu.markUnread"= "未読にする";
+"list.menu.markRead"= "既読にする";
+"list.menu.unstar"= "スターを解除";
+"list.menu.star"= "スターを追加";
+"list.menu.markReadFromHere"= "これ以降をすべて既読にする";
+"list.menu.allowMuted"= "許可してルールの例外に追加";
+"list.menu.copyLink"= "リンクをコピー";
+
+/* 記事リスト：行内のバッジと日時表示 */
+"list.badge.collapsed"= "折りたたみ済み";
+"list.badge.paywall"= "ペイウォール";
+"list.badge.paywall.help"= "このサイトは通常、全文を読むには購読が必要です";
+"list.badge.duplicateSources"= "%lld 件のソース";
+"list.date.none"= "日付なし";
+"list.date.justNow"= "たった今";
+"list.date.yesterday"= "昨日";
+
+/* リーダー：空の状態と本文プレースホルダー */
+"reader.empty.title"= "記事を選択";
+"reader.empty.description"= "↩ 原文を開く · T 対訳 · ⌘↩ リーダーモード · j/k 前後の記事";
+"reader.empty.body"= "この記事には本文がありません。右上の「ブラウザで開く」から原文をお試しください。";
+
+/* リーダーのツールバー */
+"reader.toolbar.star.help"= "スター (s)";
+"reader.toolbar.openOriginal.help"= "既定のブラウザで原文を開く";
+"reader.toolbar.refreshForum"= "返信を更新";
+"reader.toolbar.refreshForum.help"= "最新の返信を取得します（読んでいる位置は変わりません）";
+
+/* リーダー：対訳 */
+"reader.translate.toggle"= "対訳";
+"reader.translate.toggle.help"= "対訳 (T)";
+"reader.translate.download"= "翻訳モデルをダウンロード";
+"reader.translate.download.help"= "翻訳モデルのダウンロードが必要です。クリックしてダウンロード";
+"reader.translate.downloadTimeout.help"= "モデルのダウンロードがタイムアウトしました。クリックして再試行";
+"reader.translate.failed.help"= "翻訳に失敗：%@。クリックして再試行";
+"reader.translate.retry"= "翻訳を再試行";
+
+/* リーダー：全文取得 */
+"reader.fullText.extract"= "全文取得";
+"reader.fullText.showOriginal"= "元の本文に戻す";
+"reader.fullText.disabled"= "全文取得は無効";
+"reader.fullText.disabled.help"= "このフィードは全文を取得しない設定です。右クリックの「閲覧設定…」で変更できます";
+"reader.fullText.failed"= "全文の取得に失敗：%@";
+"reader.fullText.openInBrowser"= "ブラウザで開く";
+"reader.fullText.neverForFeed"= "このフィードは取得しない";
+
+/* リーダー：Reddit 本文の再構成で補う「リンク」行 */
+"reader.reddit.link"= "リンク：";
+
+/* 設定 → 外観 */
+"settings.appearance.title"= "外観";
+"settings.appearance.theme"= "テーマ";
+"settings.appearance.theme.system"= "システムに従う";
+"settings.appearance.theme.light"= "ライト";
+"settings.appearance.theme.dark"= "ダーク";
+"settings.appearance.note"= "テーマの変更はすぐに反映されます。";
+
+/* 設定 → 閲覧 */
+"settings.reading.title"= "閲覧";
+"settings.reading.fontSize"= "本文の文字サイズ";
+"settings.reading.fontSize.note"= "文字サイズは、これ以降に開く記事に適用されます。";
+"settings.reading.markReadOnOpen"= "開いたら既読にする";
+"settings.reading.markReadOnScrollEnd"= "最後までスクロールしたら既読にする";
+"settings.reading.markRead.note"= "2つのスイッチは互いに独立しています。両方オフの場合は、m キーか右クリックで手動でマークしてください。";
+"settings.reading.preview.title"= "記事タイトルのプレビュー";
+"settings.reading.preview.body"= "本文はこのサイズで表示されます。The quick brown fox jumps over the lazy dog.";
+"settings.reading.preview.translation"= "訳文は本文と同じ文字サイズで、左側に強調線が付きます。";
+
+/* 設定 → ショートカット（設定タブと「ヘルプ」メニューの一覧表で共用） */
+"settings.shortcuts.title"= "ショートカット";
+"settings.shortcuts.window.title"= "2W のショートカット";
+"settings.shortcuts.recording"= "新しいキーを押してください…";
+"settings.shortcuts.change"= "変更";
+"settings.shortcuts.reset"= "元に戻す";
+"settings.shortcuts.resetAll"= "すべて初期設定に戻す";
+"settings.shortcuts.note"= "「変更」をクリックしてから目的のキーを押します。Esc でキャンセルします。変更はすぐに反映されます。";
+"settings.shortcuts.conflict"= "「%1$@」はすでに「%2$@」が使用しています。別のキーを選んでください。";
+
+/* 設定 → ショートカット：再割り当て可能な操作の名前 */
+"settings.shortcuts.action.nextArticle"= "次の記事";
+"settings.shortcuts.action.prevArticle"= "前の記事";
+"settings.shortcuts.action.nextUnread"= "次の未読記事";
+"settings.shortcuts.action.toggleRead"= "既読/未読";
+"settings.shortcuts.action.toggleReadAlias"= "既読/未読（予備キー）";
+"settings.shortcuts.action.toggleStar"= "スター";
+"settings.shortcuts.action.translate"= "対訳";
+"settings.shortcuts.action.openOriginal"= "ブラウザで原文を開く";
+"settings.shortcuts.action.immersive"= "リーダーモード";
+"settings.shortcuts.action.spaceAdvance"= "1画面分スクロール／最後で次の未読記事へ";
+
+/* 「ヘルプ」メニューのショートカット一覧表：この列の表現は上の操作名と異なるため、別々の項目にしてある */
+"settings.shortcuts.key.immersiveToggle"= "リーダーモードの切り替え";
+"settings.shortcuts.key.immersiveExit"= "リーダーモードを終了";
+"settings.shortcuts.key.spaceAdvance"= "1画面分スクロール。最後まで来たら次の未読記事へ";
+"settings.shortcuts.key.toggleRead"= "既読/未読を切り替え";
+"settings.shortcuts.key.toggleReadAlias"= "既読/未読を切り替え（m と同じ）";
+"settings.shortcuts.key.toggleStar"= "スターを追加/解除";
+"settings.shortcuts.key.translateToggle"= "対訳の切り替え";
+"settings.shortcuts.key.addFeed"= "フィードを追加";
+"settings.shortcuts.key.savePage"= "ウェブページを保存";
+"settings.shortcuts.key.settings"= "設定";
+
+/* 設定 → 翻訳 */
+"settings.translation.title"= "翻訳";
+"settings.translation.engine"= "エンジン";
+"settings.translation.engine.apple"= "システム翻訳（オフライン）";
+"settings.translation.engine.api"= "API 翻訳";
+"settings.translation.apiModel"= "モデル名";
+"settings.translation.targetLang"= "訳文の言語";
+"settings.translation.targetLang.note"= "これ以降に開く記事に適用されます。言語を変更すると、古い翻訳キャッシュは自動的に無効になり、再翻訳されます。";
+"settings.translation.auto"= "外国語の記事は自動で対訳を有効にする";
+"settings.translation.auto.note"= "オフにしても T キーで手動翻訳できます。API キーはこの Mac のキーチェーンに保存され、設定はこれ以降に開く記事に適用されます。";
+
+/* 設定 → 更新 */
+"settings.refresh.title"= "更新";
+"settings.refresh.interval"= "自動更新の間隔";
+"settings.refresh.interval.15"= "15分";
+"settings.refresh.interval.30"= "30分";
+"settings.refresh.interval.60"= "1時間";
+"settings.refresh.interval.120"= "2時間";
+"settings.refresh.interval.note"= "個々のフィードは、右クリックの「取得設定…」でこの間隔を上書きできます。";
+"settings.refresh.domainInterval"= "同一ドメインへのリクエスト間隔";
+"settings.refresh.domainInterval.off"= "オフ";
+"settings.refresh.domainInterval.5"= "5秒";
+"settings.refresh.domainInterval.10"= "10秒";
+"settings.refresh.domainInterval.30"= "30秒";
+"settings.refresh.domainInterval.note"= "同じサイトの複数のフィードは、次のリクエストまで少なくともこの間隔を空けます。";
+"settings.refresh.initialRead"= "新規フィードの最初の記事";
+"settings.refresh.initialRead.unread"= "すべて未読";
+"settings.refresh.initialRead.read"= "すべて既読";
+"settings.refresh.initialRead.recent"= "直近の数件だけ未読にする";
+"settings.refresh.initialRead.keepCount"= "未読で残す件数";
+"settings.refresh.initialRead.items"= "%lld 件";
+"settings.refresh.initialRead.note"= "このフィードを初めて取得したときの記事にのみ影響します。";
+"settings.refresh.defaultFullText"= "全文取得の初期設定";
+"settings.refresh.defaultFullText.note"= "これ以降に追加するフィードにのみ影響します。既存のフィードは右クリックの「閲覧設定…」で変更してください。";
+
+/* 設定 → 保存期間 */
+"settings.retention.title"= "保存期間";
+"settings.retention.section"= "保存期間（スター付きの記事は永久に保存）";
+"settings.retention.count"= "フィードごとの保存件数";
+"settings.retention.days"= "保存期間";
+"settings.retention.days.7"= "7日間";
+"settings.retention.days.30"= "30日間";
+"settings.retention.days.90"= "90日間";
+"settings.retention.days.365"= "1年間";
+"settings.retention.days.forever"= "永久";
+"settings.retention.note"= "個々のフィードは、右クリックの「閲覧設定…」でこの2項目を上書きできます。";
+
+/* 設定 → フィード：一括購読解除の絞り込み、一覧、確認 */
+"settings.subscriptions.filter"= "絞り込み";
+"settings.subscriptions.notUpdated"= "未更新期間";
+"settings.subscriptions.notRead"= "未読期間";
+"settings.subscriptions.failingOnly"= "取得に失敗したフィードのみ表示";
+"settings.subscriptions.filter.note"= "未更新期間は最後の記事の日時、未読期間は最後に既読にした記事の日時を基準に計算します。記事を一度も受信していない、または一度も読んでいないフィードは、どの条件でも一覧に表示されます。";
+"settings.subscriptions.empty"= "条件に一致するフィードはありません。";
+"settings.subscriptions.matched"= "条件に一致するフィード（%lld）";
+"settings.subscriptions.selectAll"= "すべて選択";
+"settings.subscriptions.deselectAll"= "選択を解除";
+"settings.subscriptions.keepStarred"= "スター付きの記事を保持";
+"settings.subscriptions.keepStarred.on"= "スターを付けた記事は「スター付き」に残ります。それ以外の記事はフィードと一緒に削除されます。";
+"settings.subscriptions.keepStarred.off"= "フィードとすべての記事が削除され、スター付きの記事も保持されません。";
+"settings.subscriptions.unsubscribeSelected"= "選択項目を購読解除（%lld）";
+"settings.subscriptions.irreversible"= "購読解除は取り消せません。";
+"settings.subscriptions.unsubscribe.confirm"= "%lld 件のフィードの購読を解除しますか？";
+"settings.subscriptions.andMore"= "…… 全 %lld 件";
+
+/* 設定 → フィード：各行の統計サマリー */
+"settings.subscriptions.detail.staleDays"= "%lld 日間更新なし";
+"settings.subscriptions.detail.neverUpdated"= "更新履歴なし";
+"settings.subscriptions.detail.unreadDays"= "%lld 日間未読";
+"settings.subscriptions.detail.neverRead"= "既読なし";
+"settings.subscriptions.detail.noRecent"= "直近30日間新着なし";
+"settings.subscriptions.detail.recent"= "直近30日 %1$lld 件／既読 %2$lld 件";
+
+/* 設定 → フィード：2つの期間条件で共用する日数の区分 */
+"settings.subscriptions.window.any"= "指定なし";
+"settings.subscriptions.window.d3"= "3日";
+"settings.subscriptions.window.d7"= "7日";
+"settings.subscriptions.window.d15"= "15日";
+"settings.subscriptions.window.d30"= "30日以上";
+
+/* 設定 → ミュート：ルール一覧 */
+"settings.mute.title"= "ミュート";
+"settings.mute.new"= "新規ミュートルール…";
+"settings.mute.delete.help"= "このルールを削除";
+"settings.mute.note"= "ルールを保存または削除すると、過去の記事に即座に再適用されます。ミュートされた記事はサイドバーで確認し、許可に戻せます。";
+"settings.mute.scope.global"= "全体";
+"settings.mute.saved"= "保存しました。今回 %lld 件が該当しました。";
+"settings.mute.saveFailed"= "保存に失敗：%@";
+
+/* 設定 → ミュート：ルール各項目の選択肢名 */
+"settings.mute.matchType.contains"= "含む";
+"settings.mute.matchType.regex"= "正規表現";
+"settings.mute.field.title"= "タイトル";
+"settings.mute.field.body"= "本文";
+"settings.mute.field.author"= "著者";
+"settings.mute.field.category"= "カテゴリタグ";
+"settings.mute.field.all"= "すべての項目";
+"settings.mute.action.hide"= "非表示";
+"settings.mute.action.markRead"= "既読にする";
+"settings.mute.action.collapse"= "折りたたむ";
+
+/* 設定 → ミュート：新規ルールダイアログ */
+"settings.mute.editor.title"= "新規ミュートルール";
+"settings.mute.editor.condition"= "条件";
+"settings.mute.editor.matchType"= "一致条件";
+"settings.mute.editor.pattern.regex"= "正規表現";
+"settings.mute.editor.pattern.keyword"= "キーワード";
+"settings.mute.editor.field"= "項目";
+"settings.mute.editor.scope"= "範囲";
+"settings.mute.editor.scope.appliesTo"= "適用先";
+"settings.mute.editor.exceptions"= "例外ワード（1行に1つ、空欄可）";
+"settings.mute.editor.exceptions.note"= "いずれかの項目に例外ワードが含まれる場合、このルールは適用されません。";
+"settings.mute.editor.action"= "動作";
+"settings.mute.editor.action.onMatch"= "一致した場合";
+"settings.mute.editor.save"= "保存して再適用";
+
+/* 設定 → データ */
+"settings.data.title"= "データ";
+"settings.data.dbPath"= "データベースの場所";
+
+/* フィードを追加 */
+"feed.add.menu"= "フィードを追加…";
+"feed.add.title"= "フィードを追加";
+"feed.add.placeholder"= "RSS / Atom / JSON Feed またはウェブページの URL";
+"feed.add.submit"= "追加";
+"feed.add.candidates.title"= "このページには %lld 件のフィードがあります";
+"feed.add.candidates.submit"= "選択項目を購読";
+
+/* ウェブページを保存 */
+"feed.savePage.menu"= "ウェブページを保存…";
+"feed.savePage.title"= "ウェブページを保存";
+"feed.savePage.placeholder"= "ウェブページの URL";
+"feed.savePage.note"= "本文を取得して「手動保存」に保存し、フィードの記事と同じリストに並べます。";
+
+/* フィードの右クリックメニュー */
+"feed.menu.refresh"= "フィードを更新";
+"feed.menu.reloadFetchState"= "再読み込み";
+"feed.menu.clearAndReload"= "消去して再読み込み…";
+"feed.menu.readingSettings"= "閲覧設定…";
+"feed.menu.fetchSettings"= "取得設定…";
+"feed.menu.relocate"= "新しい URL を検索…";
+"feed.menu.openSite"= "サイトを開く";
+"feed.menu.copyURL"= "フィードの URL をコピー";
+"feed.menu.moveToFolder"= "フォルダに移動";
+"feed.menu.folderSuggested"= "%@（推奨）";
+
+/* フィード：名前の変更と消去して再読み込み */
+"feed.rename.title"= "フィードの名前を変更";
+"feed.reload.title"= "消去して再読み込み";
+"feed.reload.message"= "「%@」に保存済みの記事を削除し、最初から取得し直します。スター付きの記事は保持されます。フィード側からすでに外れた古い記事は復元されません。";
+
+/* フィード → 閲覧設定 */
+"feed.reading.fullText"= "全文";
+"feed.reading.fullText.mode"= "モード";
+"feed.reading.fullText.mode.auto.note"= "フィードが要約のみを配信していると判断した場合、記事を開いたときに全文を取得します。";
+"feed.reading.fullText.mode.always.note"= "記事を開くたびに、元のサイトから全文の取得を試みます。";
+"feed.reading.fullText.mode.never.note"= "フィードに含まれる本文のみを表示し、元のサイトへアクセスして全文を取得することはありません。";
+"feed.reading.selector"= "CSS セレクタ（任意）";
+"feed.reading.selector.placeholder"= "例：article .post-content";
+"feed.reading.selector.note"= "入力すると一致する領域を優先して抽出します。一致しない場合は、具体的な失敗の理由が表示されます。";
+"feed.reading.unread"= "未読";
+"feed.reading.unread.badge"= "サイドバーに未読数を表示";
+"feed.reading.unread.note"= "オフにすると、このフィードはどの未読バッジにもカウントされません。記事は通常どおりリストに表示されます。";
+"feed.reading.retention"= "保存期間（全体設定を上書き）";
+"feed.reading.retention.count"= "保存件数";
+"feed.reading.retention.days"= "保存期間";
+"feed.reading.retention.note"= "スター付きの記事が削除されることはありません。";
+"feed.reading.youtube.filterShorts"= "Shorts を除外";
+"feed.reading.youtube.filterShorts.note"= "オンにすると、新しく取得した Shorts 動画は保存されません。すでに保存済みの項目には影響しません。";
+"feed.reading.youtube.limit.note"= "YouTube 公式フィードは直近15件の動画のみを配信します。";
+
+/* フィード → 取得設定 */
+"feed.fetch.interval"= "更新間隔";
+"feed.fetch.interval.note"= "設定の全体間隔を上書きし、このフィードの自動更新にのみ影響します。";
+"feed.fetch.userAgent"= "User-Agent（任意）";
+"feed.fetch.userAgent.placeholder"= "空欄で既定値を使用";
+"feed.fetch.userAgent.note"= "サイトによっては User-Agent の内容でリクエストを拒否することがあります。例：Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15";
+"feed.fetch.basicAuth"= "HTTP Basic 認証";
+"feed.fetch.basicAuth.user"= "ユーザー名";
+"feed.fetch.basicAuth.password"= "パスワード";
+"feed.fetch.basicAuth.note"= "ログインが必要なフィード（非公開の Reddit フィードなど）専用です。パスワードはこの Mac のキーチェーンに保存されます。ユーザー名を空欄にすると認証はオフになります。";
+
+/* フィード → 新しい URL を検索 */
+"feed.relocate.current"= "現在の URL";
+"feed.relocate.new"= "新しい URL";
+"feed.relocate.searching"= "サイトのページから検索中…";
+"feed.relocate.notFound"= "新しい URL が見つかりません";
+"feed.relocate.replace"= "置き換え";
+
+/* フィードの状態パネル */
+"feed.health.window.title"= "フィードの状態";
+"feed.health.menu"= "フィードの状態…";
+"feed.health.column.recent"= "直近30日";
+"feed.health.column.read"= "既読";
+"feed.health.column.muted"= "ミュート該当";
+"feed.health.column.lastArticle"= "最後の記事";
+"feed.health.column.status"= "状態";
+"feed.health.unsubscribeSelected"= "選択項目を購読解除";
+"feed.health.unsubscribe.confirm"= "選択した %lld 件のフィードの購読を解除しますか？";
+"feed.health.unsubscribe.message"= "これらのフィードとその記事はすべて削除され、元に戻せません。";
+"feed.health.status.hardError"= "致命的エラー HTTP %lld";
+"feed.health.status.deferred"= "延期中";
+"feed.health.status.ok"= "正常";
+
+/* フィードの全文取得方式。コンテナフィードと無題記事の名称 */
+"feed.fullTextMode.auto"= "自動";
+"feed.fullTextMode.always"= "常に取得";
+"feed.fullTextMode.never"= "取得しない";
+"feed.container.starredArchive"= "購読解除済み";
+"feed.container.savedPages"= "手動保存";
+"feed.article.untitled"= "(無題)";
+
+/* 検索と保存した検索 */
+"search.prompt"= "記事を検索";
+"search.rename.title"= "検索の名前を変更";
+"search.save.title"= "検索を保存";
+"search.save.menu"= "この検索を保存…";
+"search.save.message"= "保存すると、サイドバーの「保存した検索」に表示されます。開くと今回の語句と範囲に戻ります。";
+"search.scope"= "範囲";
+"search.scope.current"= "現在の範囲";
+"search.scope.currentFolder"= "現在のフォルダ";
+"search.scope.currentFeed"= "現在のフィード";
+"search.scopeMenu.help"= "検索範囲と期間";
+"search.window"= "期間";
+"search.window.any"= "期間指定なし";
+"search.window.week"= "直近7日間";
+"search.window.month"= "直近30日間";
+"search.window.year"= "直近1年間";
+
+/* OPML のインポート／エクスポート */
+"data.opml.import.menu"= "OPML をインポート…";
+"data.opml.export.menu"= "OPML をエクスポート…";
+"data.opml.import.panel"= "OPML ファイルを選択";
+"data.opml.untitled"= "(無題)";
+
+/* データベースのバックアップ */
+"data.backup.menu"= "データベースをバックアップ…";
+"data.backup.openFolder"= "バックアップフォルダを開く";
+"data.backup.panel"= "データベースのスナップショットを保存";
+"data.backup.running"= "バックアップ中…";
+"data.backup.done"= "%@ にバックアップしました。";
+"data.backup.failed"= "バックアップに失敗：%@";
+"data.backup.summary"= "フィード %1$lld 件、記事 %2$lld 件";
+"data.backup.note"= "バックアップは整合性のとれたスナップショットで、アプリの実行中でも作成できます。フィード一覧は毎日自動で OPML としてバックアップされ、直近7件が保持されます。";
+
+/* バックアップから復元 */
+"data.restore.menu"= "バックアップから復元…";
+"data.restore.panel"= "2W データベースのバックアップを選択";
+"data.restore.verified"= "バックアップを確認しました：%@。再起動後に反映されます。";
+"data.restore.pending"= "%1$@（%2$@）は次回の起動時に現在のデータベースと置き換わります。現在のデータベースは bifeed.sqlite.bak として保持されます。";
+"data.restore.failed"= "復元できません：%@";
+"data.restore.needsRelaunch"= "復元後は再起動が必要です";
+"data.restore.later"= "後で再起動";
+"data.restore.now"= "今すぐ再起動";
+
+/* アップデートを確認 */
+"update.menu.check"= "アップデートを確認…";
+"update.section.title"= "アップデート";
+"update.section.note"= "確認して通知するだけで、自動でダウンロードやインストールはしません。スキップしたバージョンはここで解除できます。";
+"update.checkOnLaunch"= "起動時にアップデートを確認";
+"update.currentVersion"= "現在のバージョン";
+"update.skipped"= "%@ をスキップ済み";
+"update.unskip"= "スキップを解除";
+"update.check.title"= "アップデートを確認";
+"update.check.upToDate"= "最新バージョンです（%@）。";
+"update.check.failed"= "アップデートの確認に失敗：%@";
+"update.available.title"= "新しいバージョン %@ があります";
+"update.available.current"= "現在のバージョン：%@。";
+"update.available.download"= "ダウンロード";
+"update.available.skip"= "このバージョンをスキップ";
+"update.available.later"= "後で";
+
+/* フォーラムの返信 */
+"forum.replies"= "返信";
+"forum.comments"= "コメント";
+"forum.opBadge"= "スレ主";
+"forum.score"= "%lld ポイント";
+"forum.loading"= "返信を読み込み中…";
+"forum.loadFailed"= "返信の読み込みに失敗：%@";
+"forum.more.reddit"= "ほかに %lld 件の返信があります。Reddit で見る";
+"forum.more.generic"= "ほかに %lld 件の返信があります。元の投稿で見る";
+
+/* エラー：フィードと取得 */
+"error.feed.duplicate"= "このフィードはすでに購読済みです";
+"error.fetch.badURL"= "URL が無効です: %@";
+"error.fetch.tooLarge"= "レスポンスが上限の 10 MB を超えています";
+"error.fetch.notHTTP"= "HTTP 以外のレスポンスです";
+"error.parse.unparseable"= "フィードを解析できません: %@";
+"error.opml.malformed"= "OPML の形式が正しくありません";
+"error.subscribe.noFeedFound"= "この URL にフィードが見つかりません";
+
+/* エラー：バックアップとアップデート */
+"error.backup.notBiFeedDatabase"= "このファイルは 2W データベースのバックアップではありません。";
+"error.backup.newerVersion"= "バックアップはより新しいバージョンの 2W で作成されています（不明なマイグレーション：%@）。先にアプリをアップデートしてから復元してください。";
+"error.update.rateLimited"= "GitHub のリクエスト制限に達しました。しばらくしてからもう一度お試しください。";
+"error.update.badResponse"= "GitHub のバージョン情報を取得できませんでした。";
+
+/* エラー：API 翻訳 */
+"error.api.notConfigured"= "API 翻訳が未設定です。設定で Base URL、モデル名、API Key を入力してください";
+"error.api.badStatus"= "API が HTTP %lld を返しました";
+"error.api.badPayload"= "API の応答形式が仕様と一致しません";
+
+/* エラー：全文取得 */
+"error.fullText.loadFailed"= "ページの読み込みに失敗：%@";
+"error.fullText.timeout"= "ページの読み込みがタイムアウトしました（20秒）";
+"error.fullText.scriptFailed"= "本文の抽出に失敗：%@";
+"error.fullText.emptyContent"= "本文を抽出できませんでした";
+"error.fullText.selectorNoMatch"= "CSS セレクタが何にも一致しませんでした：";
+
+/* エラー：フォーラムの返信。detail は error.forum.badResponse に連結される */
+"error.forum.badResponse"= "フォーラムデータを解析できません: %@";
+"error.forum.notForum"= "これはフォーラムの投稿ではありません";
+"error.forum.redditBlocked"= "Reddit が現在のネットワーク経路からの未ログインでのコメント取得を拒否しました（IP による制限）。記事自体には影響ありません。返信を見るには「ブラウザで開く」を使うか、プロキシで reddit.com を住宅用 IP の経路に通してください。";
+"error.forum.detail.v2ex"= "V2EX 返信 %lld";
+"error.forum.detail.reddit"= "Reddit の応答が2要素の配列ではありません";
+"error.forum.detail.discourse"= "Discourse トピック %@";
+"error.forum.detail.lobsters"= "Lobsters の応答がオブジェクトではありません";
+"error.forum.detail.unexpected304"= "予期しない 304 レスポンス";
+
+/* エクスポートする Markdown 文書 */
+"export.markdown.action"= "Markdown をエクスポート";
+"export.untitled"= "無題";
+"export.translationPrefix"= "訳：";
+"export.forum.heading"= "%1$@（%2$lld）";
+
+/* フィードごとの自動翻訳（フィードを右クリック →「閲覧設定…」） */
+"feed.reading.autoTranslate"= "自動翻訳";
+"feed.reading.autoTranslate.note"= "「全体設定に従う」は設定の全体スイッチに従います。外国語の記事のみ翻訳されます。";
+"feed.autoTranslate.inherit"= "全体設定に従う";
+"feed.autoTranslate.always"= "常に翻訳";
+"feed.autoTranslate.never"= "翻訳しない";

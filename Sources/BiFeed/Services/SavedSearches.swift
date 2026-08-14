@@ -7,10 +7,10 @@ enum SearchWindow: String, Codable, CaseIterable, Sendable {
 
     var label: String {
         switch self {
-        case .any: "不限时间"
-        case .week: "最近 7 天"
-        case .month: "最近 30 天"
-        case .year: "最近一年"
+        case .any: L("search.window.any")
+        case .week: L("search.window.week")
+        case .month: L("search.window.month")
+        case .year: L("search.window.year")
         }
     }
 

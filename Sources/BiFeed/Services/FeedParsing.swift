@@ -25,7 +25,7 @@ enum ParseFailure: LocalizedError {
     case unparseable(String)
     var errorDescription: String? {
         switch self {
-        case .unparseable(let detail): return "无法解析 feed: \(detail)"
+        case .unparseable(let detail): return L("error.parse.unparseable", detail)
         }
     }
 }
@@ -147,7 +147,7 @@ enum FeedParsing {
             if !title.isEmpty { return title }
         }
         let body = HTMLTools.plainText(content)
-        return body.isEmpty ? "(无标题)" : String(body.prefix(60))
+        return body.isEmpty ? L("feed.article.untitled") : String(body.prefix(60))
     }
 
     /// guid/link 都缺时的稳定标识：内容指纹，跨进程、跨启动不变（Hasher 的种子是随机的，不能用）。

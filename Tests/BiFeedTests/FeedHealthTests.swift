@@ -39,7 +39,8 @@ final class FeedHealthTests: XCTestCase {
         XCTAssertEqual(busyRow.mutedCount, 1)
         XCTAssertEqual(try XCTUnwrap(busyRow.lastPublishedAt).timeIntervalSinceNow,
                        -86400, accuracy: 600)
-        XCTAssertEqual(busyRow.status, "正常")
+        XCTAssertEqual(busyRow.status, "feed.health.status.ok",
+                       "测试环境无资源包，L() 原样返回 key")
 
         let emptyRow = try XCTUnwrap(rows.first { $0.id == empty.id })
         XCTAssertEqual([emptyRow.recentCount, emptyRow.recentReadCount, emptyRow.mutedCount],
@@ -54,13 +55,14 @@ final class FeedHealthTests: XCTestCase {
         try await db.applyFetchFailure(feedId: feed.id!, message: "HTTP 410", status: 410,
                                        nextFetchAt: nil, incrementFailure: true)
         var row = try await db.pool.read { try FeedHealthRow.fetchAll($0)[0] }
-        XCTAssertEqual(row.status, "硬错误 HTTP 410")
+        XCTAssertEqual(row.status, "feed.health.status.hardError")
 
         try await db.applyFetchFailure(feedId: feed.id!, message: "超时", status: nil,
                                        nextFetchAt: Date(timeIntervalSinceNow: 3600),
                                        incrementFailure: true)
         row = try await db.pool.read { try FeedHealthRow.fetchAll($0)[0] }
-        XCTAssertEqual(row.status, "暂缓中", "退避期内优先报暂缓，与侧栏图标同序")
+        XCTAssertEqual(row.status, "feed.health.status.deferred",
+                       "退避期内优先报暂缓，与侧栏图标同序")
     }
 
     func testRelocateClearsFetchStateAndKeepsArticles() async throws {

@@ -102,7 +102,7 @@ final class ForumEngineTests: XCTestCase {
         XCTAssertTrue(thread.posts[0].html.contains(#"href="https://linux.do/t/other/9""#))
         XCTAssertTrue(thread.posts[0].html.contains(#"src="https://linux.do/uploads/a.png""#))
         // 25 - 3 = 22
-        XCTAssertTrue(thread.posts[2].html.contains("还有 22 条回复"), thread.posts[2].html)
+        XCTAssertTrue(thread.posts[2].html.contains("forum.more.generic"), thread.posts[2].html)
         // 带小数秒与不带小数秒的 created_at 都要能解析
         XCTAssertFalse(thread.posts[0].timeText.isEmpty)
         XCTAssertFalse(thread.posts[1].timeText.isEmpty)
@@ -202,9 +202,9 @@ final class ForumEngineTests: XCTestCase {
         let thread = try ForumResolver.parseDiscourse(
             data: Data(discourseJSON.utf8), host: "linux.do", fallbackTitle: "兜底")
         let html = ReaderTemplate.forumHTML(thread)
-        XCTAssertTrue(html.contains("回帖"), "平铺样式用「回帖」而不是「评论」")
+        XCTAssertTrue(html.contains("forum.replies"), "平铺样式用「回帖」而不是「评论」")
         XCTAssertTrue(html.contains("#2 ·"), "楼号来自 post_number")
-        XCTAssertTrue(html.contains("楼主"))
+        XCTAssertTrue(html.contains("forum.opBadge"))
         XCTAssertTrue(html.contains("--depth:0"))
         XCTAssertFalse(html.contains(#"<span class="bf-post-author"></span>"#),
                        "占位行没有作者，不出头部")

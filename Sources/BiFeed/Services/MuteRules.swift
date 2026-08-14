@@ -5,7 +5,7 @@ enum MuteMatchType: String, Codable, CaseIterable {
     case contains
     case regex
 
-    var label: String { self == .contains ? "包含" : "正则" }
+    var label: String { self == .contains ? L("settings.mute.matchType.contains") : L("settings.mute.matchType.regex") }
 }
 
 enum MuteRuleField: String, Codable, CaseIterable {
@@ -13,12 +13,12 @@ enum MuteRuleField: String, Codable, CaseIterable {
 
     var label: String {
         switch self {
-        case .title: "标题"
-        case .body: "正文"
-        case .author: "作者"
+        case .title: L("settings.mute.field.title")
+        case .body: L("settings.mute.field.body")
+        case .author: L("settings.mute.field.author")
         case .url: "URL"
-        case .category: "分类标签"
-        case .all: "全部字段"
+        case .category: L("settings.mute.field.category")
+        case .all: L("settings.mute.field.all")
         }
     }
 }
@@ -30,9 +30,9 @@ enum MuteRuleAction: String, Codable, CaseIterable {
 
     var label: String {
         switch self {
-        case .hide: "隐藏"
-        case .markRead: "标记已读"
-        case .collapse: "折叠"
+        case .hide: L("settings.mute.action.hide")
+        case .markRead: L("settings.mute.action.markRead")
+        case .collapse: L("settings.mute.action.collapse")
         }
     }
 }
@@ -113,7 +113,9 @@ enum MuteRules {
         try await db.pool.write { db in
             guard let article = try storedArticle(db, id: articleId) else { return 0 }
             let rules = try fetchAll(db)
-            let prepared = prepare(rules.filter { scopeMatches($0, feedId: article.feedId, folderId: article.folderId) })
+            let prepared = prepare(rules.filter {
+                scopeMatches($0, feedId: article.feedId, folderId: article.folderId)
+            })
             let candidate = article.candidate
             let matching = prepared.filter { matches($0, candidate: candidate) }
             let exception = article.title.replacing(/\s+/, with: " ")

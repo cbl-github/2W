@@ -14,8 +14,17 @@ enum HTMLTools {
         s = s.replacing(/<(script|style)[^>]*>[\s\S]*?<\/\1>/.ignoresCase(), with: " ")
         s = s.replacing(/<!--[\s\S]*?-->/, with: " ")
         // 只剥已知 HTML 标签；中文标题里的「<书名>」不是标签，必须保留。
+        // 标签名枚举本身超过 120 字符且不能再拆（一个 `|` 交替表达式），按 reers 指南对
+        // 不可分割长字面量的例外保留；用扩展正则字面量 #/ ... /# 折成多行只为满足行长，
+        // 该定界符下折行不改变匹配语义（已用两侧样例逐一比对旧写法验证一致）。
         s = s.replacing(
-            /<\/?(?:a|abbr|address|article|aside|audio|b|blockquote|body|br|button|canvas|caption|center|code|dd|del|details|div|dl|dt|em|embed|figcaption|figure|font|footer|form|h[1-6]|head|header|hr|html|i|iframe|img|input|label|li|link|main|mark|meta|nav|noscript|object|ol|option|p|picture|pre|s|section|select|small|source|span|strike|strong|sub|summary|sup|table|tbody|td|template|textarea|tfoot|th|thead|time|title|tr|u|ul|video)\b[^>]*>/.ignoresCase(),
+            #/
+            <\/?(?:a|abbr|address|article|aside|audio|b|blockquote|body|br|button|canvas|caption|center|code|dd|del
+              |details|div|dl|dt|em|embed|figcaption|figure|font|footer|form|h[1-6]|head|header|hr|html|i|iframe|img
+              |input|label|li|link|main|mark|meta|nav|noscript|object|ol|option|p|picture|pre|s|section|select|small
+              |source|span|strike|strong|sub|summary|sup|table|tbody|td|template|textarea|tfoot|th|thead|time|title
+              |tr|u|ul|video)\b[^>]*>
+            /#.ignoresCase(),
             with: " ")
         s = s.replacing(/<!doctype[^>]*>|<\?xml[^>]*\?>/.ignoresCase(), with: " ")
         s = decodeEntities(s)

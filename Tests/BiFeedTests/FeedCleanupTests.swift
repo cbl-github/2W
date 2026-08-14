@@ -163,7 +163,7 @@ final class FeedCleanupTests: XCTestCase {
         XCTAssertEqual(health.map(\.title), ["真实源"], "容器源不进批量退订的候选列表")
 
         let sidebar = try await db.pool.read { try SidebarData.fetch($0) }
-        XCTAssertEqual(sidebar.visibleFeeds.map(\.title).sorted(), ["手动保存", "真实源"],
+        XCTAssertEqual(sidebar.visibleFeeds.map(\.title).sorted(), ["feed.container.savedPages", "真实源"],
                        "手动保存仍然显示在侧栏，那是用户主动放东西的地方")
     }
 }

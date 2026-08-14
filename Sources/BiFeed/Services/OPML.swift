@@ -14,7 +14,7 @@ enum OPML {
         let parser = XMLParser(data: data)
         parser.delegate = delegate
         guard parser.parse() else {
-            throw ParseFailure.unparseable(parser.parserError?.localizedDescription ?? "OPML 格式错误")
+            throw ParseFailure.unparseable(parser.parserError?.localizedDescription ?? L("error.opml.malformed"))
         }
         return delegate.roots
     }
@@ -30,7 +30,9 @@ enum OPML {
         }
         for outline in outlines {
             if outline.xmlURL != nil {
-                if let f = try? await db.addFeed(url: outline.xmlURL!, title: outline.title, siteURL: nil, folderId: nil), f.id != nil {
+                if let f = try? await db.addFeed(
+                    url: outline.xmlURL!, title: outline.title, siteURL: nil, folderId: nil
+                ), f.id != nil {
                     imported += 1
                 }
             } else {
@@ -53,7 +55,10 @@ enum OPML {
         let feeds = allFeeds.filter(\.isFetchable)
         var body = ""
         func outline(_ feed: Feed, indent: String) -> String {
-            "\(indent)<outline type=\"rss\" text=\"\(escape(feed.title))\" title=\"\(escape(feed.title))\" xmlUrl=\"\(escape(feed.url))\"\(feed.siteURL.map { " htmlUrl=\"\(escape($0))\"" } ?? "")/>\n"
+            let title = escape(feed.title)
+            let htmlAttr = feed.siteURL.map { " htmlUrl=\"\(escape($0))\"" } ?? ""
+            return "\(indent)<outline type=\"rss\" text=\"\(title)\" title=\"\(title)\" " +
+                "xmlUrl=\"\(escape(feed.url))\"\(htmlAttr)/>\n"
         }
         for feed in feeds.filter({ $0.folderId == nil }) {
             body += outline(feed, indent: "    ")
@@ -90,7 +95,7 @@ private final class OPMLParserDelegate: NSObject, XMLParserDelegate {
     func parser(_ parser: XMLParser, didStartElement name: String, namespaceURI: String?,
                 qualifiedName: String?, attributes: [String: String]) {
         guard name == "outline" else { return }
-        let title = attributes["title"] ?? attributes["text"] ?? "(未命名)"
+        let title = attributes["title"] ?? attributes["text"] ?? L("data.opml.untitled")
         stack.append(OPMLOutline(title: title, xmlURL: attributes["xmlUrl"]))
     }
 

@@ -53,6 +53,40 @@ struct ArticleListItem: Codable, Identifiable, Hashable, FetchableRecord {
         let order = " ORDER BY article.publishedAt IS NULL, article.publishedAt DESC, article.id DESC"
         var conditions: [String] = []
         var arguments: [(any DatabaseValueConvertible)?] = []
+        scopeCondition(scope, sticky: sticky, conditions: &conditions, arguments: &arguments)
+        if scope != .muted { conditions.append("article.isMuted = 0") }
+        sinceCondition(since, conditions: &conditions, arguments: &arguments)
+        filterCondition(filter, sticky: sticky, conditions: &conditions)
+        let term = (search ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+        if term.isEmpty, let eligibility = dedupEligibility(scope: scope, filter: filter, sticky: sticky) {
+            conditions.append("""
+                (article.normalizedURL IS NULL OR article.id = (
+                    SELECT MIN(duplicate.id) FROM article duplicate
+                    WHERE duplicate.normalizedURL = article.normalizedURL AND \(eligibility)
+                ))
+                """)
+        }
+        if !term.isEmpty {
+            if let result = try fetchViaFTS(
+                db, term: term, columns: columns, conditions: conditions, arguments: arguments
+            ) {
+                return result
+            }
+            appendLikeCondition(term: term, conditions: &conditions, arguments: &arguments)
+        }
+        let base = columns + "\n    FROM article JOIN feed ON feed.id = article.feedId"
+        let whereClause = " WHERE " + conditions.joined(separator: " AND ")
+        return try fetchAll(db, sql: base + whereClause + order, arguments: StatementArguments(arguments))
+    }
+
+    /// 范围条件（switch scope 那段）：对应 SidebarSelection 的 WHERE 片段与可能的绑定参数，
+    /// 按 fetchAll 原有顺序追加进 conditions / arguments。
+    private static func scopeCondition(
+        _ scope: SidebarSelection,
+        sticky: Set<Int64>,
+        conditions: inout [String],
+        arguments: inout [(any DatabaseValueConvertible)?]
+    ) {
         switch scope {
         case .all:
             break
@@ -76,73 +110,96 @@ struct ArticleListItem: Codable, Identifiable, Hashable, FetchableRecord {
         case .savedSearch:
             break // 视图已解析成基础范围；真走到这里等价于「全部文章」
         }
-        if scope != .muted { conditions.append("article.isMuted = 0") }
-        if let since {
-            conditions.append("article.publishedAt IS NOT NULL AND article.publishedAt >= ?")
-            arguments.append(since)
-        }
-        switch filter {
-        case "unread": conditions.append(sticky.isEmpty
-                ? "article.isRead = 0"
-                : "(article.isRead = 0 OR article.id IN (\(sticky.sorted().map(String.init).joined(separator: ","))))") // .allUnread 下重复无害（AND 幂等）
-        case "starred": conditions.append("article.isStarred = 1")
-        default: break
-        }
-        let term = (search ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
-        if term.isEmpty, let eligibility = dedupEligibility(scope: scope, filter: filter, sticky: sticky) {
-            conditions.append("""
-                (article.normalizedURL IS NULL OR article.id = (
-                    SELECT MIN(duplicate.id) FROM article duplicate
-                    WHERE duplicate.normalizedURL = article.normalizedURL AND \(eligibility)
-                ))
-                """)
-        }
-        if !term.isEmpty {
-            // FTS 路径：articleSearch 只索引 title/summary（不含 feed.title），rowid=article.id JOIN 回列表列。
-            // bm25 返回负值、越相关越小，升序即相关度降序。
-            let ftsSQL = columns + """
+    }
 
-                FROM articleSearch
-                JOIN article ON article.id = articleSearch.rowid
-                JOIN feed ON feed.id = article.feedId
-                WHERE articleSearch MATCH ? AND \(conditions.joined(separator: " AND "))
-                ORDER BY bm25(articleSearch)
-                """
-            // unicode61 不切分 CJK（整段连续汉字是一个 token），中文词用 FTS 基本搜不到；
-            // 含 CJK 的词直接走 LIKE。ASCII 词按空格拆 token、双引号包裹 + 前缀星号，
-            // 与 LIKE 的子串语义对齐（"oth" 能命中 "other"）。
-            let hasCJK = term.unicodeScalars.contains { $0.value >= 0x2E80 }
-            let ftsQuery = term.split(separator: " ").map {
-                "\"\($0.replacingOccurrences(of: "\"", with: "\"\""))\"*"
-            }.joined(separator: " ")
-            if !hasCJK {
-                do {
-                    var ftsArguments: [(any DatabaseValueConvertible)?] = [ftsQuery]
-                    ftsArguments.append(contentsOf: arguments)
-                    return try fetchAll(db, sql: ftsSQL, arguments: StatementArguments(ftsArguments))
-                } catch is DatabaseError {
-                    // MATCH 语法错误（未配对引号、裸 AND/OR 等）——落到下方 LIKE 路径
-                }
-            }
-            let escaped = term
-                .replacingOccurrences(of: "\\", with: "\\\\")
-                .replacingOccurrences(of: "%", with: "\\%")
-                .replacingOccurrences(of: "_", with: "\\_")
-            let pattern = "%\(escaped)%"
-            // 正文用子查询而不是 JOIN：大字段不进结果集，列表查询「永不 JOIN 正文列」的不变量保住。
-            // ponytail: 中文走这条路时正文是全表扫描；等库大到搜索明显卡顿，再换 CJK 分词的 FTS。
-            conditions.append("""
-                (article.title LIKE ? ESCAPE '\\' OR article.summary LIKE ? ESCAPE '\\' \
-                OR feed.title LIKE ? ESCAPE '\\' OR article.id IN (
-                    SELECT articleId FROM articleContent
-                    WHERE html LIKE ? ESCAPE '\\' OR extractedHTML LIKE ? ESCAPE '\\'
-                ))
-                """)
-            arguments.append(contentsOf: [pattern, pattern, pattern, pattern, pattern])
+    /// 时间窗：since 非空时只保留该时间之后发布的文章（搜索的时间范围限定；无日期的文章被排除）。
+    private static func sinceCondition(
+        _ since: Date?,
+        conditions: inout [String],
+        arguments: inout [(any DatabaseValueConvertible)?]
+    ) {
+        guard let since else { return }
+        conditions.append("article.publishedAt IS NOT NULL AND article.publishedAt >= ?")
+        arguments.append(since)
+    }
+
+    /// 读态过滤：filter 三态（"all" / "unread" / "starred"），与 scope 条件 AND 叠加。
+    private static func filterCondition(
+        _ filter: String,
+        sticky: Set<Int64>,
+        conditions: inout [String]
+    ) {
+        switch filter {
+        case "unread":
+            conditions.append(sticky.isEmpty
+                ? "article.isRead = 0"
+                : "(article.isRead = 0 OR article.id IN (\(sticky.sorted().map(String.init).joined(separator: ","))))")
+            // .allUnread 下重复无害（AND 幂等）
+        case "starred":
+            conditions.append("article.isStarred = 1")
+        default:
+            break
         }
-        let base = columns + "\n    FROM article JOIN feed ON feed.id = article.feedId"
-        let whereClause = " WHERE " + conditions.joined(separator: " AND ")
-        return try fetchAll(db, sql: base + whereClause + order, arguments: StatementArguments(arguments))
+    }
+
+    /// FTS 路径：非 CJK 词走 articleSearch MATCH。含 CJK 或 MATCH 语法错误（未配对引号、
+    /// 裸 AND/OR 等）时返回 nil，交调用方落到下方 LIKE 路径；此函数本身不改 conditions/arguments。
+    private static func fetchViaFTS(
+        _ db: Database,
+        term: String,
+        columns: String,
+        conditions: [String],
+        arguments: [(any DatabaseValueConvertible)?]
+    ) throws -> [ArticleListItem]? {
+        // FTS 路径：articleSearch 只索引 title/summary（不含 feed.title），rowid=article.id JOIN 回列表列。
+        // bm25 返回负值、越相关越小，升序即相关度降序。
+        let ftsSQL = columns + """
+
+            FROM articleSearch
+            JOIN article ON article.id = articleSearch.rowid
+            JOIN feed ON feed.id = article.feedId
+            WHERE articleSearch MATCH ? AND \(conditions.joined(separator: " AND "))
+            ORDER BY bm25(articleSearch)
+            """
+        // unicode61 不切分 CJK（整段连续汉字是一个 token），中文词用 FTS 基本搜不到；
+        // 含 CJK 的词直接走 LIKE。ASCII 词按空格拆 token、双引号包裹 + 前缀星号，
+        // 与 LIKE 的子串语义对齐（"oth" 能命中 "other"）。
+        let hasCJK = term.unicodeScalars.contains { $0.value >= 0x2E80 }
+        let ftsQuery = term.split(separator: " ").map {
+            "\"\($0.replacingOccurrences(of: "\"", with: "\"\""))\"*"
+        }.joined(separator: " ")
+        guard !hasCJK else { return nil }
+        do {
+            var ftsArguments: [(any DatabaseValueConvertible)?] = [ftsQuery]
+            ftsArguments.append(contentsOf: arguments)
+            return try fetchAll(db, sql: ftsSQL, arguments: StatementArguments(ftsArguments))
+        } catch is DatabaseError {
+            // MATCH 语法错误(未配对引号、裸 AND/OR 等)——落到下方 LIKE 路径
+            return nil
+        }
+    }
+
+    /// LIKE 路径：CJK 词或 FTS 语法错误时的回退，正文经子查询匹配，不 JOIN 出大字段。
+    private static func appendLikeCondition(
+        term: String,
+        conditions: inout [String],
+        arguments: inout [(any DatabaseValueConvertible)?]
+    ) {
+        let escaped = term
+            .replacingOccurrences(of: "\\", with: "\\\\")
+            .replacingOccurrences(of: "%", with: "\\%")
+            .replacingOccurrences(of: "_", with: "\\_")
+        let pattern = "%\(escaped)%"
+        // 正文用子查询而不是 JOIN：大字段不进结果集，列表查询「永不 JOIN 正文列」的不变量保住。
+        // ponytail: 中文走这条路时正文是全表扫描；等库大到搜索明显卡顿，再换 CJK 分词的 FTS。
+        conditions.append("""
+            (article.title LIKE ? ESCAPE '\\' OR article.summary LIKE ? ESCAPE '\\' \
+            OR feed.title LIKE ? ESCAPE '\\' OR article.id IN (
+                SELECT articleId FROM articleContent
+                WHERE html LIKE ? ESCAPE '\\' OR extractedHTML LIKE ? ESCAPE '\\'
+            ))
+            """)
+        arguments.append(contentsOf: [pattern, pattern, pattern, pattern, pattern])
     }
 
     /// 聚合范围折叠精确重复；单源/分组/搜索保留各自条目，避免跨范围的 canonical 把结果吃掉。
@@ -196,7 +253,9 @@ struct SidebarData {
         d.feeds = try Feed.order(Column("title").collating(.localizedCaseInsensitiveCompare)).fetchAll(db)
         d.savedSearches = try SavedSearches.fetchAll(db)
         // 计数一律排除静音文章（isMuted=1 不计未读，与列表口径一致）
-        for row in try Row.fetchAll(db, sql: "SELECT feedId, COUNT(*) AS c FROM article WHERE isRead = 0 AND isMuted = 0 GROUP BY feedId") {
+        for row in try Row.fetchAll(
+            db, sql: "SELECT feedId, COUNT(*) AS c FROM article WHERE isRead = 0 AND isMuted = 0 GROUP BY feedId"
+        ) {
             d.unreadByFeed[row["feedId"]] = row["c"]
         }
         // 静默停更判定的数据：一条 GROUP BY 拿全部源的最新发布时间，不逐源查
@@ -299,10 +358,10 @@ struct FeedHealthRow: Identifiable, Hashable {
 
     /// 与侧栏状态图标同一套判定（SidebarView.feedRow）。
     var status: String {
-        if feed.isHardErrored, let code = feed.lastHTTPStatus { return "硬错误 HTTP \(code)" }
-        if let next = feed.nextFetchAt, next > Date() { return "暂缓中" }
+        if feed.isHardErrored, let code = feed.lastHTTPStatus { return L("feed.health.status.hardError", code) }
+        if let next = feed.nextFetchAt, next > Date() { return L("feed.health.status.deferred") }
         if let error = feed.fetchError { return error }
-        return "正常"
+        return L("feed.health.status.ok")
     }
 
     /// 距今多少天没有新文章。从来没有过文章返回 nil（"从未更新"，比任何天数都糟）。

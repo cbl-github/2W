@@ -21,7 +21,7 @@ enum MarkdownExporter {
         var name = title.replacing(/[\/:\\\n\r\t]/, with: " ")
         name = name.replacing(/\s+/, with: " ").trimmingCharacters(in: .whitespaces)
         name = String(name.drop(while: { $0 == "." }).prefix(80))
-        return (name.isEmpty ? "未命名" : name) + ".md"
+        return (name.isEmpty ? L("export.untitled") : name) + ".md"
     }
 
     // MARK: - frontmatter
@@ -178,7 +178,7 @@ enum MarkdownExporter {
             }
         }
         if let translation {
-            out.append("> 译：" + translation.replacingOccurrences(of: "\n", with: " "))
+            out.append("> " + L("export.translationPrefix") + translation.replacingOccurrences(of: "\n", with: " "))
         }
     }
 
@@ -236,10 +236,10 @@ enum MarkdownExporter {
     /// 楼层不对位译文——extract() 给楼层的序号取决于页面实时 DOM，导出侧无法复现。
     private static func forumBlocks(_ thread: ForumThread) -> [String] {
         let isHN = thread.source == "hn"
-        var out = ["## \(isHN ? "评论" : "回帖")（\(thread.postCount)）"]
+        var out = ["## " + L("export.forum.heading", isHN ? L("forum.comments") : L("forum.replies"), thread.postCount)]
         var mute = BlockCounter(translations: [:])
         for post in thread.posts {
-            let badge = post.isOP ? (isHN ? " · OP" : " · 楼主") : ""
+            let badge = post.isOP ? (isHN ? " · OP" : " · " + L("forum.opBadge")) : ""
             let meta = isHN ? post.timeText : "#\(post.index) · \(post.timeText)"
             var body: [String] = []
             parse(post.html[...], counter: &mute, into: &body)

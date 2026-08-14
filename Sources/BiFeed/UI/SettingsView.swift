@@ -11,15 +11,15 @@ private enum SettingsCategory: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .appearance: "外观"
-        case .reading: "阅读"
-        case .shortcuts: "快捷键"
-        case .translation: "翻译"
-        case .refresh: "刷新"
-        case .retention: "保留"
-        case .subscriptions: "订阅"
-        case .mute: "静音"
-        case .data: "数据"
+        case .appearance: L("settings.appearance.title")
+        case .reading: L("settings.reading.title")
+        case .shortcuts: L("settings.shortcuts.title")
+        case .translation: L("settings.translation.title")
+        case .refresh: L("settings.refresh.title")
+        case .retention: L("settings.retention.title")
+        case .subscriptions: L("common.feeds")
+        case .mute: L("settings.mute.title")
+        case .data: L("settings.data.title")
         }
     }
 
@@ -94,13 +94,13 @@ private struct AppearanceSettings: View {
 
     var body: some View {
         Form {
-            Section("外观") {
-                Picker("主题", selection: $appearanceMode) {
-                    Text("跟随系统").tag("system")
-                    Text("浅色").tag("light")
-                    Text("深色").tag("dark")
+            Section(L("settings.appearance.title")) {
+                Picker(L("settings.appearance.theme"), selection: $appearanceMode) {
+                    Text(L("settings.appearance.theme.system")).tag("system")
+                    Text(L("settings.appearance.theme.light")).tag("light")
+                    Text(L("settings.appearance.theme.dark")).tag("dark")
                 }
-                Text("主题立即生效。")
+                Text(L("settings.appearance.note"))
                     .font(.system(size: DesignTokens.Typography.caption))
                     .foregroundStyle(.secondary)
             }
@@ -119,9 +119,9 @@ private struct ReadingSettings: View {
 
     var body: some View {
         Form {
-            Section("阅读") {
+            Section(L("settings.reading.title")) {
                 HStack {
-                    Text("正文字号")
+                    Text(L("settings.reading.fontSize"))
                     Slider(value: $articleFontSize, in: 15...23, step: 1)
                     Text("\(Int(articleFontSize)) px")
                         .font(.system(size: DesignTokens.Typography.caption).monospacedDigit())
@@ -129,12 +129,12 @@ private struct ReadingSettings: View {
                         .frame(width: 42, alignment: .trailing)
                 }
                 fontPreview
-                Text("字号对之后打开的文章生效。")
+                Text(L("settings.reading.fontSize.note"))
                     .font(.system(size: DesignTokens.Typography.caption))
                     .foregroundStyle(.secondary)
-                Toggle("打开即标为已读", isOn: $markReadOnOpen)
-                Toggle("滚动到底标为已读", isOn: $markReadOnScrollEnd)
-                Text("两个开关互不依赖；都关闭时只能用 m 或右键手动标记。")
+                Toggle(L("settings.reading.markReadOnOpen"), isOn: $markReadOnOpen)
+                Toggle(L("settings.reading.markReadOnScrollEnd"), isOn: $markReadOnScrollEnd)
+                Text(L("settings.reading.markRead.note"))
                     .font(.system(size: DesignTokens.Typography.caption))
                     .foregroundStyle(.secondary)
             }
@@ -147,11 +147,11 @@ private struct ReadingSettings: View {
     @ViewBuilder
     private var fontPreview: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-            Text("文章标题预览")
+            Text(L("settings.reading.preview.title"))
                 .font(.system(size: articleFontSize * 1.7, weight: .bold))
-            Text("正文会以这个大小显示。The quick brown fox jumps over the lazy dog.")
+            Text(L("settings.reading.preview.body"))
                 .font(.system(size: articleFontSize))
-            Text("译文与正文同字号，带左侧强调线。")
+            Text(L("settings.reading.preview.translation"))
                 .font(.system(size: articleFontSize))
                 .padding(.leading, 10)
                 .overlay(alignment: .leading) {
@@ -184,17 +184,21 @@ private struct ShortcutSettings: View {
                     HStack(spacing: 8) {
                         Text(action.title)
                         Spacer()
-                        Text(recordingAction == action ? "按下新键位…" : (keys.bindings[action]?.display ?? "—"))
+                        Text(recordingAction == action
+                            ? L("settings.shortcuts.recording")
+                            : (keys.bindings[action]?.display ?? "—"))
                             .font(.system(size: DesignTokens.Typography.caption, weight: .medium))
                             .foregroundStyle(recordingAction == action ? Color.accentColor : .primary)
                             .padding(.horizontal, 7)
                             .padding(.vertical, 2)
                             .background(RoundedRectangle(cornerRadius: DesignTokens.Radius.small)
                                 .fill(.primary.opacity(DesignTokens.Opacity.subtle)))
-                        Button(recordingAction == action ? "取消" : "更改") { toggleRecording(action) }
+                        Button(
+                            recordingAction == action ? L("common.cancel") : L("settings.shortcuts.change")
+                        ) { toggleRecording(action) }
                             .buttonStyle(.borderless)
                             .font(.system(size: 11))
-                        Button("恢复") { keys.reset(action) }
+                        Button(L("settings.shortcuts.reset")) { keys.reset(action) }
                             .buttonStyle(.borderless)
                             .font(.system(size: 11))
                             .disabled(keys.bindings[action] == KeyBindings.defaults[action])
@@ -205,14 +209,14 @@ private struct ShortcutSettings: View {
                         .font(.system(size: 11))
                         .foregroundStyle(.red)
                 }
-                Text("点「更改」后直接按目标键；Esc 取消。修改立即生效。")
+                Text(L("settings.shortcuts.note"))
                     .font(.system(size: 11))
                     .foregroundStyle(.secondary)
             } header: {
                 HStack {
-                    Text("快捷键")
+                    Text(L("settings.shortcuts.title"))
                     Spacer()
-                    Button("全部恢复默认") {
+                    Button(L("settings.shortcuts.resetAll")) {
                         keys.resetAll()
                         conflictText = nil
                     }
@@ -242,7 +246,7 @@ private struct ShortcutSettings: View {
             }
             guard let stroke = KeyStroke.from(event: event) else { return nil } // 纯修饰键：等下一次按键
             if let clash = keys.conflict(of: stroke, excluding: action) {
-                conflictText = "「\(stroke.display)」已被「\(clash.title)」占用，换一个键位。"
+                conflictText = L("settings.shortcuts.conflict", stroke.display, clash.title)
                 stopRecording()
                 return nil
             }
@@ -274,30 +278,30 @@ private struct TranslationSettings: View {
 
     var body: some View {
         Form {
-            Section("翻译") {
-                Picker("引擎", selection: $translationEngine) {
-                    Text("系统翻译（离线）").tag("apple")
-                    Text("API 翻译").tag("api")
+            Section(L("settings.translation.title")) {
+                Picker(L("settings.translation.engine"), selection: $translationEngine) {
+                    Text(L("settings.translation.engine.apple")).tag("apple")
+                    Text(L("settings.translation.engine.api")).tag("api")
                 }
                 if translationEngine == "api" {
                     TextField("Base URL", text: $apiBaseURL, prompt: Text("https://api.example.com/v1"))
-                    TextField("模型名", text: $apiModel)
+                    TextField(L("settings.translation.apiModel"), text: $apiModel)
                     SecureField("API Key", text: $apiKey)
                         .onChange(of: apiKey) {
                             KeychainStore.set(account: "api-key", value: apiKey)
                         }
                 }
-                Picker("译文语言", selection: $targetLang) {
-                    Text("简体中文").tag("zh-Hans")
-                    Text("繁體中文").tag("zh-Hant")
-                    Text("English").tag("en")
-                    Text("日本語").tag("ja")
+                Picker(L("settings.translation.targetLang"), selection: $targetLang) {
+                    Text(verbatim: "简体中文").tag("zh-Hans")
+                    Text(verbatim: "繁體中文").tag("zh-Hant")
+                    Text(verbatim: "English").tag("en")
+                    Text(verbatim: "日本語").tag("ja")
                 }
-                Text("对之后打开的文章生效；换语言后旧译文缓存自动失效重翻。")
+                Text(L("settings.translation.targetLang.note"))
                     .font(.system(size: 11))
                     .foregroundStyle(.secondary)
-                Toggle("外文文章自动开启双语对照", isOn: $autoTranslateForeign)
-                Text("关闭后仍可按 T 手动翻译；Key 存本机钥匙串，设置对之后打开的文章生效。")
+                Toggle(L("settings.translation.auto"), isOn: $autoTranslateForeign)
+                Text(L("settings.translation.auto.note"))
                     .font(.system(size: 11))
                     .foregroundStyle(.secondary)
             }
@@ -317,42 +321,44 @@ private struct RefreshSettings: View {
 
     var body: some View {
         Form {
-            Section("刷新") {
-                Picker("自动刷新间隔", selection: $refreshMinutes) {
-                    Text("15 分钟").tag(15)
-                    Text("30 分钟").tag(30)
-                    Text("1 小时").tag(60)
-                    Text("2 小时").tag(120)
+            Section(L("settings.refresh.title")) {
+                Picker(L("settings.refresh.interval"), selection: $refreshMinutes) {
+                    Text(L("settings.refresh.interval.15")).tag(15)
+                    Text(L("settings.refresh.interval.30")).tag(30)
+                    Text(L("settings.refresh.interval.60")).tag(60)
+                    Text(L("settings.refresh.interval.120")).tag(120)
                 }
-                Text("单个源可以在右键「抓取设置…」里覆盖这个间隔。")
+                Text(L("settings.refresh.interval.note"))
                     .font(.system(size: DesignTokens.Typography.caption))
                     .foregroundStyle(.secondary)
-                Picker("同域请求间隔", selection: $domainMinIntervalSeconds) {
-                    Text("关闭").tag(0)
-                    Text("5 秒").tag(5)
-                    Text("10 秒").tag(10)
-                    Text("30 秒").tag(30)
+                Picker(L("settings.refresh.domainInterval"), selection: $domainMinIntervalSeconds) {
+                    Text(L("settings.refresh.domainInterval.off")).tag(0)
+                    Text(L("settings.refresh.domainInterval.5")).tag(5)
+                    Text(L("settings.refresh.domainInterval.10")).tag(10)
+                    Text(L("settings.refresh.domainInterval.30")).tag(30)
                 }
-                Text("同一网站的多个订阅之间至少间隔这么久再发下一个请求。")
+                Text(L("settings.refresh.domainInterval.note"))
                     .font(.system(size: DesignTokens.Typography.caption))
                     .foregroundStyle(.secondary)
-                Picker("新增订阅的首批文章", selection: $newFeedInitialRead) {
-                    Text("全部未读").tag("unread")
-                    Text("全部已读").tag("read")
-                    Text("只留最近几条未读").tag("recent")
+                Picker(L("settings.refresh.initialRead"), selection: $newFeedInitialRead) {
+                    Text(L("settings.refresh.initialRead.unread")).tag("unread")
+                    Text(L("settings.refresh.initialRead.read")).tag("read")
+                    Text(L("settings.refresh.initialRead.recent")).tag("recent")
                 }
                 if newFeedInitialRead == "recent" {
-                    Picker("保留未读条数", selection: $newFeedRecentCount) {
-                        ForEach([5, 10, 25, 50], id: \.self) { Text("\($0) 条").tag($0) }
+                    Picker(L("settings.refresh.initialRead.keepCount"), selection: $newFeedRecentCount) {
+                        ForEach([5, 10, 25, 50], id: \.self) {
+                        Text(L("settings.refresh.initialRead.items", $0)).tag($0)
+                    }
                     }
                 }
-                Text("只影响该源第一次抓取的那批文章。")
+                Text(L("settings.refresh.initialRead.note"))
                     .font(.system(size: DesignTokens.Typography.caption))
                     .foregroundStyle(.secondary)
-                Picker("默认全文抓取", selection: $defaultFullTextMode) {
+                Picker(L("settings.refresh.defaultFullText"), selection: $defaultFullTextMode) {
                     ForEach(FullTextMode.allCases, id: \.self) { Text($0.label).tag($0.rawValue) }
                 }
-                Text("只影响之后新增的订阅；已有订阅在右键「阅读设置…」里改。")
+                Text(L("settings.refresh.defaultFullText.note"))
                     .font(.system(size: DesignTokens.Typography.caption))
                     .foregroundStyle(.secondary)
             }
@@ -369,20 +375,20 @@ private struct RetentionSettings: View {
 
     var body: some View {
         Form {
-            Section("保留策略（星标永久保留）") {
-                Picker("每源保留条数", selection: $keepCount) {
-                    Text("200").tag(200)
-                    Text("500").tag(500)
-                    Text("1000").tag(1000)
-                    Text("2000").tag(2000)
+            Section(L("settings.retention.section")) {
+                Picker(L("settings.retention.count"), selection: $keepCount) {
+                    Text(verbatim: "200").tag(200)
+                    Text(verbatim: "500").tag(500)
+                    Text(verbatim: "1000").tag(1000)
+                    Text(verbatim: "2000").tag(2000)
                 }
-                Picker("保留时间", selection: $keepDays) {
-                    Text("30 天").tag(30)
-                    Text("90 天").tag(90)
-                    Text("一年").tag(365)
-                    Text("永久").tag(0)
+                Picker(L("settings.retention.days"), selection: $keepDays) {
+                    Text(L("settings.retention.days.30")).tag(30)
+                    Text(L("settings.retention.days.90")).tag(90)
+                    Text(L("settings.retention.days.365")).tag(365)
+                    Text(L("settings.retention.days.forever")).tag(0)
                 }
-                Text("单个订阅可在右键「阅读设置…」里覆盖这两项。")
+                Text(L("settings.retention.note"))
                     .font(.system(size: DesignTokens.Typography.caption))
                     .foregroundStyle(.secondary)
             }
@@ -415,12 +421,14 @@ private struct MuteSettings: View {
 
     var body: some View {
         Form {
-            Section("静音") {
+            Section(L("settings.mute.title")) {
                 ForEach(muteRules.value) { rule in
                     HStack(spacing: DesignTokens.Spacing.md) {
                         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xxs) {
                             Text(rule.pattern).lineLimit(1)
-                            Text("\(rule.matchType.label) · \(rule.field.label) · \(scopeLabel(rule)) · \(rule.action.label)")
+                            let summary = "\(rule.matchType.label) · \(rule.field.label) · " +
+                                "\(scopeLabel(rule)) · \(rule.action.label)"
+                            Text(summary)
                                 .font(.system(size: DesignTokens.Typography.caption))
                                 .foregroundStyle(.secondary)
                         }
@@ -433,20 +441,20 @@ private struct MuteSettings: View {
                             Image(systemName: "trash")
                         }
                         .buttonStyle(.borderless)
-                        .help("删除这条规则")
+                        .help(L("settings.mute.delete.help"))
                     }
                 }
                 Button {
                     showingMuteEditor = true
                 } label: {
-                    Label("新建静音规则…", systemImage: "plus")
+                    Label(L("settings.mute.new"), systemImage: "plus")
                 }
                 if let muteStatus {
                     Text(muteStatus)
                         .font(.system(size: DesignTokens.Typography.caption))
                         .foregroundStyle(.secondary)
                 }
-                Text("规则保存或删除后立即回扫历史；已静音文章可在侧栏检查并放行。")
+                Text(L("settings.mute.note"))
                     .font(.system(size: DesignTokens.Typography.caption))
                     .foregroundStyle(.secondary)
             }
@@ -464,7 +472,7 @@ private struct MuteSettings: View {
         if let folderId = rule.scopeFolderId {
             return folders.value.first { $0.id == folderId }?.name ?? "—"
         }
-        guard let fid = rule.scopeFeedId else { return "全局" }
+        guard let fid = rule.scopeFeedId else { return L("settings.mute.scope.global") }
         // scopeFeedId 外键随 feed 级联删除，正常总能查到标题；
         // 两条 ValueObservation 异步刷新可能错位一帧，占位符只为这一帧。
         return feeds.value.first { $0.id == fid }?.title ?? "—"
@@ -474,9 +482,9 @@ private struct MuteSettings: View {
         Task {
             do {
                 let count = try await MuteRules.add(AppEnvironment.sharedDB, draft: draft)
-                muteStatus = "保存成功，本次命中 \(count) 篇。"
+                muteStatus = L("settings.mute.saved", count)
             } catch {
-                muteStatus = "保存失败：\(error.localizedDescription)"
+                muteStatus = L("settings.mute.saveFailed", error.localizedDescription)
             }
         }
     }
@@ -504,18 +512,18 @@ private struct DataSettings: View {
 
     var body: some View {
         Form {
-            Section("数据") {
-                LabeledContent("数据库位置") {
+            Section(L("settings.data.title")) {
+                LabeledContent(L("settings.data.dbPath")) {
                     Text(AppDatabase.defaultPath())
                         .font(.caption)
                         .textSelection(.enabled)
                         .foregroundStyle(.secondary)
                 }
                 HStack {
-                    Button("备份数据库…") { backupDatabase() }
-                    Button("从备份恢复…") { restoreDatabase() }
+                    Button(L("data.backup.menu")) { backupDatabase() }
+                    Button(L("data.restore.menu")) { restoreDatabase() }
                     Spacer()
-                    Button("打开备份文件夹") {
+                    Button(L("data.backup.openFolder")) {
                         try? FileManager.default.createDirectory(
                             at: Backup.directory, withIntermediateDirectories: true)
                         NSWorkspace.shared.open(Backup.directory)
@@ -526,33 +534,33 @@ private struct DataSettings: View {
                         .font(.system(size: DesignTokens.Typography.caption))
                         .foregroundStyle(.secondary)
                 }
-                Text("备份是一致性快照，可在应用运行时进行。订阅列表每天自动备份一份 OPML，保留最近 7 份。")
+                Text(L("data.backup.note"))
                     .font(.system(size: DesignTokens.Typography.caption))
                     .foregroundStyle(.secondary)
             }
-            Section("更新") {
-                Toggle("启动时检查更新", isOn: $checkUpdatesOnLaunch)
-                LabeledContent("当前版本") {
+            Section(L("update.section.title")) {
+                Toggle(L("update.checkOnLaunch"), isOn: $checkUpdatesOnLaunch)
+                LabeledContent(L("update.currentVersion")) {
                     Text(UpdateChecker.currentVersion).foregroundStyle(.secondary)
                 }
-                Text("只检查并提示，不会自动下载或安装。跳过的版本可在这里清除。")
+                Text(L("update.section.note"))
                     .font(.system(size: DesignTokens.Typography.caption))
                     .foregroundStyle(.secondary)
                 if !skippedUpdateVersion.isEmpty {
                     HStack {
-                        Text("已跳过 \(skippedUpdateVersion)")
+                        Text(L("update.skipped", skippedUpdateVersion))
                             .font(.system(size: DesignTokens.Typography.caption))
                             .foregroundStyle(.secondary)
                         Spacer()
-                        Button("不再跳过") { skippedUpdateVersion = "" }
+                        Button(L("update.unskip")) { skippedUpdateVersion = "" }
                     }
                 }
             }
         }
         .formStyle(.grouped)
-        .alert("恢复后需要重启", isPresented: .constant(pendingRestore != nil)) {
-            Button("稍后重启") { pendingRestore = nil }
-            Button("立即重启") {
+        .alert(L("data.restore.needsRelaunch"), isPresented: .constant(pendingRestore != nil)) {
+            Button(L("data.restore.later")) { pendingRestore = nil }
+            Button(L("data.restore.now")) {
                 pendingRestore = nil
                 relaunch()
             }
@@ -567,15 +575,15 @@ private struct DataSettings: View {
         let panel = NSSavePanel()
         panel.allowedContentTypes = [UTType(filenameExtension: "sqlite") ?? .data]
         panel.nameFieldStringValue = Backup.suggestedFilename()
-        panel.message = "保存数据库快照"
+        panel.message = L("data.backup.panel")
         guard panel.runModal() == .OK, let url = panel.url else { return }
-        dataStatus = "正在备份…"
+        dataStatus = L("data.backup.running")
         Task {
             do {
                 try await Backup.snapshot(AppEnvironment.sharedDB, to: url)
-                dataStatus = "已备份到 \(url.lastPathComponent)。"
+                dataStatus = L("data.backup.done", url.lastPathComponent)
             } catch {
-                dataStatus = "备份失败：\(error.localizedDescription)"
+                dataStatus = L("data.backup.failed", error.localizedDescription)
             }
         }
     }
@@ -584,15 +592,14 @@ private struct DataSettings: View {
     private func restoreDatabase() {
         let panel = NSOpenPanel()
         panel.allowedContentTypes = [UTType(filenameExtension: "sqlite") ?? .data, .data]
-        panel.message = "选择 2W 数据库备份"
+        panel.message = L("data.restore.panel")
         guard panel.runModal() == .OK, let url = panel.url else { return }
         do {
             let info = try Backup.stageRestore(from: url)
-            dataStatus = "备份已校验：\(info.summary)。重启后生效。"
-            pendingRestore = "\(url.lastPathComponent)（\(info.summary)）将在下次启动时替换当前数据库，"
-                + "当前数据库会保留为 bifeed.sqlite.bak。"
+            dataStatus = L("data.restore.verified", info.summary)
+            pendingRestore = L("data.restore.pending", url.lastPathComponent, info.summary)
         } catch {
-            dataStatus = "无法恢复：\(error.localizedDescription)"
+            dataStatus = L("data.restore.failed", error.localizedDescription)
         }
     }
 
@@ -629,55 +636,60 @@ private struct MuteRuleEditor: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("条件") {
-                    Picker("匹配", selection: $matchType) {
+                Section(L("settings.mute.editor.condition")) {
+                    Picker(L("settings.mute.editor.matchType"), selection: $matchType) {
                         ForEach(MuteMatchType.allCases, id: \.self) { Text($0.label).tag($0) }
                     }
                     .pickerStyle(.segmented)
-                    TextField(matchType == .regex ? "正则表达式" : "关键词", text: $pattern)
-                    Picker("字段", selection: $field) {
+                    TextField(
+                        matchType == .regex
+                            ? L("settings.mute.editor.pattern.regex")
+                            : L("settings.mute.editor.pattern.keyword"),
+                        text: $pattern
+                    )
+                    Picker(L("settings.mute.editor.field"), selection: $field) {
                         ForEach(MuteRuleField.allCases, id: \.self) { Text($0.label).tag($0) }
                     }
                 }
-                Section("范围") {
-                    Picker("作用于", selection: $scope) {
-                        Text("全部订阅").tag(MuteScopeChoice.all)
+                Section(L("settings.mute.editor.scope")) {
+                    Picker(L("settings.mute.editor.scope.appliesTo"), selection: $scope) {
+                        Text(L("common.allFeeds")).tag(MuteScopeChoice.all)
                         if !folders.isEmpty {
-                            Section("分组") {
+                            Section(L("common.folders")) {
                                 ForEach(folders) { folder in
                                     Text(folder.name).tag(MuteScopeChoice.folder(folder.id!))
                                 }
                             }
                         }
-                        Section("订阅") {
+                        Section(L("common.feeds")) {
                             ForEach(feeds) { feed in
                                 Text(feed.title).tag(MuteScopeChoice.feed(feed.id!))
                             }
                         }
                     }
                 }
-                Section("例外词（一行一个，可留空）") {
+                Section(L("settings.mute.editor.exceptions")) {
                     TextEditor(text: $exceptions)
                         .font(.system(size: DesignTokens.Typography.body))
                         .frame(height: 72)
-                    Text("任一字段含例外词时，这条规则不会触发。")
+                    Text(L("settings.mute.editor.exceptions.note"))
                         .font(.system(size: DesignTokens.Typography.caption))
                         .foregroundStyle(.secondary)
                 }
-                Section("动作") {
-                    Picker("命中后", selection: $action) {
+                Section(L("settings.mute.editor.action")) {
+                    Picker(L("settings.mute.editor.action.onMatch"), selection: $action) {
                         ForEach(MuteRuleAction.allCases, id: \.self) { Text($0.label).tag($0) }
                     }
                 }
             }
             .formStyle(.grouped)
-            .navigationTitle("新建静音规则")
+            .navigationTitle(L("settings.mute.editor.title"))
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("取消") { dismiss() }
+                    Button(L("common.cancel")) { dismiss() }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("保存并回扫") {
+                    Button(L("settings.mute.editor.save")) {
                         onSave(draft)
                     }
                     .disabled(!isValid)

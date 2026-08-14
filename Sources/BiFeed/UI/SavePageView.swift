@@ -11,13 +11,13 @@ struct SavePageView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
-            Text("保存网页")
+            Text(L("feed.savePage.title"))
                 .font(.headline)
-            TextField("网页地址", text: $input)
+            TextField(L("feed.savePage.placeholder"), text: $input)
                 .textFieldStyle(.roundedBorder)
                 .onSubmit { save() }
                 .disabled(working)
-            Text("抓取正文后存进「手动保存」，与订阅的文章同列。")
+            Text(L("feed.savePage.note"))
                 .font(.callout)
                 .foregroundStyle(.secondary)
             if let errorText {
@@ -27,7 +27,7 @@ struct SavePageView: View {
             }
             HStack {
                 Spacer()
-                Button("取消") { dismiss() }
+                Button(L("common.cancel")) { dismiss() }
                     .keyboardShortcut(.cancelAction)
                 Button {
                     save()
@@ -35,7 +35,7 @@ struct SavePageView: View {
                     if working {
                         ProgressView().controlSize(.small).frame(width: 28)
                     } else {
-                        Text("保存")
+                        Text(L("common.save"))
                     }
                 }
                 .buttonStyle(.borderedProminent)

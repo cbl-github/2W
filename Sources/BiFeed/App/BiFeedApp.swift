@@ -32,7 +32,7 @@ struct BiFeedApp: App {
         }
 
         // 源健康面板（文件菜单 → 源健康…）：独立小窗，与主窗互不干扰
-        Window("源健康", id: "feedHealth") {
+        Window(L("feed.health.window.title"), id: "feedHealth") {
             FeedHealthView()
                 .environmentObject(env)
                 .preferredColorScheme(colorScheme)
@@ -40,7 +40,7 @@ struct BiFeedApp: App {
         .defaultSize(width: 720, height: 440)
 
         // 快捷键总表（帮助菜单 → BiFeed 快捷键）：独立小窗，尺寸随内容固定
-        Window("2W 快捷键", id: "shortcuts") {
+        Window(L("settings.shortcuts.window.title"), id: "shortcuts") {
             ShortcutsView()
                 .preferredColorScheme(colorScheme)
         }
@@ -178,7 +178,7 @@ final class AppEnvironment: ObservableObject {
             do {
                 let found = try await UpdateChecker.check()
                 guard let found else {
-                    if manual { updateStatus = "已是最新版本（\(UpdateChecker.currentVersion)）。" }
+                    if manual { updateStatus = L("update.check.upToDate", UpdateChecker.currentVersion) }
                     return
                 }
                 // 自动检查尊重「跳过此版本」；手动检查是用户主动问，一律回答
@@ -186,7 +186,7 @@ final class AppEnvironment: ObservableObject {
                 if !manual, skipped == found.version { return }
                 availableUpdate = found
             } catch {
-                if manual { updateStatus = "检查更新失败：\(error.localizedDescription)" }
+                if manual { updateStatus = L("update.check.failed", error.localizedDescription) }
             }
         }
     }
@@ -216,7 +216,7 @@ final class AppEnvironment: ObservableObject {
     func importOPML() {
         let panel = NSOpenPanel()
         panel.allowedContentTypes = [UTType(filenameExtension: "opml") ?? .xml, .xml]
-        panel.message = "选择 OPML 文件"
+        panel.message = L("data.opml.import.panel")
         guard panel.runModal() == .OK, let url = panel.url, let data = try? Data(contentsOf: url) else { return }
         Task {
             let outlines = try OPML.parse(data: data)
@@ -245,25 +245,25 @@ struct AppCommands: Commands {
 
     var body: some Commands {
         CommandGroup(after: .newItem) {
-            Button("添加订阅…") { env.showAddFeed = true }
+            Button(L("feed.add.menu")) { env.showAddFeed = true }
                 .keyboardShortcut("n", modifiers: .command)
-            Button("保存网页…") { env.showSavePage = true }
+            Button(L("feed.savePage.menu")) { env.showSavePage = true }
                 .keyboardShortcut("n", modifiers: [.command, .shift])
-            Button("刷新全部") { Task { await env.scheduler.refreshAll() } }
+            Button(L("sidebar.toolbar.refreshAll")) { Task { await env.scheduler.refreshAll() } }
                 .keyboardShortcut("r", modifiers: .command)
                 .disabled(env.isRefreshing)
-            Button("源健康…") { openWindow(id: "feedHealth") }
+            Button(L("feed.health.menu")) { openWindow(id: "feedHealth") }
             Divider()
-            Button("导入 OPML…") { env.importOPML() }
-            Button("导出 OPML…") { env.exportOPML() }
+            Button(L("data.opml.import.menu")) { env.importOPML() }
+            Button(L("data.opml.export.menu")) { env.exportOPML() }
         }
         CommandGroup(after: .appInfo) {
-            Button("检查更新…") { env.checkForUpdates(manual: true) }
+            Button(L("update.menu.check")) { env.checkForUpdates(manual: true) }
                 .disabled(env.checkingUpdate)
         }
         // 系统默认的「BiFeed 帮助」没有内容，整组换成快捷键总表入口
         CommandGroup(replacing: .help) {
-            Button("2W 快捷键") { openWindow(id: "shortcuts") }
+            Button(L("settings.shortcuts.window.title")) { openWindow(id: "shortcuts") }
                 .keyboardShortcut("?", modifiers: .command)
         }
     }
@@ -278,21 +278,21 @@ struct ShortcutsView: View {
     }
 
     private static let rows: [Shortcut] = [
-        .init(key: "↩", action: "在浏览器打开原文"),
-        .init(key: "⌘↩", action: "沉浸模式开关"),
-        .init(key: "Esc", action: "退出沉浸模式"),
-        .init(key: "Space", action: "翻一屏；到底后跳下一篇未读"),
-        .init(key: "j", action: "下一篇"),
-        .init(key: "k", action: "上一篇"),
-        .init(key: "n", action: "下一篇未读"),
-        .init(key: "m", action: "标为已读 / 未读"),
-        .init(key: "u", action: "标为已读 / 未读（与 m 同效）"),
-        .init(key: "s", action: "加星标 / 取消星标"),
-        .init(key: "T", action: "双语对照开关"),
-        .init(key: "⌘R", action: "刷新全部"),
-        .init(key: "⌘N", action: "添加订阅"),
-        .init(key: "⌘⇧N", action: "保存网页"),
-        .init(key: "⌘,", action: "设置"),
+        .init(key: "↩", action: L("settings.shortcuts.action.openOriginal")),
+        .init(key: "⌘↩", action: L("settings.shortcuts.key.immersiveToggle")),
+        .init(key: "Esc", action: L("settings.shortcuts.key.immersiveExit")),
+        .init(key: "Space", action: L("settings.shortcuts.key.spaceAdvance")),
+        .init(key: "j", action: L("settings.shortcuts.action.nextArticle")),
+        .init(key: "k", action: L("settings.shortcuts.action.prevArticle")),
+        .init(key: "n", action: L("settings.shortcuts.action.nextUnread")),
+        .init(key: "m", action: L("settings.shortcuts.key.toggleRead")),
+        .init(key: "u", action: L("settings.shortcuts.key.toggleReadAlias")),
+        .init(key: "s", action: L("settings.shortcuts.key.toggleStar")),
+        .init(key: "T", action: L("settings.shortcuts.key.translateToggle")),
+        .init(key: "⌘R", action: L("sidebar.toolbar.refreshAll")),
+        .init(key: "⌘N", action: L("settings.shortcuts.key.addFeed")),
+        .init(key: "⌘⇧N", action: L("settings.shortcuts.key.savePage")),
+        .init(key: "⌘,", action: L("settings.shortcuts.key.settings")),
     ]
 
     var body: some View {

@@ -20,7 +20,7 @@ enum ReaderTemplate {
         // 全文抓取结果优先；「恢复原文」由调用方把 extractedHTML 置 nil 后重渲染
         let body = data.extractedHTML ?? data.html
         let content = body.isEmpty
-            ? "<p class=\"bf-empty\">这篇没有正文，试试右上角在浏览器打开原文。</p>"
+            ? "<p class=\"bf-empty\">" + escape(L("reader.empty.body")) + "</p>"
             : body
         // 字号档位（设置 → 阅读），默认 17.5；模板生成时代入，换档对之后打开的文章生效
         let base = UserDefaults.standard.double(forKey: SettingsKey.articleFontSize)
@@ -81,15 +81,24 @@ enum ReaderTemplate {
     static func forumHTML(_ thread: ForumThread) -> String {
         // v2ex/discourse 是平铺楼层（有楼号），hn/reddit/lobsters 是树（楼号无意义，靠 --depth 缩进）
         let isFlat = thread.source == "v2ex" || thread.source == "discourse"
-        var out = #"<h2 class="bf-forum-title">\#(isFlat ? "回帖" : "评论") <span class="bf-forum-count">\#(thread.postCount)</span></h2>"#
+        var out = #"""
+            <h2 class="bf-forum-title">\#(isFlat ? L("forum.replies") : L("forum.comments")) \#
+            <span class="bf-forum-count">\#(thread.postCount)</span></h2>
+            """#
         for post in thread.posts {
-            let badge = post.isOP ? #"<span class="bf-op">\#(isFlat ? "楼主" : "OP")</span>"# : ""
+            let badge = post.isOP ? #"<span class="bf-op">\#(isFlat ? L("forum.opBadge") : "OP")</span>"# : ""
             var meta = isFlat ? "#\(post.index) · \(escape(post.timeText))" : escape(post.timeText)
-            if let score = post.score { meta += " · \(score) 分" }
+            if let score = post.score { meta += " · " + L("forum.score", score) }
             // 作者为空的是 Reddit 未展开的 more 占位，只有一行正文，不出头部
             let head = post.author.isEmpty ? "" :
-                #"<div class="bf-post-head"><span class="bf-post-author">\#(escape(post.author))</span>\#(badge)<span class="bf-post-meta">\#(meta)</span></div>"#
-            out += #"<div class="bf-post" style="--depth:\#(post.depth)">\#(head)<div class="bf-post-body">\#(post.html)</div></div>"#
+                #"""
+                <div class="bf-post-head"><span class="bf-post-author">\#(escape(post.author))</span>\#
+                \#(badge)<span class="bf-post-meta">\#(meta)</span></div>
+                """#
+            out += #"""
+                <div class="bf-post" style="--depth:\#(post.depth)">\#(head)<div class="bf-post-body">\#
+                \#(post.html)</div></div>
+                """#
         }
         return out
     }
@@ -203,6 +212,10 @@ enum ReaderTemplate {
     /// 楼层 forumLoading / setForum（M3），滚动 getScroll / setScroll（M4，进度条自维护），
     /// Space 阅读流 pageDown。
     /// 全部幂等。原始字符串省去 JS 引号的转义。
+    /// 「正在加载回帖…」经 JSON 编码成合法的 JS 字符串字面量：译文里可能有引号。
+    private static let forumLoadingLiteral =
+        String(data: try! JSONEncoder().encode(escape(L("forum.loading"))), encoding: .utf8)!
+
     static let js = #"""
     (function () {
       var SEL = 'p, li, blockquote, h1, h2, h3, h4, h5, h6';
@@ -288,7 +301,7 @@ enum ReaderTemplate {
         },
         // 楼层区：占位与注入都整体替换 innerHTML，天然幂等
         forumLoading: function () {
-          forumSection().innerHTML = '<div class="bf-forum-loading">正在加载回帖…</div>';
+          forumSection().innerHTML = '<div class="bf-forum-loading">' + \#(forumLoadingLiteral) + '</div>';
         },
         setForum: function (jsonString) {
           forumSection().innerHTML = JSON.parse(jsonString);

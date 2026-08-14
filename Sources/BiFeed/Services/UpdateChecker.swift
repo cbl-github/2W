@@ -15,8 +15,8 @@ enum UpdateError: LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case .rateLimited: "GitHub 暂时限制了请求频率，过一会儿再试。"
-        case .badResponse: "没能读到 GitHub 上的版本信息。"
+        case .rateLimited: L("error.update.rateLimited")
+        case .badResponse: L("error.update.badResponse")
         }
     }
 }

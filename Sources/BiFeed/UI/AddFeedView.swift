@@ -25,14 +25,14 @@ struct AddFeedView: View {
 
     private var inputForm: some View {
         VStack(alignment: .leading, spacing: 14) {
-            Text("添加订阅")
+            Text(L("feed.add.title"))
                 .font(.headline)
-            TextField("RSS / Atom / JSON Feed 或网页地址", text: $input)
+            TextField(L("feed.add.placeholder"), text: $input)
                 .textFieldStyle(.roundedBorder)
                 .onSubmit { add() }
                 .disabled(working)
-            Picker("分组", selection: $folderId) {
-                Text("无分组").tag(Int64?.none)
+            Picker(L("common.folder"), selection: $folderId) {
+                Text(L("common.noFolder")).tag(Int64?.none)
                 ForEach(folders.value) { folder in
                     Text(folder.name).tag(Optional(folder.id!))
                 }
@@ -45,7 +45,7 @@ struct AddFeedView: View {
             }
             HStack {
                 Spacer()
-                Button("取消") { dismiss() }
+                Button(L("common.cancel")) { dismiss() }
                     .keyboardShortcut(.cancelAction)
                 Button {
                     add()
@@ -53,7 +53,7 @@ struct AddFeedView: View {
                     if working {
                         ProgressView().controlSize(.small).frame(width: 28)
                     } else {
-                        Text("添加")
+                        Text(L("feed.add.submit"))
                     }
                 }
                 .buttonStyle(.borderedProminent)
@@ -67,7 +67,7 @@ struct AddFeedView: View {
 
     private var candidateList: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-            Text("这个页面有 \(candidates.count) 个 feed")
+            Text(L("feed.add.candidates.title", candidates.count))
                 .font(.headline)
             ScrollView {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
@@ -96,7 +96,7 @@ struct AddFeedView: View {
             }
             HStack {
                 Spacer()
-                Button("取消") { dismiss() }
+                Button(L("common.cancel")) { dismiss() }
                     .keyboardShortcut(.cancelAction)
                 Button {
                     subscribePicked()
@@ -104,7 +104,7 @@ struct AddFeedView: View {
                     if working {
                         ProgressView().controlSize(.small).frame(width: 28)
                     } else {
-                        Text("订阅所选")
+                        Text(L("feed.add.candidates.submit"))
                     }
                 }
                 .buttonStyle(.borderedProminent)
@@ -189,7 +189,7 @@ struct AddFeedView: View {
 
     private func friendly(_ error: Error) -> String {
         let text = error.localizedDescription
-        if text.contains("UNIQUE constraint") { return "已经订阅过这个源了" }
+        if text.contains("UNIQUE constraint") { return L("error.feed.duplicate") }
         return text
     }
 }

@@ -23,18 +23,21 @@ enum DiscourseHostVerdict {
     private static var rejected: Set<String> = []
 
     static func reject(host: String) {
-        lock.lock(); defer { lock.unlock() }
+        lock.lock()
+        defer { lock.unlock() }
         rejected.insert(host.lowercased())
     }
 
     static func isRejected(_ host: String) -> Bool {
-        lock.lock(); defer { lock.unlock() }
+        lock.lock()
+        defer { lock.unlock() }
         return rejected.contains(host.lowercased())
     }
 
     /// 测试用：清掉进程内积累的判定。
     static func reset() {
-        lock.lock(); defer { lock.unlock() }
+        lock.lock()
+        defer { lock.unlock() }
         rejected.removeAll()
     }
 }
@@ -67,10 +70,10 @@ enum ForumFailure: LocalizedError {
     case notForum
     var errorDescription: String? {
         switch self {
-        case .badResponse(let detail): return "论坛数据无法解析: \(detail)"
-        case .notForum: return "这不是论坛帖"
+        case .badResponse(let detail): return L("error.forum.badResponse", detail)
+        case .notForum: return L("error.forum.notForum")
         case .redditBlocked:
-            return "Reddit 拒绝了当前网络出口的未登录评论请求（IP 风控）。文章不受影响；想看回帖用「在浏览器打开」，或让代理把 reddit.com 走住宅性质的出口。"
+            return L("error.forum.redditBlocked")
         }
     }
 }
@@ -160,7 +163,7 @@ enum ForumResolver {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         guard let replies = try? decoder.decode([V2EXReply].self, from: repliesData) else {
-            throw ForumFailure.badResponse("V2EX 回帖 \(topicId)")
+            throw ForumFailure.badResponse(L("error.forum.detail.v2ex", topicId))
         }
         let fmt = relativeFormatter()
         let now = Date()
@@ -235,7 +238,7 @@ enum ForumResolver {
     /// 直接走 JSONSerialization 更短。测试喂手工样本。
     static func parseReddit(data: Data, fallbackTitle: String) throws -> ForumThread {
         guard let root = try? JSONSerialization.jsonObject(with: data) as? [Any], root.count >= 2 else {
-            throw ForumFailure.badResponse("Reddit 响应不是两元素数组")
+            throw ForumFailure.badResponse(L("error.forum.detail.reddit"))
         }
         let op = listingChildren(root[0]).first?["data"] as? [String: Any]
         let opAuthor = op?["author"] as? String
@@ -265,7 +268,7 @@ enum ForumResolver {
                 guard let count = d["count"] as? Int, count > 0 else { return }
                 posts.append(ForumPost(
                     index: posts.count + 1, author: "", timeText: "",
-                    html: "<p>还有 \(count) 条回复，去 Reddit 查看</p>", depth: depth, isOP: false))
+                    html: "<p>" + L("forum.more.reddit", count) + "</p>", depth: depth, isOP: false))
             default: break
             }
         }
@@ -318,7 +321,7 @@ enum ForumResolver {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         guard let topic = try? decoder.decode(DiscourseTopic.self, from: data) else {
-            throw ForumFailure.badResponse("Discourse 主题 \(host)")
+            throw ForumFailure.badResponse(L("error.forum.detail.discourse", host))
         }
         let stream = topic.postStream.posts
         let opAuthor = stream.first(where: { $0.postNumber == 1 })?.username
@@ -340,7 +343,7 @@ enum ForumResolver {
         if let total = topic.postsCount, total > stream.count {
             posts.append(ForumPost(
                 index: 0, author: "", timeText: "",
-                html: "<p>还有 \(total - stream.count) 条回复，去原帖查看</p>", depth: 0, isOP: false))
+                html: "<p>" + L("forum.more.generic", total - stream.count) + "</p>", depth: 0, isOP: false))
         }
         return ForumThread(source: "discourse", title: topic.title ?? fallbackTitle,
                            postCount: rendered, posts: posts)
@@ -352,7 +355,7 @@ enum ForumResolver {
     /// 为这点差异写自定义 Decodable 不划算，照 parseReddit 的先例走 JSONSerialization。
     static func parseLobsters(data: Data, fallbackTitle: String) throws -> ForumThread {
         guard let root = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
-            throw ForumFailure.badResponse("Lobsters 响应不是对象")
+            throw ForumFailure.badResponse(L("error.forum.detail.lobsters"))
         }
         let submitter = username(root["submitter_user"])
         let fmt = relativeFormatter()
@@ -404,7 +407,7 @@ enum ForumResolver {
         // 不带条件请求头，.notModified 不可能出现。
         guard case .success(let data, _, _, _, _) = try await fetcher.fetch(
             url: URL(string: url)!, userAgent: userAgent) else {
-            throw ForumFailure.badResponse("意外的 304 响应")
+            throw ForumFailure.badResponse(L("error.forum.detail.unexpected304"))
         }
         return data
     }

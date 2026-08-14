@@ -14,10 +14,10 @@ enum FetchError: LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case .badURL(let s): return "URL 无效: \(s)"
+        case .badURL(let s): return L("error.fetch.badURL", s)
         case .status(let code, _): return "HTTP \(code)"
-        case .tooLarge: return "响应超过 10 MB 上限"
-        case .notHTTP: return "非 HTTP 响应"
+        case .tooLarge: return L("error.fetch.tooLarge")
+        case .notHTTP: return L("error.fetch.notHTTP")
         }
     }
 }

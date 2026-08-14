@@ -8,9 +8,33 @@ enum FullTextMode: String, Codable, CaseIterable, Sendable {
 
     var label: String {
         switch self {
-        case .auto: "自动"
-        case .always: "总是抓取"
-        case .never: "从不抓取"
+        case .auto: L("feed.fullTextMode.auto")
+        case .always: L("feed.fullTextMode.always")
+        case .never: L("feed.fullTextMode.never")
+        }
+    }
+}
+
+/// 按源的自动翻译开关。默认跟随设置里的全局开关。
+enum AutoTranslateMode: String, Codable, CaseIterable, Sendable {
+    case inherit
+    case always
+    case never
+
+    var label: String {
+        switch self {
+        case .inherit: L("feed.autoTranslate.inherit")
+        case .always: L("feed.autoTranslate.always")
+        case .never: L("feed.autoTranslate.never")
+        }
+    }
+
+    /// global = 设置里的「外文文章自动开启双语对照」。
+    func resolved(global: Bool) -> Bool {
+        switch self {
+        case .inherit: global
+        case .always: true
+        case .never: false
         }
     }
 }
@@ -61,6 +85,8 @@ struct Feed: Codable, Identifiable, Hashable, FetchableRecord, MutablePersistabl
     var refreshMinutes: Int?
     /// 只对 YouTube 源有意义：开着时 Shorts 条目直接不入库（需求 18）。
     var filterShorts: Bool = false
+    /// 自动翻译：跟随全局 / 始终 / 从不。
+    var autoTranslateMode: AutoTranslateMode = .inherit
 
     /// 已因硬错误停止自动重试。判定必须与调度器同一个函数，否则 YouTube 偶发 404 的
     /// 容忍期（需求 18）内，界面会显示"已停止"而后台其实还在退避重试。

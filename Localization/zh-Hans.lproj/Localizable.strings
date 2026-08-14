@@ -1,0 +1,503 @@
+/* 跨区域复用的按钮与名词。改这里会同时影响侧栏、列表、设置、各弹窗。 */
+"common.ok"= "好";
+"common.cancel"= "取消";
+"common.confirm"= "确定";
+"common.save"= "保存";
+"common.delete"= "删除";
+"common.rename"= "重命名…";
+"common.retry"= "重试";
+"common.unsubscribe"= "退订";
+"common.name"= "名称";
+"common.feeds"= "订阅";
+"common.folder"= "分组";
+"common.folders"= "分组";
+"common.noFolder"= "无分组";
+"common.allFeeds"= "全部订阅";
+"common.followGlobal"= "跟随全局";
+"common.markAllRead"= "标记全部已读";
+"common.openInBrowser"= "在浏览器打开";
+
+/* 侧栏：智能行、分区标题、工具栏、底栏 */
+"sidebar.smart.today"= "今天";
+"sidebar.smart.starred"= "星标";
+"sidebar.smart.muted"= "已静音";
+"sidebar.smart.all"= "全部文章";
+"sidebar.section.smart"= "智能";
+"sidebar.section.savedSearches"= "保存的搜索";
+"sidebar.toolbar.toggleSidebar"= "收起/展开侧栏";
+"sidebar.toolbar.refreshAll"= "刷新全部";
+"sidebar.toolbar.refreshAll.help"= "刷新全部 (⌘R)";
+"sidebar.bottomBar.add.help"= "添加订阅或分组";
+"sidebar.bottomBar.settings.help"= "设置 (⌘,)";
+
+/* 侧栏订阅行的状态图标提示 */
+"sidebar.feed.hardError.help"= "HTTP %lld，已停止自动重试；右键手动刷新可重试";
+"sidebar.feed.deferred.help"= "暂缓到 %1$@：%2$@";
+"sidebar.feed.fetchFailed"= "抓取失败";
+"sidebar.feed.stale.help"= "最后更新于 %lld 天前";
+
+/* 侧栏分组：重命名、新建、右键菜单 */
+"sidebar.folder.rename.title"= "重命名分组";
+"sidebar.folder.new.title"= "新建分组";
+"sidebar.folder.new.namePlaceholder"= "分组名";
+"sidebar.folder.new.create"= "创建";
+"sidebar.folder.new.menu"= "新建分组…";
+"sidebar.folder.menu.hideBadge"= "关闭未读徽标";
+"sidebar.folder.menu.showBadge"= "开启未读徽标";
+"sidebar.folder.menu.delete"= "删除分组";
+
+/* 文章列表：空状态 */
+"list.empty.unread"= "没有未读文章";
+"list.empty.starred"= "没有星标文章";
+"list.empty.filtered.description"= "切换回「全部」可查看所有文章。";
+"list.empty.muted"= "没有已静音文章";
+"list.empty.muted.description"= "静音规则命中的文章会出现在这里。";
+"list.empty.none"= "没有文章";
+"list.empty.none.description"= "添加订阅或刷新后，文章会出现在这里。";
+
+/* 文章列表：工具栏、标题、头部统计、未读过滤 */
+"list.toolbar.undoMarkAllRead"= "撤销全部已读";
+"list.toolbar.undoMarkAllRead.help"= "撤销刚才的全部标为已读";
+"list.toolbar.markAllRead"= "全部标为已读";
+"list.toolbar.markAllRead.help"= "当前列表全部标为已读";
+"list.title.allUnread"= "全部未读";
+"list.title.articles"= "文章";
+"list.filter.showAll"= "显示全部";
+"list.filter.unreadOnly"= "只看未读";
+"list.header.unreadOnly"= "只看未读 · %lld 篇";
+"list.header.summary"= "%1$lld 篇，%2$lld 未读";
+
+/* 文章列表：行右键菜单 */
+"list.menu.markUnread"= "标为未读";
+"list.menu.markRead"= "标为已读";
+"list.menu.unstar"= "取消星标";
+"list.menu.star"= "加星标";
+"list.menu.markReadFromHere"= "这篇及以下标为已读";
+"list.menu.allowMuted"= "放行并加入规则例外";
+"list.menu.copyLink"= "复制链接";
+
+/* 文章列表：行内标记与时间 */
+"list.badge.collapsed"= "已折叠";
+"list.badge.paywall"= "付费墙";
+"list.badge.paywall.help"= "该站点通常需要订阅才能读全文";
+"list.badge.duplicateSources"= "%lld 个来源";
+"list.date.none"= "无日期";
+"list.date.justNow"= "刚刚";
+"list.date.yesterday"= "昨天";
+
+/* 阅读器：空状态与正文占位 */
+"reader.empty.title"= "选一篇文章";
+"reader.empty.description"= "↩ 打开原文 · T 双语 · ⌘↩ 阅读模式 · j/k 上下篇";
+"reader.empty.body"= "这篇没有正文，试试右上角在浏览器打开原文。";
+
+/* 阅读器工具栏 */
+"reader.toolbar.star.help"= "星标 (s)";
+"reader.toolbar.openOriginal.help"= "用默认浏览器打开原文";
+"reader.toolbar.refreshForum"= "刷新回帖";
+"reader.toolbar.refreshForum.help"= "拉取最新回帖（不改变阅读位置）";
+
+/* 阅读器：双语对照 */
+"reader.translate.toggle"= "双语对照";
+"reader.translate.toggle.help"= "双语对照 (T)";
+"reader.translate.download"= "下载翻译模型";
+"reader.translate.download.help"= "需要下载翻译模型，点击下载";
+"reader.translate.downloadTimeout.help"= "模型下载超时，点击重试";
+"reader.translate.failed.help"= "翻译失败：%@，点击重试";
+"reader.translate.retry"= "重试翻译";
+
+/* 阅读器：全文抓取 */
+"reader.fullText.extract"= "抓取全文";
+"reader.fullText.showOriginal"= "恢复原文";
+"reader.fullText.disabled"= "全文抓取已关闭";
+"reader.fullText.disabled.help"= "此源设置为从不抓取全文；可在订阅右键菜单的阅读设置中修改";
+"reader.fullText.failed"= "未能抓取全文：%@";
+"reader.fullText.openInBrowser"= "浏览器打开";
+"reader.fullText.neverForFeed"= "此源从不抓取";
+
+/* 阅读器：Reddit 正文重排补的链接行 */
+"reader.reddit.link"= "链接：";
+
+/* 设置 → 外观 */
+"settings.appearance.title"= "外观";
+"settings.appearance.theme"= "主题";
+"settings.appearance.theme.system"= "跟随系统";
+"settings.appearance.theme.light"= "浅色";
+"settings.appearance.theme.dark"= "深色";
+"settings.appearance.note"= "主题立即生效。";
+
+/* 设置 → 阅读 */
+"settings.reading.title"= "阅读";
+"settings.reading.fontSize"= "正文字号";
+"settings.reading.fontSize.note"= "字号对之后打开的文章生效。";
+"settings.reading.markReadOnOpen"= "打开即标为已读";
+"settings.reading.markReadOnScrollEnd"= "滚动到底标为已读";
+"settings.reading.markRead.note"= "两个开关互不依赖；都关闭时只能用 m 或右键手动标记。";
+"settings.reading.preview.title"= "文章标题预览";
+"settings.reading.preview.body"= "正文会以这个大小显示。The quick brown fox jumps over the lazy dog.";
+"settings.reading.preview.translation"= "译文与正文同字号，带左侧强调线。";
+
+/* 设置 → 快捷键（分类页与帮助菜单的总表共用） */
+"settings.shortcuts.title"= "快捷键";
+"settings.shortcuts.window.title"= "2W 快捷键";
+"settings.shortcuts.recording"= "按下新键位…";
+"settings.shortcuts.change"= "更改";
+"settings.shortcuts.reset"= "恢复";
+"settings.shortcuts.resetAll"= "全部恢复默认";
+"settings.shortcuts.note"= "点「更改」后直接按目标键；Esc 取消。修改立即生效。";
+"settings.shortcuts.conflict"= "「%1$@」已被「%2$@」占用，换一个键位。";
+
+/* 设置 → 快捷键：可重绑定动作的名称 */
+"settings.shortcuts.action.nextArticle"= "下一篇";
+"settings.shortcuts.action.prevArticle"= "上一篇";
+"settings.shortcuts.action.nextUnread"= "下一篇未读";
+"settings.shortcuts.action.toggleRead"= "已读/未读";
+"settings.shortcuts.action.toggleReadAlias"= "已读/未读（备用键）";
+"settings.shortcuts.action.toggleStar"= "星标";
+"settings.shortcuts.action.translate"= "双语对照";
+"settings.shortcuts.action.openOriginal"= "在浏览器打开原文";
+"settings.shortcuts.action.immersive"= "阅读模式";
+"settings.shortcuts.action.spaceAdvance"= "翻一屏 / 到底跳下一篇未读";
+
+/* 帮助菜单的快捷键总表：这一列的措辞与上面的动作名不同，故各自成条 */
+"settings.shortcuts.key.immersiveToggle"= "沉浸模式开关";
+"settings.shortcuts.key.immersiveExit"= "退出沉浸模式";
+"settings.shortcuts.key.spaceAdvance"= "翻一屏；到底后跳下一篇未读";
+"settings.shortcuts.key.toggleRead"= "标为已读 / 未读";
+"settings.shortcuts.key.toggleReadAlias"= "标为已读 / 未读（与 m 同效）";
+"settings.shortcuts.key.toggleStar"= "加星标 / 取消星标";
+"settings.shortcuts.key.translateToggle"= "双语对照开关";
+"settings.shortcuts.key.addFeed"= "添加订阅";
+"settings.shortcuts.key.savePage"= "保存网页";
+"settings.shortcuts.key.settings"= "设置";
+
+/* 设置 → 翻译 */
+"settings.translation.title"= "翻译";
+"settings.translation.engine"= "引擎";
+"settings.translation.engine.apple"= "系统翻译（离线）";
+"settings.translation.engine.api"= "API 翻译";
+"settings.translation.apiModel"= "模型名";
+"settings.translation.targetLang"= "译文语言";
+"settings.translation.targetLang.note"= "对之后打开的文章生效；换语言后旧译文缓存自动失效重翻。";
+"settings.translation.auto"= "外文文章自动开启双语对照";
+"settings.translation.auto.note"= "关闭后仍可按 T 手动翻译；Key 存本机钥匙串，设置对之后打开的文章生效。";
+
+/* 设置 → 刷新 */
+"settings.refresh.title"= "刷新";
+"settings.refresh.interval"= "自动刷新间隔";
+"settings.refresh.interval.15"= "15 分钟";
+"settings.refresh.interval.30"= "30 分钟";
+"settings.refresh.interval.60"= "1 小时";
+"settings.refresh.interval.120"= "2 小时";
+"settings.refresh.interval.note"= "单个源可以在右键「抓取设置…」里覆盖这个间隔。";
+"settings.refresh.domainInterval"= "同域请求间隔";
+"settings.refresh.domainInterval.off"= "关闭";
+"settings.refresh.domainInterval.5"= "5 秒";
+"settings.refresh.domainInterval.10"= "10 秒";
+"settings.refresh.domainInterval.30"= "30 秒";
+"settings.refresh.domainInterval.note"= "同一网站的多个订阅之间至少间隔这么久再发下一个请求。";
+"settings.refresh.initialRead"= "新增订阅的首批文章";
+"settings.refresh.initialRead.unread"= "全部未读";
+"settings.refresh.initialRead.read"= "全部已读";
+"settings.refresh.initialRead.recent"= "只留最近几条未读";
+"settings.refresh.initialRead.keepCount"= "保留未读条数";
+"settings.refresh.initialRead.items"= "%lld 条";
+"settings.refresh.initialRead.note"= "只影响该源第一次抓取的那批文章。";
+"settings.refresh.defaultFullText"= "默认全文抓取";
+"settings.refresh.defaultFullText.note"= "只影响之后新增的订阅；已有订阅在右键「阅读设置…」里改。";
+
+/* 设置 → 保留 */
+"settings.retention.title"= "保留";
+"settings.retention.section"= "保留策略（星标永久保留）";
+"settings.retention.count"= "每源保留条数";
+"settings.retention.days"= "保留时间";
+"settings.retention.days.7"= "7 天";
+"settings.retention.days.30"= "30 天";
+"settings.retention.days.90"= "90 天";
+"settings.retention.days.365"= "一年";
+"settings.retention.days.forever"= "永久";
+"settings.retention.note"= "单个订阅可在右键「阅读设置…」里覆盖这两项。";
+
+/* 设置 → 订阅：批量退订的筛选、清单与确认 */
+"settings.subscriptions.filter"= "筛选";
+"settings.subscriptions.notUpdated"= "未更新时长";
+"settings.subscriptions.notRead"= "近期未读";
+"settings.subscriptions.failingOnly"= "仅显示抓取失败的订阅";
+"settings.subscriptions.filter.note"= "未更新时长按最后一篇文章计算，近期未读按最后一篇已读文章计算。从未收到文章或从未读过的订阅在任何档位下均会列出。";
+"settings.subscriptions.empty"= "无符合条件的订阅。";
+"settings.subscriptions.matched"= "符合条件的订阅（%lld）";
+"settings.subscriptions.selectAll"= "全选";
+"settings.subscriptions.deselectAll"= "取消选择";
+"settings.subscriptions.keepStarred"= "保留星标文章";
+"settings.subscriptions.keepStarred.on"= "星标文章继续保留在「星标」中，其余文章随订阅删除。";
+"settings.subscriptions.keepStarred.off"= "订阅及其全部文章一并删除，星标不保留。";
+"settings.subscriptions.unsubscribeSelected"= "退订所选（%lld）";
+"settings.subscriptions.irreversible"= "退订不可撤销。";
+"settings.subscriptions.unsubscribe.confirm"= "退订 %lld 个订阅？";
+"settings.subscriptions.andMore"= "…… 共 %lld 个";
+
+/* 设置 → 订阅：每行的统计摘要 */
+"settings.subscriptions.detail.staleDays"= "未更新 %lld 天";
+"settings.subscriptions.detail.neverUpdated"= "从未收到文章";
+"settings.subscriptions.detail.unreadDays"= "未读 %lld 天";
+"settings.subscriptions.detail.neverRead"= "从未读过";
+"settings.subscriptions.detail.noRecent"= "近 30 天无新文章";
+"settings.subscriptions.detail.recent"= "近 30 天 %1$lld 篇 / 已读 %2$lld 篇";
+
+/* 设置 → 订阅：两个时长条件共用的天数档位 */
+"settings.subscriptions.window.any"= "不限";
+"settings.subscriptions.window.d3"= "3 天";
+"settings.subscriptions.window.d7"= "7 天";
+"settings.subscriptions.window.d15"= "15 天";
+"settings.subscriptions.window.d30"= "30 天及以上";
+
+/* 设置 → 静音：规则列表 */
+"settings.mute.title"= "静音";
+"settings.mute.new"= "新建静音规则…";
+"settings.mute.delete.help"= "删除这条规则";
+"settings.mute.note"= "规则保存或删除后立即回扫历史；已静音文章可在侧栏检查并放行。";
+"settings.mute.scope.global"= "全局";
+"settings.mute.saved"= "保存成功，本次命中 %lld 篇。";
+"settings.mute.saveFailed"= "保存失败：%@";
+
+/* 设置 → 静音：规则各字段的取值名 */
+"settings.mute.matchType.contains"= "包含";
+"settings.mute.matchType.regex"= "正则";
+"settings.mute.field.title"= "标题";
+"settings.mute.field.body"= "正文";
+"settings.mute.field.author"= "作者";
+"settings.mute.field.category"= "分类标签";
+"settings.mute.field.all"= "全部字段";
+"settings.mute.action.hide"= "隐藏";
+"settings.mute.action.markRead"= "标记已读";
+"settings.mute.action.collapse"= "折叠";
+
+/* 设置 → 静音：新建规则弹窗 */
+"settings.mute.editor.title"= "新建静音规则";
+"settings.mute.editor.condition"= "条件";
+"settings.mute.editor.matchType"= "匹配";
+"settings.mute.editor.pattern.regex"= "正则表达式";
+"settings.mute.editor.pattern.keyword"= "关键词";
+"settings.mute.editor.field"= "字段";
+"settings.mute.editor.scope"= "范围";
+"settings.mute.editor.scope.appliesTo"= "作用于";
+"settings.mute.editor.exceptions"= "例外词（一行一个，可留空）";
+"settings.mute.editor.exceptions.note"= "任一字段含例外词时，这条规则不会触发。";
+"settings.mute.editor.action"= "动作";
+"settings.mute.editor.action.onMatch"= "命中后";
+"settings.mute.editor.save"= "保存并回扫";
+
+/* 设置 → 数据 */
+"settings.data.title"= "数据";
+"settings.data.dbPath"= "数据库位置";
+
+/* 添加订阅 */
+"feed.add.menu"= "添加订阅…";
+"feed.add.title"= "添加订阅";
+"feed.add.placeholder"= "RSS / Atom / JSON Feed 或网页地址";
+"feed.add.submit"= "添加";
+"feed.add.candidates.title"= "这个页面有 %lld 个 feed";
+"feed.add.candidates.submit"= "订阅所选";
+
+/* 保存网页 */
+"feed.savePage.menu"= "保存网页…";
+"feed.savePage.title"= "保存网页";
+"feed.savePage.placeholder"= "网页地址";
+"feed.savePage.note"= "抓取正文后存进「手动保存」，与订阅的文章同列。";
+
+/* 订阅右键菜单 */
+"feed.menu.refresh"= "刷新此源";
+"feed.menu.reloadFetchState"= "重新载入";
+"feed.menu.clearAndReload"= "清空并重新载入…";
+"feed.menu.readingSettings"= "阅读设置…";
+"feed.menu.fetchSettings"= "抓取设置…";
+"feed.menu.relocate"= "查找新地址…";
+"feed.menu.openSite"= "打开网站";
+"feed.menu.copyURL"= "复制 Feed 链接";
+"feed.menu.moveToFolder"= "移动到分组";
+"feed.menu.folderSuggested"= "%@（建议）";
+
+/* 订阅：重命名与清空重载 */
+"feed.rename.title"= "重命名订阅";
+"feed.reload.title"= "清空并重新载入";
+"feed.reload.message"= "删除「%@」已入库的文章，然后从头抓一遍。星标文章会保留；源里已经滚出去的旧文章不会回来。";
+
+/* 订阅 → 阅读设置 */
+"feed.reading.fullText"= "全文";
+"feed.reading.fullText.mode"= "策略";
+"feed.reading.fullText.mode.auto.note"= "检测到 feed 只给一段摘要时，在打开文章后抓取全文。";
+"feed.reading.fullText.mode.always.note"= "打开文章时总是尝试从原站提取全文。";
+"feed.reading.fullText.mode.never.note"= "只显示 feed 自带正文，不访问原站抓取全文。";
+"feed.reading.selector"= "CSS 选择器（可选）";
+"feed.reading.selector.placeholder"= "例如 article .post-content";
+"feed.reading.selector.note"= "填写后优先提取匹配区域；不匹配时会显示具体失败原因。";
+"feed.reading.unread"= "未读";
+"feed.reading.unread.badge"= "在侧栏显示未读数";
+"feed.reading.unread.note"= "关闭后此源不计入任何未读徽标；文章照常进列表。";
+"feed.reading.retention"= "保留（覆盖全局设置）";
+"feed.reading.retention.count"= "保留条数";
+"feed.reading.retention.days"= "保留时间";
+"feed.reading.retention.note"= "星标文章永远不会被清理。";
+"feed.reading.youtube.filterShorts"= "过滤 Shorts";
+"feed.reading.youtube.filterShorts.note"= "开启后新抓到的 Shorts 视频不入库；已入库的条目不受影响。";
+"feed.reading.youtube.limit.note"= "YouTube 官方 feed 只提供最近 15 条视频。";
+
+/* 订阅 → 抓取设置 */
+"feed.fetch.interval"= "刷新间隔";
+"feed.fetch.interval.note"= "覆盖设置里的全局间隔，只影响这个源的自动刷新。";
+"feed.fetch.userAgent"= "User-Agent（可选）";
+"feed.fetch.userAgent.placeholder"= "留空使用默认";
+"feed.fetch.userAgent.note"= "有些站点会按 UA 拒绝请求。示例：Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15";
+"feed.fetch.basicAuth"= "HTTP Basic 认证";
+"feed.fetch.basicAuth.user"= "用户名";
+"feed.fetch.basicAuth.password"= "密码";
+"feed.fetch.basicAuth.note"= "仅用于需要登录的 feed（如私有 Reddit 源）；密码存本机钥匙串。清空用户名即关闭认证。";
+
+/* 订阅 → 查找新地址 */
+"feed.relocate.current"= "当前地址";
+"feed.relocate.new"= "新地址";
+"feed.relocate.searching"= "正在从站点页面查找…";
+"feed.relocate.notFound"= "没有发现新地址";
+"feed.relocate.replace"= "替换";
+
+/* 源健康面板 */
+"feed.health.window.title"= "源健康";
+"feed.health.menu"= "源健康…";
+"feed.health.column.recent"= "近 30 天";
+"feed.health.column.read"= "已读";
+"feed.health.column.muted"= "静音命中";
+"feed.health.column.lastArticle"= "最后一篇";
+"feed.health.column.status"= "状态";
+"feed.health.unsubscribeSelected"= "退订所选";
+"feed.health.unsubscribe.confirm"= "退订所选的 %lld 个订阅？";
+"feed.health.unsubscribe.message"= "这些订阅和它们的文章都会被删除，不能撤销。";
+"feed.health.status.hardError"= "硬错误 HTTP %lld";
+"feed.health.status.deferred"= "暂缓中";
+"feed.health.status.ok"= "正常";
+
+/* 订阅的全文抓取策略；容器源与无标题文章的名称 */
+"feed.fullTextMode.auto"= "自动";
+"feed.fullTextMode.always"= "总是抓取";
+"feed.fullTextMode.never"= "从不抓取";
+"feed.container.starredArchive"= "已退订";
+"feed.container.savedPages"= "手动保存";
+"feed.article.untitled"= "(无标题)";
+
+/* 搜索与保存的搜索 */
+"search.prompt"= "搜索文章";
+"search.rename.title"= "重命名搜索";
+"search.save.title"= "保存搜索";
+"search.save.menu"= "保存这次搜索…";
+"search.save.message"= "保存后出现在侧栏「保存的搜索」，点开即回到这次的词与范围。";
+"search.scope"= "范围";
+"search.scope.current"= "当前范围";
+"search.scope.currentFolder"= "当前分组";
+"search.scope.currentFeed"= "当前订阅";
+"search.scopeMenu.help"= "搜索范围与时间";
+"search.window"= "时间";
+"search.window.any"= "不限时间";
+"search.window.week"= "最近 7 天";
+"search.window.month"= "最近 30 天";
+"search.window.year"= "最近一年";
+
+/* OPML 导入导出 */
+"data.opml.import.menu"= "导入 OPML…";
+"data.opml.export.menu"= "导出 OPML…";
+"data.opml.import.panel"= "选择 OPML 文件";
+"data.opml.untitled"= "(未命名)";
+
+/* 数据库备份 */
+"data.backup.menu"= "备份数据库…";
+"data.backup.openFolder"= "打开备份文件夹";
+"data.backup.panel"= "保存数据库快照";
+"data.backup.running"= "正在备份…";
+"data.backup.done"= "已备份到 %@。";
+"data.backup.failed"= "备份失败：%@";
+"data.backup.summary"= "%1$lld 个订阅，%2$lld 篇文章";
+"data.backup.note"= "备份是一致性快照，可在应用运行时进行。订阅列表每天自动备份一份 OPML，保留最近 7 份。";
+
+/* 从备份恢复 */
+"data.restore.menu"= "从备份恢复…";
+"data.restore.panel"= "选择 2W 数据库备份";
+"data.restore.verified"= "备份已校验：%@。重启后生效。";
+"data.restore.pending"= "%1$@（%2$@）将在下次启动时替换当前数据库，当前数据库会保留为 bifeed.sqlite.bak。";
+"data.restore.failed"= "无法恢复：%@";
+"data.restore.needsRelaunch"= "恢复后需要重启";
+"data.restore.later"= "稍后重启";
+"data.restore.now"= "立即重启";
+
+/* 检查更新 */
+"update.menu.check"= "检查更新…";
+"update.section.title"= "更新";
+"update.section.note"= "只检查并提示，不会自动下载或安装。跳过的版本可在这里清除。";
+"update.checkOnLaunch"= "启动时检查更新";
+"update.currentVersion"= "当前版本";
+"update.skipped"= "已跳过 %@";
+"update.unskip"= "不再跳过";
+"update.check.title"= "检查更新";
+"update.check.upToDate"= "已是最新版本（%@）。";
+"update.check.failed"= "检查更新失败：%@";
+"update.available.title"= "有新版本 %@";
+"update.available.current"= "当前版本 %@。";
+"update.available.download"= "下载";
+"update.available.skip"= "跳过此版本";
+"update.available.later"= "稍后";
+
+/* 论坛楼层 */
+"forum.replies"= "回帖";
+"forum.comments"= "评论";
+"forum.opBadge"= "楼主";
+"forum.score"= "%lld 分";
+"forum.loading"= "正在加载回帖…";
+"forum.loadFailed"= "回帖加载失败：%@";
+"forum.more.reddit"= "还有 %lld 条回复，去 Reddit 查看";
+"forum.more.generic"= "还有 %lld 条回复，去原帖查看";
+
+/* 错误：订阅与抓取 */
+"error.feed.duplicate"= "已经订阅过这个源了";
+"error.fetch.badURL"= "URL 无效: %@";
+"error.fetch.tooLarge"= "响应超过 10 MB 上限";
+"error.fetch.notHTTP"= "非 HTTP 响应";
+"error.parse.unparseable"= "无法解析 feed: %@";
+"error.opml.malformed"= "OPML 格式错误";
+"error.subscribe.noFeedFound"= "这个地址里没有发现 feed";
+
+/* 错误：备份与更新 */
+"error.backup.notBiFeedDatabase"= "这个文件不是 2W 数据库备份。";
+"error.backup.newerVersion"= "备份来自更新版本的 2W（未知迁移：%@）。请先升级应用再恢复。";
+"error.update.rateLimited"= "GitHub 暂时限制了请求频率，过一会儿再试。";
+"error.update.badResponse"= "没能读到 GitHub 上的版本信息。";
+
+/* 错误：API 翻译 */
+"error.api.notConfigured"= "API 翻译未配置：请在设置里填写 Base URL、模型名和 API Key";
+"error.api.badStatus"= "API 返回 HTTP %lld";
+"error.api.badPayload"= "API 返回格式不符合约定";
+
+/* 错误：全文抓取 */
+"error.fullText.loadFailed"= "页面加载失败：%@";
+"error.fullText.timeout"= "页面加载超时（20 秒）";
+"error.fullText.scriptFailed"= "正文提取失败：%@";
+"error.fullText.emptyContent"= "未能提取到正文";
+"error.fullText.selectorNoMatch"= "CSS 选择器未匹配任何内容：";
+
+/* 错误：论坛楼层。detail 会被拼进 error.forum.badResponse */
+"error.forum.badResponse"= "论坛数据无法解析: %@";
+"error.forum.notForum"= "这不是论坛帖";
+"error.forum.redditBlocked"= "Reddit 拒绝了当前网络出口的未登录评论请求（IP 风控）。文章不受影响；想看回帖用「在浏览器打开」，或让代理把 reddit.com 走住宅性质的出口。";
+"error.forum.detail.v2ex"= "V2EX 回帖 %lld";
+"error.forum.detail.reddit"= "Reddit 响应不是两元素数组";
+"error.forum.detail.discourse"= "Discourse 主题 %@";
+"error.forum.detail.lobsters"= "Lobsters 响应不是对象";
+"error.forum.detail.unexpected304"= "意外的 304 响应";
+
+/* 导出的 Markdown 文档 */
+"export.markdown.action"= "导出 Markdown";
+"export.untitled"= "未命名";
+"export.translationPrefix"= "译：";
+"export.forum.heading"= "%1$@（%2$lld）";
+
+/* 按源的自动翻译（订阅右键 →「阅读设置…」） */
+"feed.reading.autoTranslate"= "自动翻译";
+"feed.reading.autoTranslate.note"= "「跟随全局」用设置里的总开关；外文文章才会翻译。";
+"feed.autoTranslate.inherit"= "跟随全局";
+"feed.autoTranslate.always"= "始终";
+"feed.autoTranslate.never"= "从不";

@@ -22,9 +22,9 @@ struct ReaderView: View {
             ReaderPane(articleId: articleId)
         } else {
             ContentUnavailableView {
-                Label("选一篇文章", systemImage: "doc.richtext")
+                Label(L("reader.empty.title"), systemImage: "doc.richtext")
             } description: {
-                Text("↩ 打开原文 · T 双语 · ⌘↩ 阅读模式 · j/k 上下篇")
+                Text(L("reader.empty.description"))
             }
         }
     }
@@ -63,6 +63,10 @@ private struct ReaderPane: View {
     @State private var fullTextSelector: String?
     @State private var autoExtractAttempted = false
     @AppStorage(SettingsKey.markReadOnScrollEnd) private var markReadOnScrollEnd = false
+    /// 当前文章所属源的自动翻译设置，来自 readerData。
+    @State private var autoTranslateMode = AutoTranslateMode.inherit
+    /// 楼层落地后的二次语言识别每篇只做一次，避免「刷新回帖」反复触发。
+    @State private var redetectedAfterForum = false
 
     init(articleId: Int64) {
         self.articleId = articleId
@@ -92,6 +96,8 @@ private struct ReaderPane: View {
         fullTextMode = .auto
         fullTextSelector = nil
         autoExtractAttempted = false
+        autoTranslateMode = .inherit
+        redetectedAfterForum = false
         // 探测新文章是否已有全文，决定按钮初始高亮（页面本身由 readerData 直接给全文）。
         // 结构体闭包捕获的 self.articleId 是旧拷贝，不能拿来做时效判定；靠 cancel + isCancelled 把关。
         fullTextProbe?.cancel()
@@ -142,23 +148,23 @@ private struct ReaderPane: View {
                             try await db.setStarred(articleId: articleId, !article.isStarred)
                         }
                     } label: {
-                        Label(article.isStarred ? "取消星标" : "加星标",
+                        Label(article.isStarred ? L("list.menu.unstar") : L("list.menu.star"),
                               systemImage: article.isStarred ? "star.fill" : "star")
                             .foregroundStyle(article.isStarred ? .yellow : .secondary)
                     }
                     .buttonStyle(.borderless)
                     .readerToolbarIcon()
-                    .help("星标 (s)")
+                    .help(L("reader.toolbar.star.help"))
                     if let urlString = article.url, let url = URL(string: urlString) {
                         Button {
                             // 推迟一拍让按钮先完成点击态释放再失焦，否则从浏览器回来按钮停在按下态
                             DispatchQueue.main.async { NSWorkspace.shared.open(url) }
                         } label: {
-                            Label("在浏览器打开", systemImage: "safari")
+                            Label(L("common.openInBrowser"), systemImage: "safari")
                         }
                         .buttonStyle(.borderless)
                     .readerToolbarIcon()
-                        .help("用默认浏览器打开原文")
+                        .help(L("reader.toolbar.openOriginal.help"))
                         // 论坛帖（V2EX/HN/Reddit）不给抓全文：feed 里正文本就完整、楼层另行渲染，
                         // 对论坛页跑提取只会抓到导航壳子（用户实测：点了就白板）。
                         // 换成「刷新回帖」：原地换楼层 DOM，不重载文档，阅读位置不动（Paul 点名）。
@@ -169,11 +175,14 @@ private struct ReaderPane: View {
                                 Button {
                                     refreshForum()
                                 } label: {
-                                    Label("刷新回帖", systemImage: "bubble.left.and.text.bubble.right")
+                                    Label(
+                                        L("reader.toolbar.refreshForum"),
+                                        systemImage: "bubble.left.and.text.bubble.right"
+                                    )
                                 }
                                 .buttonStyle(.borderless)
                     .readerToolbarIcon()
-                                .help("拉取最新回帖（不改变阅读位置）")
+                                .help(L("reader.toolbar.refreshForum.help"))
                             }
                         } else {
                             fullTextControl(url: url)
@@ -183,11 +192,11 @@ private struct ReaderPane: View {
                 Button {
                     exportMarkdown()
                 } label: {
-                    Label("导出 Markdown", systemImage: "square.and.arrow.up")
+                    Label(L("export.markdown.action"), systemImage: "square.and.arrow.up")
                 }
                 .buttonStyle(.borderless)
                     .readerToolbarIcon()
-                .help("导出 Markdown")
+                .help(L("export.markdown.action"))
             }
         }
         // T 由列表的 NSEvent 监听器消费后转发为通知：不挂在按钮上，
@@ -234,30 +243,30 @@ private struct ReaderPane: View {
             if downloadTask != nil || service.state == .translating {
                 ProgressView().controlSize(.small)
             } else if downloadTimedOut {
-                retryButton(help: "模型下载超时，点击重试")
+                retryButton(help: L("reader.translate.downloadTimeout.help"))
             } else {
                 switch service.state {
                 case .needsDownload:
                     Button {
                         startDownload()
                     } label: {
-                        Label("下载翻译模型", systemImage: "arrow.down.circle")
+                        Label(L("reader.translate.download"), systemImage: "arrow.down.circle")
                     }
                     .buttonStyle(.borderless)
                     .readerToolbarIcon()
-                    .help("需要下载翻译模型，点击下载")
+                    .help(L("reader.translate.download.help"))
                 case .failed(let reason):
-                    retryButton(help: "翻译失败：\(reason)，点击重试")
+                    retryButton(help: L("reader.translate.failed.help", reason))
                 case .idle, .translating:
                     Button {
                         toggleTranslation()
                     } label: {
-                        Label("双语对照", systemImage: "translate")
+                        Label(L("reader.translate.toggle"), systemImage: "translate")
                             .foregroundStyle(translated ? Color.accentColor : Color.secondary)
                     }
                     .buttonStyle(.borderless)
                     .readerToolbarIcon()
-                    .help("双语对照 (T)")
+                    .help(L("reader.translate.toggle.help"))
                 }
             }
         }
@@ -279,7 +288,7 @@ private struct ReaderPane: View {
             downloadTimedOut = false
             Task { await enableTranslation() }
         } label: {
-            Label("重试翻译", systemImage: "exclamationmark.arrow.circlepath")
+            Label(L("reader.translate.retry"), systemImage: "exclamationmark.arrow.circlepath")
         }
         .buttonStyle(.borderless)
                     .readerToolbarIcon()
@@ -313,19 +322,19 @@ private struct ReaderPane: View {
         if extractTask != nil {
             ProgressView().controlSize(.small)
         } else if fullTextMode == .never {
-            Label("全文抓取已关闭", systemImage: "doc.text.magnifyingglass")
+            Label(L("reader.fullText.disabled"), systemImage: "doc.text.magnifyingglass")
                 .foregroundStyle(.tertiary)
-                .help("此源设置为从不抓取全文；可在订阅右键菜单的阅读设置中修改")
+                .help(L("reader.fullText.disabled.help"))
         } else {
             Button {
                 toggleFullText(url: url)
             } label: {
-                Label("抓取全文", systemImage: "doc.text.magnifyingglass")
+                Label(L("reader.fullText.extract"), systemImage: "doc.text.magnifyingglass")
                     .foregroundStyle(showingFullText ? Color.accentColor : Color.secondary)
             }
             .buttonStyle(.borderless)
                     .readerToolbarIcon()
-            .help(showingFullText ? "恢复原文" : "抓取全文")
+            .help(showingFullText ? L("reader.fullText.showOriginal") : L("reader.fullText.extract"))
         }
     }
 
@@ -373,17 +382,17 @@ private struct ReaderPane: View {
     private func fullTextFailureBar(_ failure: FullTextFailure) -> some View {
         HStack(spacing: DesignTokens.Spacing.lg) {
             Image(systemName: "exclamationmark.triangle.fill").foregroundStyle(.orange)
-            Text("未能抓取全文：\(failure.message)")
+            Text(L("reader.fullText.failed", failure.message))
                 .font(.system(size: DesignTokens.Typography.metadata))
                 .lineLimit(2)
             Spacer()
-            Button("重试") {
+            Button(L("common.retry")) {
                 startExtract(url: failure.url, selector: failure.selector)
             }
-            Button("浏览器打开") {
+            Button(L("reader.fullText.openInBrowser")) {
                 DispatchQueue.main.async { NSWorkspace.shared.open(failure.url) }
             }
-            Button("此源从不抓取") {
+            Button(L("reader.fullText.neverForFeed")) {
                 guard let feedId = meta.value?.feedId else { return }
                 fullTextMode = .never
                 extractFailure = nil
@@ -411,6 +420,7 @@ private struct ReaderPane: View {
               let loadedId = data.article.id else { return }
         fullTextMode = data.fullTextMode
         fullTextSelector = data.fullTextSelector
+        autoTranslateMode = data.autoTranslateMode
         showingFullText = data.extractedHTML != nil
         hasFullText = hasFullText || data.extractedHTML != nil
         startAutomaticFullTextIfNeeded(data)
@@ -443,6 +453,11 @@ private struct ReaderPane: View {
     }
 
     /// 识别正文主语言，决定翻译按钮显隐；设置中的自动翻译总开关开启时进入双语。
+    /// 识别正文主语言并决定要不要自动进入双语。
+    ///
+    /// 论坛帖的 feed 正文往往只是个占位符——HN 的整篇正文就是一个 `Comments` 链接，
+    /// 真正的文字要等楼层注入之后才在页面上。所以这个函数会被调用两次：
+    /// 页面加载完一次，楼层落地后再一次（`redetectAfterForum`）。
     private func detectLanguage(webView: WKWebView, articleId: Int64) async {
         // 求值前页面被替换/销毁属生命周期竞态，放弃本次而不是报错
         guard let json = try? await webView.evaluateJavaScript("window.__bifeed.extract()") as? String,
@@ -458,10 +473,15 @@ private struct ReaderPane: View {
             return
         }
         sourceLang = lang
+        guard !translated else { return } // 楼层重翻由 showForumThread 负责，别重复触发
+
+        // 按源开关优先于全局开关：inherit 才看设置里的总开关
+        let global = UserDefaults.standard.bool(forKey: SettingsKey.autoTranslateForeign)
+        guard autoTranslateMode.resolved(global: global) else { return }
+
         // 自动翻译只在模型已经装好时进行。未装就停在这里——工具栏会显示「下载翻译模型」
         // 按钮由用户决定。否则系统会为没装的语言对自己弹下载框，
         // 用户等于被追着下载一堆自己根本用不到的语言（Paul 实测报的）。
-        guard UserDefaults.standard.bool(forKey: SettingsKey.autoTranslateForeign) else { return }
         guard await AppEnvironment.currentEngine().availability(
             source: lang, target: TranslationService.targetLang) == .installed else {
             service.markNeedsDownload()
@@ -602,8 +622,10 @@ private struct ReaderPane: View {
                 await setForumHTML("", in: webView)
                 return
             }
-            let message = ReaderTemplate.escape("回帖加载失败：\(error.localizedDescription)")
-            await setForumHTML("<p class=\"bf-empty\">\(message)</p>", in: webView)
+            let message = ReaderTemplate.escape(L("forum.loadFailed", error.localizedDescription))
+            // 先落到局部量：校验脚本按 L 加左括号加引号提取 key，函数名以 L 结尾时会被误当成一条
+            let placeholder = "<p class=\"bf-empty\">\(message)</p>"
+            await setForumHTML(placeholder, in: webView)
         }
     }
 
@@ -614,6 +636,12 @@ private struct ReaderPane: View {
         webView.evaluateJavaScript("window.__bifeedWireImgs()", completionHandler: nil)
         if translated {
             await translateAndInject(webView: webView, articleId: articleId)
+        } else if !redetectedAfterForum {
+            // 楼层是这类文章唯一的正文。页面刚加载时样本只有一句占位符，
+            // 语言识别要么判错要么判不出（HN 的正文就是一个 Comments 链接），
+            // 楼层落地后才有足够的文字可判——这时候重来一次，翻译按钮和自动双语才生效。
+            redetectedAfterForum = true
+            await detectLanguage(webView: webView, articleId: articleId)
         }
     }
 

@@ -23,15 +23,19 @@ struct SidebarView: View {
         _columnVisibility = columnVisibility
         // StateObject 初值在首次 body 前生效；db 经 EnvironmentObject 在 init 拿不到，
         // 所以用全局单例路径初始化一次性观察。见 AppEnvironment.shared 说明。
-        _model = StateObject(wrappedValue: DBObserved(db: AppEnvironment.sharedDB, initial: SidebarData(), fetch: SidebarData.fetch))
+        _model = StateObject(wrappedValue: DBObserved(
+            db: AppEnvironment.sharedDB,
+            initial: SidebarData(),
+            fetch: SidebarData.fetch
+        ))
     }
 
     private var smartItems: [(selection: SidebarSelection, title: String, icon: String, badge: Int)] {
         [
-            (.today, "今天", "sun.max", model.value.todayCount),
-            (.starred, "星标", "star", model.value.starredCount),
-            (.muted, "已静音", "speaker.slash", model.value.mutedCount),
-            (.all, "全部文章", "tray.full", model.value.totalUnread),
+            (.today, L("sidebar.smart.today"), "sun.max", model.value.todayCount),
+            (.starred, L("sidebar.smart.starred"), "star", model.value.starredCount),
+            (.muted, L("sidebar.smart.muted"), "speaker.slash", model.value.mutedCount),
+            (.all, L("sidebar.smart.all"), "tray.full", model.value.totalUnread),
         ]
     }
 
@@ -41,7 +45,7 @@ struct SidebarView: View {
             // 「未读」不占侧栏行，走列表工具栏的未读按钮。
             // 必须用 ForEach 提供行：List 的选中与高亮对 Section 静态行不完整生效
             //（智能行"点了没反馈"的根因），ForEach + tag 才是原生路径。
-            Section("智能") {
+            Section(L("sidebar.section.smart")) {
                 ForEach(smartItems, id: \.selection) { item in
                     Label(item.title, systemImage: item.icon)
                         .badge(badgeText(item.badge))
@@ -51,7 +55,7 @@ struct SidebarView: View {
             savedSearchSection
             folderSection
             if !model.value.feedsWithoutFolder.isEmpty {
-                Section("订阅") {
+                Section(L("common.feeds")) {
                     ForEach(model.value.feedsWithoutFolder) { feed in
                         feedRow(feed)
                     }
@@ -68,9 +72,9 @@ struct SidebarView: View {
                 Button {
                     columnVisibility = columnVisibility == .all ? .doubleColumn : .all
                 } label: {
-                    Label("收起/展开侧栏", systemImage: "sidebar.left")
+                    Label(L("sidebar.toolbar.toggleSidebar"), systemImage: "sidebar.left")
                 }
-                .help("收起/展开侧栏")
+                .help(L("sidebar.toolbar.toggleSidebar"))
             }
             ToolbarItem {
                 if env.isRefreshing {
@@ -79,39 +83,39 @@ struct SidebarView: View {
                     Button {
                         Task { await env.scheduler.refreshAll() }
                     } label: {
-                        Label("刷新全部", systemImage: "arrow.clockwise")
+                        Label(L("sidebar.toolbar.refreshAll"), systemImage: "arrow.clockwise")
                     }
-                    .help("刷新全部 (⌘R)")
+                    .help(L("sidebar.toolbar.refreshAll.help"))
                 }
             }
         }
         .safeAreaInset(edge: .bottom, spacing: 0) {
             bottomBar
         }
-        .alert("重命名订阅", isPresented: .constant(renamingFeed != nil)) {
-            TextField("名称", text: $nameDraft)
-            Button("取消", role: .cancel) { renamingFeed = nil }
-            Button("确定") {
+        .alert(L("feed.rename.title"), isPresented: .constant(renamingFeed != nil)) {
+            TextField(L("common.name"), text: $nameDraft)
+            Button(L("common.cancel"), role: .cancel) { renamingFeed = nil }
+            Button(L("common.confirm")) {
                 if let f = renamingFeed, let id = f.id, !nameDraft.isEmpty {
                     env.dbWrite { [db = env.db] in try await db.renameFeed(id: id, to: self.nameDraft) }
                 }
                 renamingFeed = nil
             }
         }
-        .alert("重命名分组", isPresented: .constant(renamingFolder != nil)) {
-            TextField("名称", text: $nameDraft)
-            Button("取消", role: .cancel) { renamingFolder = nil }
-            Button("确定") {
+        .alert(L("sidebar.folder.rename.title"), isPresented: .constant(renamingFolder != nil)) {
+            TextField(L("common.name"), text: $nameDraft)
+            Button(L("common.cancel"), role: .cancel) { renamingFolder = nil }
+            Button(L("common.confirm")) {
                 if let f = renamingFolder, let id = f.id, !nameDraft.isEmpty {
                     env.dbWrite { [db = env.db] in try await db.renameFolder(id: id, to: self.nameDraft) }
                 }
                 renamingFolder = nil
             }
         }
-        .alert("重命名搜索", isPresented: .constant(renamingSearch != nil)) {
-            TextField("名称", text: $nameDraft)
-            Button("取消", role: .cancel) { renamingSearch = nil }
-            Button("确定") {
+        .alert(L("search.rename.title"), isPresented: .constant(renamingSearch != nil)) {
+            TextField(L("common.name"), text: $nameDraft)
+            Button(L("common.cancel"), role: .cancel) { renamingSearch = nil }
+            Button(L("common.confirm")) {
                 if let s = renamingSearch, let id = s.id, !nameDraft.isEmpty {
                     env.dbWrite { [db = env.db] in
                         try await SavedSearches.rename(db, id: id, to: self.nameDraft)
@@ -120,10 +124,10 @@ struct SidebarView: View {
                 renamingSearch = nil
             }
         }
-        .alert("新建分组", isPresented: $creatingFolder) {
-            TextField("分组名", text: $nameDraft)
-            Button("取消", role: .cancel) {}
-            Button("创建") {
+        .alert(L("sidebar.folder.new.title"), isPresented: $creatingFolder) {
+            TextField(L("sidebar.folder.new.namePlaceholder"), text: $nameDraft)
+            Button(L("common.cancel"), role: .cancel) {}
+            Button(L("sidebar.folder.new.create")) {
                 if !nameDraft.isEmpty {
                     env.dbWrite { [db = env.db] in _ = try await db.addFolder(name: self.nameDraft) }
                 }
@@ -139,12 +143,13 @@ struct SidebarView: View {
                     try await db.setRetention(
                         feedId: feed.id!, keepCount: draft.keepCount, keepDays: draft.keepDays)
                     try await db.setFilterShorts(feedId: feed.id!, draft.filterShorts)
+                    try await db.setAutoTranslate(feedId: feed.id!, draft.autoTranslate)
                 }
             }
         }
-        .alert("清空并重新载入", isPresented: .constant(reloadingFeed != nil)) {
-            Button("取消", role: .cancel) { reloadingFeed = nil }
-            Button("清空并重新载入", role: .destructive) {
+        .alert(L("feed.reload.title"), isPresented: .constant(reloadingFeed != nil)) {
+            Button(L("common.cancel"), role: .cancel) { reloadingFeed = nil }
+            Button(L("feed.reload.title"), role: .destructive) {
                 guard let feed = reloadingFeed, let id = feed.id else { return }
                 reloadingFeed = nil
                 Task {
@@ -154,8 +159,7 @@ struct SidebarView: View {
                 }
             }
         } message: {
-            Text("删除「\(reloadingFeed?.title ?? "")」已入库的文章，然后从头抓一遍。"
-                 + "星标文章会保留；源里已经滚出去的旧文章不会回来。")
+            Text(L("feed.reload.message", reloadingFeed?.title ?? ""))
         }
         .sheet(item: $relocatingFeed) { feed in
             FeedRelocationSheet(feed: feed, fetcher: env.fetcher) { newURL in
@@ -186,17 +190,17 @@ struct SidebarView: View {
     @ViewBuilder
     private var savedSearchSection: some View {
         if !model.value.savedSearches.isEmpty {
-            Section("保存的搜索") {
+            Section(L("sidebar.section.savedSearches")) {
                 ForEach(model.value.savedSearches) { saved in
                     Label(saved.name, systemImage: "magnifyingglass")
                         .tag(SidebarSelection.savedSearch(saved.id!))
                         .selectableRow(.savedSearch(saved.id!), selection: $selection)
                         .contextMenu {
-                            Button("重命名…") {
+                            Button(L("common.rename")) {
                                 nameDraft = saved.name
                                 renamingSearch = saved
                             }
-                            Button("删除", role: .destructive) {
+                            Button(L("common.delete"), role: .destructive) {
                                 env.dbWrite { [db = env.db] in
                                     try await SavedSearches.delete(db, id: saved.id!)
                                 }
@@ -210,7 +214,7 @@ struct SidebarView: View {
     @ViewBuilder
     private var folderSection: some View {
         if !model.value.folders.isEmpty {
-            Section("分组") {
+            Section(L("common.folders")) {
                 ForEach(model.value.folders) { folder in
                     DisclosureGroup {
                         ForEach(model.value.feeds(inFolder: folder.id!)) { feed in
@@ -247,9 +251,9 @@ struct SidebarView: View {
             // 邮件式加号：一个 + 菜单选加什么（Paul 指定，照 Mail 的 + ˅，纯图标无文字）。
             // .borderlessButton 样式配 Label 点击区域会失灵（实测点不动），用 .button + 无边框按钮样式。
             Menu {
-                Button("添加订阅…") { env.showAddFeed = true }
+                Button(L("feed.add.menu")) { env.showAddFeed = true }
                     .keyboardShortcut("n", modifiers: .command)
-                Button("新建分组…") {
+                Button(L("sidebar.folder.new.menu")) {
                     nameDraft = ""
                     creatingFolder = true
                 }
@@ -264,7 +268,7 @@ struct SidebarView: View {
             .foregroundStyle(.secondary)
             .padding(.horizontal, DesignTokens.Spacing.sm)
             .padding(.vertical, DesignTokens.Spacing.xs)
-            .help("添加订阅或分组")
+            .help(L("sidebar.bottomBar.add.help"))
             Spacer()
             SettingsLink {
                 Image(systemName: "gearshape")
@@ -273,7 +277,7 @@ struct SidebarView: View {
             .buttonStyle(.plain)
             .foregroundStyle(.secondary)
             .padding(DesignTokens.Spacing.md)
-            .help("设置 (⌘,)")
+            .help(L("sidebar.bottomBar.settings.help"))
         }
         .padding(.horizontal, DesignTokens.Spacing.sm)
         .background(.bar)
@@ -298,12 +302,16 @@ struct SidebarView: View {
                 Image(systemName: "stop.circle.fill")
                     .font(.system(size: DesignTokens.Icon.status))
                     .foregroundStyle(.red)
-                    .help("HTTP \(status)，已停止自动重试；右键手动刷新可重试")
+                    .help(L("sidebar.feed.hardError.help", status))
             } else if let next = feed.nextFetchAt, next > Date() {
                 Image(systemName: "clock.arrow.circlepath")
                     .font(.system(size: DesignTokens.Icon.status))
                     .foregroundStyle(.orange)
-                    .help("暂缓到 \(next.formatted(date: .omitted, time: .shortened))：\(feed.fetchError ?? "抓取失败")")
+                    .help(L(
+                        "sidebar.feed.deferred.help",
+                        next.formatted(date: .omitted, time: .shortened),
+                        feed.fetchError ?? L("sidebar.feed.fetchFailed")
+                    ))
             } else if feed.fetchError != nil {
                 Image(systemName: "exclamationmark.triangle.fill")
                     .font(.system(size: DesignTokens.Icon.status))
@@ -314,7 +322,7 @@ struct SidebarView: View {
                 Image(systemName: "clock")
                     .font(.system(size: DesignTokens.Icon.status))
                     .foregroundStyle(.tertiary)
-                    .help("最后更新于 \(days) 天前")
+                    .help(L("sidebar.feed.stale.help", days))
             }
         }
         .badge(badgeText(model.value.unreadBadge(for: feed)))
@@ -329,55 +337,55 @@ struct SidebarView: View {
 
     @ViewBuilder
     private func feedMenu(_ feed: Feed) -> some View {
-        Button("刷新此源") {
+        Button(L("feed.menu.refresh")) {
             Task { await env.scheduler.refresh(feedId: feed.id!) }
         }
         // 重新载入 = 丢掉条件请求头与内容指纹再抓，服务器一定给全量。
         // 「刷新此源」在 feed 内容没变时会被 304 或指纹短路，改完全文策略、
         // 或者怀疑正文抓错了的时候，需要的是这个而不是刷新。
-        Button("重新载入") {
+        Button(L("feed.menu.reloadFetchState")) {
             Task {
                 try? await env.db.resetFetchState(feedId: feed.id!)
                 await env.scheduler.refresh(feedId: feed.id!)
             }
         }
-        Button("清空并重新载入…") { reloadingFeed = feed }
-        Button("标记全部已读") {
+        Button(L("feed.menu.clearAndReload")) { reloadingFeed = feed }
+        Button(L("common.markAllRead")) {
             env.markAllRead(scope: .feed(feed.id!))
         }
         Divider()
-        Button("阅读设置…") {
+        Button(L("feed.menu.readingSettings")) {
             readingSettingsFeed = feed
         }
-        Button("抓取设置…") {
+        Button(L("feed.menu.fetchSettings")) {
             fetchSettingsFeed = feed
         }
         // 只有硬错误的源才谈得上改址；其它情况这一项不出现
         if feed.isHardErrored {
-            Button("查找新地址…") { relocatingFeed = feed }
+            Button(L("feed.menu.relocate")) { relocatingFeed = feed }
         }
         if let site = feed.siteURL, let url = URL(string: site) {
-            Button("打开网站") { NSWorkspace.shared.open(url) }
+            Button(L("feed.menu.openSite")) { NSWorkspace.shared.open(url) }
         }
-        Button("复制 Feed 链接") {
+        Button(L("feed.menu.copyURL")) {
             NSPasteboard.general.clearContents()
             NSPasteboard.general.setString(feed.url, forType: .string)
         }
         Divider()
-        Button("重命名…") {
+        Button(L("common.rename")) {
             nameDraft = feed.title
             renamingFeed = feed
         }
-        Menu("移动到分组") {
+        Menu(L("feed.menu.moveToFolder")) {
             // 启发式建议置顶（同域跟随/组名关键词），只是建议，动手的还是用户
             if let suggested = FeedOrganizer.suggestFolder(
                 for: feed, folders: model.value.folders, feeds: model.value.feeds) {
-                Button("\(suggested.name)（建议）") {
+                Button(L("feed.menu.folderSuggested", suggested.name)) {
                     env.dbWrite { [db = env.db] in try await db.moveFeed(id: feed.id!, toFolder: suggested.id) }
                 }
                 Divider()
             }
-            Button("无分组") {
+            Button(L("common.noFolder")) {
                 env.dbWrite { [db = env.db] in try await db.moveFeed(id: feed.id!, toFolder: nil) }
             }
             ForEach(model.value.folders) { folder in
@@ -387,26 +395,26 @@ struct SidebarView: View {
             }
         }
         Divider()
-        Button("退订", role: .destructive) {
+        Button(L("common.unsubscribe"), role: .destructive) {
             env.dbWrite { [db = env.db] in try await db.deleteFeed(id: feed.id!) }
         }
     }
 
     @ViewBuilder
     private func folderMenu(_ folder: Folder) -> some View {
-        Button("标记全部已读") {
+        Button(L("common.markAllRead")) {
             env.markAllRead(scope: .folder(folder.id!))
         }
-        Button(folder.showsUnreadBadge ? "关闭未读徽标" : "开启未读徽标") {
+        Button(folder.showsUnreadBadge ? L("sidebar.folder.menu.hideBadge") : L("sidebar.folder.menu.showBadge")) {
             env.dbWrite { [db = env.db] in
                 try await db.setUnreadBadge(folderId: folder.id!, !folder.showsUnreadBadge)
             }
         }
-        Button("重命名…") {
+        Button(L("common.rename")) {
             nameDraft = folder.name
             renamingFolder = folder
         }
-        Button("删除分组", role: .destructive) {
+        Button(L("sidebar.folder.menu.delete"), role: .destructive) {
             env.dbWrite { [db = env.db] in try await db.deleteFolder(id: folder.id!) }
         }
     }
@@ -421,6 +429,7 @@ struct FeedReadingDraft {
     var keepCount: Int?
     var keepDays: Int?
     var filterShorts: Bool
+    var autoTranslate: AutoTranslateMode
 }
 
 private struct FeedReadingSettings: View {
@@ -431,6 +440,7 @@ private struct FeedReadingSettings: View {
     @State private var mode: FullTextMode
     @State private var selector: String
     @State private var showsUnreadBadge: Bool
+    @State private var autoTranslate: AutoTranslateMode
     /// -1 = 跟随全局；Picker 用一个哨兵值比多带一个 Toggle 少一层状态
     @State private var keepCount: Int
     @State private var keepDays: Int
@@ -444,6 +454,7 @@ private struct FeedReadingSettings: View {
         _mode = State(initialValue: feed.fullTextMode)
         _selector = State(initialValue: feed.fullTextSelector ?? "")
         _showsUnreadBadge = State(initialValue: feed.showsUnreadBadge)
+        _autoTranslate = State(initialValue: feed.autoTranslateMode)
         _keepCount = State(initialValue: feed.keepCount ?? Self.followsGlobal)
         _keepDays = State(initialValue: feed.keepDays ?? Self.followsGlobal)
         _filterShorts = State(initialValue: feed.filterShorts)
@@ -452,41 +463,49 @@ private struct FeedReadingSettings: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("全文") {
-                    Picker("策略", selection: $mode) {
+                Section(L("feed.reading.fullText")) {
+                    Picker(L("feed.reading.fullText.mode"), selection: $mode) {
                         ForEach(FullTextMode.allCases, id: \.self) { Text($0.label).tag($0) }
                     }
                     Text(modeDescription)
                         .font(.system(size: DesignTokens.Typography.caption))
                         .foregroundStyle(.secondary)
                 }
-                Section("CSS 选择器（可选）") {
-                    TextField("例如 article .post-content", text: $selector)
+                Section(L("feed.reading.selector")) {
+                    TextField(L("feed.reading.selector.placeholder"), text: $selector)
                         .disabled(mode == .never)
-                    Text("填写后优先提取匹配区域；不匹配时会显示具体失败原因。")
+                    Text(L("feed.reading.selector.note"))
                         .font(.system(size: DesignTokens.Typography.caption))
                         .foregroundStyle(.secondary)
                 }
-                Section("未读") {
-                    Toggle("在侧栏显示未读数", isOn: $showsUnreadBadge)
-                    Text("关闭后此源不计入任何未读徽标；文章照常进列表。")
+                Section(L("feed.reading.autoTranslate")) {
+                    Picker(L("feed.reading.autoTranslate"), selection: $autoTranslate) {
+                        ForEach(AutoTranslateMode.allCases, id: \.self) { Text($0.label).tag($0) }
+                    }
+                    Text(L("feed.reading.autoTranslate.note"))
                         .font(.system(size: DesignTokens.Typography.caption))
                         .foregroundStyle(.secondary)
                 }
-                Section("保留（覆盖全局设置）") {
-                    Picker("保留条数", selection: $keepCount) {
-                        Text("跟随全局").tag(Self.followsGlobal)
+                Section(L("feed.reading.unread")) {
+                    Toggle(L("feed.reading.unread.badge"), isOn: $showsUnreadBadge)
+                    Text(L("feed.reading.unread.note"))
+                        .font(.system(size: DesignTokens.Typography.caption))
+                        .foregroundStyle(.secondary)
+                }
+                Section(L("feed.reading.retention")) {
+                    Picker(L("feed.reading.retention.count"), selection: $keepCount) {
+                        Text(L("common.followGlobal")).tag(Self.followsGlobal)
                         ForEach([50, 100, 200, 500, 1000, 2000], id: \.self) { Text("\($0)").tag($0) }
                     }
-                    Picker("保留时间", selection: $keepDays) {
-                        Text("跟随全局").tag(Self.followsGlobal)
-                        Text("7 天").tag(7)
-                        Text("30 天").tag(30)
-                        Text("90 天").tag(90)
-                        Text("一年").tag(365)
-                        Text("永久").tag(0)
+                    Picker(L("feed.reading.retention.days"), selection: $keepDays) {
+                        Text(L("common.followGlobal")).tag(Self.followsGlobal)
+                        Text(L("settings.retention.days.7")).tag(7)
+                        Text(L("settings.retention.days.30")).tag(30)
+                        Text(L("settings.retention.days.90")).tag(90)
+                        Text(L("settings.retention.days.365")).tag(365)
+                        Text(L("settings.retention.days.forever")).tag(0)
                     }
-                    Text("星标文章永远不会被清理。")
+                    Text(L("feed.reading.retention.note"))
                         .font(.system(size: DesignTokens.Typography.caption))
                         .foregroundStyle(.secondary)
                 }
@@ -496,15 +515,16 @@ private struct FeedReadingSettings: View {
             .navigationTitle(feed.title)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("取消") { dismiss() }
+                    Button(L("common.cancel")) { dismiss() }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("保存") {
+                    Button(L("common.save")) {
                         onSave(FeedReadingDraft(
                             mode: mode, selector: selector, showsUnreadBadge: showsUnreadBadge,
                             keepCount: keepCount == Self.followsGlobal ? nil : keepCount,
                             keepDays: keepDays == Self.followsGlobal ? nil : keepDays,
-                            filterShorts: filterShorts))
+                            filterShorts: filterShorts,
+                            autoTranslate: autoTranslate))
                     }
                 }
             }
@@ -517,11 +537,11 @@ private struct FeedReadingSettings: View {
     private var youtubeSection: some View {
         if YouTube.isFeedURL(feed.url) {
             Section("YouTube") {
-                Toggle("过滤 Shorts", isOn: $filterShorts)
-                Text("开启后新抓到的 Shorts 视频不入库；已入库的条目不受影响。")
+                Toggle(L("feed.reading.youtube.filterShorts"), isOn: $filterShorts)
+                Text(L("feed.reading.youtube.filterShorts.note"))
                     .font(.system(size: DesignTokens.Typography.caption))
                     .foregroundStyle(.secondary)
-                Text("YouTube 官方 feed 只提供最近 15 条视频。")
+                Text(L("feed.reading.youtube.limit.note"))
                     .font(.system(size: DesignTokens.Typography.caption))
                     .foregroundStyle(.secondary)
             }
@@ -530,9 +550,9 @@ private struct FeedReadingSettings: View {
 
     private var modeDescription: String {
         switch mode {
-        case .auto: "检测到 feed 只给一段摘要时，在打开文章后抓取全文。"
-        case .always: "打开文章时总是尝试从原站提取全文。"
-        case .never: "只显示 feed 自带正文，不访问原站抓取全文。"
+        case .auto: L("feed.reading.fullText.mode.auto.note")
+        case .always: L("feed.reading.fullText.mode.always.note")
+        case .never: L("feed.reading.fullText.mode.never.note")
         }
     }
 }
@@ -552,20 +572,20 @@ private struct FeedRelocationSheet: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("当前地址") {
+                Section(L("feed.relocate.current")) {
                     Text(feed.url)
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
                         .truncationMode(.middle)
                 }
-                Section("新地址") {
+                Section(L("feed.relocate.new")) {
                     if searching {
                         HStack(spacing: DesignTokens.Spacing.md) {
                             ProgressView().controlSize(.small)
-                            Text("正在从站点页面查找…")
+                            Text(L("feed.relocate.searching"))
                         }
                     } else if candidates.isEmpty {
-                        Text("没有发现新地址")
+                        Text(L("feed.relocate.notFound"))
                     } else {
                         Picker("", selection: $picked) {
                             ForEach(candidates) { candidate in
@@ -582,10 +602,10 @@ private struct FeedRelocationSheet: View {
             .navigationTitle(feed.title)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("取消") { dismiss() }
+                    Button(L("common.cancel")) { dismiss() }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("替换") { if let picked { onReplace(picked) } }
+                    Button(L("feed.relocate.replace")) { if let picked { onReplace(picked) } }
                         .disabled(picked == nil)
                 }
             }
@@ -628,35 +648,36 @@ private struct FeedFetchSettings: View {
         _basicUser = State(initialValue: feed.basicUser ?? "")
         // 回填已存的密码，否则"只改 UA"会把认证顺手清掉
         _basicPassword = State(
-            initialValue: feed.id.map { KeychainStore.get(account: KeychainStore.basicAccount(feedId: $0)) ?? "" } ?? "")
+            initialValue: feed.id.map {
+                KeychainStore.get(account: KeychainStore.basicAccount(feedId: $0)) ?? ""
+            } ?? "")
     }
 
     var body: some View {
         NavigationStack {
             Form {
-                Section("刷新") {
-                    Picker("刷新间隔", selection: $refreshMinutes) {
-                        Text("跟随全局").tag(Self.followsGlobal)
-                        Text("15 分钟").tag(15)
-                        Text("30 分钟").tag(30)
-                        Text("1 小时").tag(60)
-                        Text("2 小时").tag(120)
+                Section(L("settings.refresh.title")) {
+                    Picker(L("feed.fetch.interval"), selection: $refreshMinutes) {
+                        Text(L("common.followGlobal")).tag(Self.followsGlobal)
+                        Text(L("settings.refresh.interval.15")).tag(15)
+                        Text(L("settings.refresh.interval.30")).tag(30)
+                        Text(L("settings.refresh.interval.60")).tag(60)
+                        Text(L("settings.refresh.interval.120")).tag(120)
                     }
-                    Text("覆盖设置里的全局间隔，只影响这个源的自动刷新。")
+                    Text(L("feed.fetch.interval.note"))
                         .font(.system(size: DesignTokens.Typography.caption))
                         .foregroundStyle(.secondary)
                 }
-                Section("User-Agent（可选）") {
-                    TextField("留空使用默认", text: $userAgent)
-                    Text("有些站点会按 UA 拒绝请求。示例：Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-                         + "AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15")
+                Section(L("feed.fetch.userAgent")) {
+                    TextField(L("feed.fetch.userAgent.placeholder"), text: $userAgent)
+                    Text(L("feed.fetch.userAgent.note"))
                         .font(.system(size: DesignTokens.Typography.caption))
                         .foregroundStyle(.secondary)
                 }
-                Section("HTTP Basic 认证") {
-                    TextField("用户名", text: $basicUser)
-                    SecureField("密码", text: $basicPassword)
-                    Text("仅用于需要登录的 feed（如私有 Reddit 源）；密码存本机钥匙串。清空用户名即关闭认证。")
+                Section(L("feed.fetch.basicAuth")) {
+                    TextField(L("feed.fetch.basicAuth.user"), text: $basicUser)
+                    SecureField(L("feed.fetch.basicAuth.password"), text: $basicPassword)
+                    Text(L("feed.fetch.basicAuth.note"))
                         .font(.system(size: DesignTokens.Typography.caption))
                         .foregroundStyle(.secondary)
                 }
@@ -665,10 +686,10 @@ private struct FeedFetchSettings: View {
             .navigationTitle(feed.title)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("取消") { dismiss() }
+                    Button(L("common.cancel")) { dismiss() }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("保存") {
+                    Button(L("common.save")) {
                         let user = basicUser.trimmingCharacters(in: .whitespacesAndNewlines)
                         onSave(FeedFetchDraft(
                             refreshMinutes: refreshMinutes == Self.followsGlobal ? nil : refreshMinutes,

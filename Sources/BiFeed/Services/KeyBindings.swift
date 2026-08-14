@@ -11,16 +11,16 @@ enum KeyAction: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .nextArticle: "下一篇"
-        case .prevArticle: "上一篇"
-        case .nextUnread: "下一篇未读"
-        case .toggleRead: "已读/未读"
-        case .toggleReadAlias: "已读/未读（备用键）"
-        case .toggleStar: "星标"
-        case .translate: "双语对照"
-        case .openOriginal: "在浏览器打开原文"
-        case .immersive: "阅读模式"
-        case .spaceAdvance: "翻一屏 / 到底跳下一篇未读"
+        case .nextArticle: L("settings.shortcuts.action.nextArticle")
+        case .prevArticle: L("settings.shortcuts.action.prevArticle")
+        case .nextUnread: L("settings.shortcuts.action.nextUnread")
+        case .toggleRead: L("settings.shortcuts.action.toggleRead")
+        case .toggleReadAlias: L("settings.shortcuts.action.toggleReadAlias")
+        case .toggleStar: L("settings.shortcuts.action.toggleStar")
+        case .translate: L("settings.shortcuts.action.translate")
+        case .openOriginal: L("settings.shortcuts.action.openOriginal")
+        case .immersive: L("settings.shortcuts.action.immersive")
+        case .spaceAdvance: L("settings.shortcuts.action.spaceAdvance")
         }
     }
 }

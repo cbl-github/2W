@@ -9,10 +9,10 @@ enum FullTextExtractError: LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case .loadFailed(let message): return "页面加载失败：\(message)"
-        case .timeout: return "页面加载超时（20 秒）"
-        case .scriptFailed(let message): return "正文提取失败：\(message)"
-        case .emptyContent: return "未能提取到正文"
+        case .loadFailed(let message): return L("error.fullText.loadFailed", message)
+        case .timeout: return L("error.fullText.timeout")
+        case .scriptFailed(let message): return L("error.fullText.scriptFailed", message)
+        case .emptyContent: return L("error.fullText.emptyContent")
         }
     }
 }
@@ -84,8 +84,12 @@ final class FullTextExtractor {
             let literal = selector.flatMap {
                 try? JSONEncoder().encode($0)
             }.flatMap { String(data: $0, encoding: .utf8) } ?? "null"
-            let script = Self.extractionScript.replacingOccurrences(
-                of: "CUSTOM_SELECTOR_JSON", with: literal)
+            // 译文可能含引号，经 JSON 编码成合法的 JS 字符串字面量再代入
+            let selectorError = String(
+                data: try! JSONEncoder().encode(L("error.fullText.selectorNoMatch")), encoding: .utf8)!
+            let script = Self.extractionScript
+                .replacingOccurrences(of: "CUSTOM_SELECTOR_JSON", with: literal)
+                .replacingOccurrences(of: "SELECTOR_ERROR_JSON", with: selectorError)
             let result = try await webView.evaluateJavaScript(script)
             return (result as? String)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         } catch {
@@ -177,7 +181,7 @@ extension FullTextExtractor {
       var custom = null;
       if (customSelector) {
         custom = document.querySelector(customSelector);
-        if (!custom) { throw new Error("CSS 选择器未匹配任何内容：" + customSelector); }
+        if (!custom) { throw new Error(SELECTOR_ERROR_JSON + customSelector); }
       }
       var container = custom || best || document.querySelector("article") || document.body;
 

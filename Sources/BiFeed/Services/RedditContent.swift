@@ -22,7 +22,7 @@ enum RedditContent {
         s = liftThumbnails(s, fullImage: fullImage)
         if let linkHref, fullImage == nil, !isRedditHost(linkHref) {
             let escaped = HTMLTools.escapeHTML(linkHref)
-            s += "<p>链接：<a href=\"\(escaped)\">\(escaped)</a></p>"
+            s += "<p>" + L("reader.reddit.link") + "<a href=\"\(escaped)\">\(escaped)</a></p>"
         }
         return s
     }
@@ -30,8 +30,9 @@ enum RedditContent {
     /// 模板尾行。要求 `submitted by` 后面紧跟 `/u/` 锚点、再往后出现 `[comments]` 才删，
     /// 免得正文里恰好写了「submitted by」就被连尾巴带正文一起吃掉。
     private static func stripTemplateTail(_ html: String) -> String {
-        let pattern = /(?:&#32;|\s|<br\s*\/?>)*submitted by\s*(?:&#32;\s*)*<a\s[^>]*>\s*\/u\/[\s\S]*\[comments\][\s\S]*$/
-            .ignoresCase()
+        let pattern =
+            /(?:&#32;|\s|<br\s*\/?>)*submitted by\s*(?:&#32;\s*)*<a\s[^>]*>\s*\/u\/[\s\S]*\[comments\][\s\S]*$/
+                .ignoresCase()
         guard let m = html.firstMatch(of: pattern) else { return html }
         return html.replacingCharacters(in: m.range, with: "")
     }

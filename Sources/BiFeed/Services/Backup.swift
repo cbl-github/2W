@@ -10,7 +10,7 @@ struct BackupInfo {
     var unknownMigrations: [String]
 
     var summary: String {
-        "\(feedCount) 个订阅，\(articleCount) 篇文章"
+        L("data.backup.summary", feedCount, articleCount)
     }
 }
 
@@ -21,9 +21,9 @@ enum BackupError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .notBiFeedDatabase:
-            "这个文件不是 2W 数据库备份。"
+            L("error.backup.notBiFeedDatabase")
         case .newerVersion(let ids):
-            "备份来自更新版本的 2W（未知迁移：\(ids.joined(separator: "、"))）。请先升级应用再恢复。"
+            L("error.backup.newerVersion", ids.joined(separator: "、"))
         }
     }
 }

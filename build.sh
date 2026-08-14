@@ -4,38 +4,48 @@
 #   --universal 同时编 arm64 与 x86_64（需要完整 Xcode：通用二进制走 XCBuild，纯 CLT 没有）
 set -euo pipefail
 cd "$(dirname "$0")"
+source scripts/common.sh
 
-CONF=release
-UNIVERSAL=0
+# Swift 模块名不能以数字开头，所以内部 target 仍叫 BiFeed，产物才叫 2W。
+readonly PRODUCT='BiFeed'
+readonly APP='dist/2W.app'
+readonly XCODE_DEVELOPER_DIR='/Applications/Xcode.app/Contents/Developer'
+
+conf='release'
+universal=0
 for arg in "$@"; do
-  case "$arg" in
-    debug|release) CONF=$arg ;;
-    --universal) UNIVERSAL=1 ;;
-    *) echo "未知参数: $arg" >&2; exit 1 ;;
+  case "${arg}" in
+    debug|release) conf="${arg}" ;;
+    --universal) universal=1 ;;
+    *) die 1 "未知参数: ${arg}" ;;
   esac
 done
 
-# Swift 模块名不能以数字开头，所以内部 target 仍叫 BiFeed，产物才叫 2W。
-PRODUCT=BiFeed
-APP=dist/2W.app
+# 规范靠脚本守，不靠人记：不通过就不出包
+scripts/check-swift-style.sh
+scripts/check-localization.sh
 
-if [ "$UNIVERSAL" = 1 ]; then
-  export DEVELOPER_DIR=${DEVELOPER_DIR:-/Applications/Xcode.app/Contents/Developer}
-  swift build -c "$CONF" --arch arm64 --arch x86_64
-  BIN=$(swift build -c "$CONF" --arch arm64 --arch x86_64 --show-bin-path)/$PRODUCT
+if [[ "${universal}" -eq 1 ]]; then
+  # 通用二进制走 XCBuild，纯 Command Line Tools 没有它
+  export DEVELOPER_DIR="${DEVELOPER_DIR:-${XCODE_DEVELOPER_DIR}}"
+  swift build -c "${conf}" --arch arm64 --arch x86_64
+  bin="$(swift build -c "${conf}" --arch arm64 --arch x86_64 --show-bin-path)/${PRODUCT}"
 else
-  swift build -c "$CONF"
-  BIN=.build/$CONF/$PRODUCT
+  swift build -c "${conf}"
+  bin=".build/${conf}/${PRODUCT}"
 fi
 
-rm -rf "$APP"
-mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
-cp "$BIN" "$APP/Contents/MacOS/2W"
+rm -rf "${APP}"
+mkdir -p "${APP}/Contents/MacOS" "${APP}/Contents/Resources"
+cp "${bin}" "${APP}/Contents/MacOS/2W"
 
-[ -f dist/2W.icns ] || scripts/make-icns.sh dist
-cp dist/2W.icns "$APP/Contents/Resources/2W.icns"
+[[ -f dist/2W.icns ]] || scripts/make-icns.sh dist
+cp dist/2W.icns "${APP}/Contents/Resources/2W.icns"
 
-cat > "$APP/Contents/Info.plist" <<'EOF'
+# 本地化表进 Contents/Resources，运行时由 Bundle.main 查表
+cp -R Localization/*.lproj "${APP}/Contents/Resources/"
+
+cat > "${APP}/Contents/Info.plist" <<'EOF'
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0"><dict>
@@ -44,13 +54,17 @@ cat > "$APP/Contents/Info.plist" <<'EOF'
   <key>CFBundleIdentifier</key><string>com.paul.bifeed</string>
   <key>CFBundleName</key><string>2W</string>
   <key>CFBundleDisplayName</key><string>2W</string>
-  <key>CFBundleDevelopmentRegion</key><string>zh-Hans</string>
-  <key>CFBundleLocalizations</key><array><string>zh-Hans</string></array>
+  <!-- 开发区域即回落语言：系统语言不在下面的列表里时，用英语 -->
+  <key>CFBundleDevelopmentRegion</key><string>en</string>
+  <key>CFBundleLocalizations</key><array>
+    <string>en</string><string>zh-Hans</string><string>ja</string>
+    <string>es</string><string>fr</string>
+  </array>
   <key>CFBundleExecutable</key><string>2W</string>
   <key>CFBundleIconFile</key><string>2W</string>
   <key>CFBundlePackageType</key><string>APPL</string>
-  <key>CFBundleShortVersionString</key><string>0.1.6</string>
-  <key>CFBundleVersion</key><string>7</string>
+  <key>CFBundleShortVersionString</key><string>0.2.0</string>
+  <key>CFBundleVersion</key><string>8</string>
   <key>LSMinimumSystemVersion</key><string>15.0</string>
   <key>LSApplicationCategoryType</key><string>public.app-category.news</string>
   <key>NSPrincipalClass</key><string>NSApplication</string>
@@ -62,8 +76,12 @@ cat > "$APP/Contents/Info.plist" <<'EOF'
   </dict>
 </dict></plist>
 EOF
-printf 'APPL????' > "$APP/Contents/PkgInfo"
+printf 'APPL????' > "${APP}/Contents/PkgInfo"
 
-codesign --force --sign - "$APP"
-echo "built $APP ($CONF$([ "$UNIVERSAL" = 1 ] && echo ', universal'))"
-lipo -archs "$APP/Contents/MacOS/2W" | sed 's/^/  架构: /'
+codesign --force --sign - "${APP}"
+if [[ "${universal}" -eq 1 ]]; then
+  echo "built ${APP} (${conf}, universal)"
+else
+  echo "built ${APP} (${conf})"
+fi
+lipo -archs "${APP}/Contents/MacOS/2W" | sed 's/^/  架构: /'

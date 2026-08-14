@@ -12,11 +12,11 @@ enum StaleWindow: Int, CaseIterable, Identifiable {
 
     var label: String {
         switch self {
-        case .any: "不限"
-        case .d3: "3 天"
-        case .d7: "7 天"
-        case .d15: "15 天"
-        case .d30: "30 天及以上"
+        case .any: L("settings.subscriptions.window.any")
+        case .d3: L("settings.subscriptions.window.d3")
+        case .d7: L("settings.subscriptions.window.d7")
+        case .d15: L("settings.subscriptions.window.d15")
+        case .d30: L("settings.subscriptions.window.d30")
         }
     }
 }

@@ -7,9 +7,9 @@ enum APITranslateError: LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case .notConfigured: return "API 翻译未配置：请在设置里填写 Base URL、模型名和 API Key"
-        case .badStatus(let code): return "API 返回 HTTP \(code)"
-        case .badPayload: return "API 返回格式不符合约定"
+        case .notConfigured: return L("error.api.notConfigured")
+        case .badStatus(let code): return L("error.api.badStatus", code)
+        case .badPayload: return L("error.api.badPayload")
         }
     }
 }
@@ -21,8 +21,12 @@ final class OpenAICompatibleEngine: TranslationEngine {
     /// 每组请求的源文本字符上限；单段超限独立成组。
     private static let maxGroupChars = 3000
 
-    /// 原文照用（冻结契约）。
-    private static let systemPrompt = "你是专业译者。把用户消息里 JSON 数组中的每个段落翻译成简体中文：技术术语保留英文原词或用业界通行译法，语气自然像中文技术博客，不逐字直译。只输出 JSON 数组，元素 {\"i\": 原编号, \"t\": \"译文\"}，编号一一对应，不增不减，无任何多余文字。"
+    /// 原文照用（冻结契约）。多行字面量只为断行，`\` 续行不产生换行，字符串值与折行前逐字相同。
+    private static let systemPrompt = """
+        你是专业译者。把用户消息里 JSON 数组中的每个段落翻译成简体中文：技术术语保留英文原词或用业界通行译法，\
+        语气自然像中文技术博客，不逐字直译。只输出 JSON 数组，元素 {"i": 原编号, "t": "译文"}，\
+        编号一一对应，不增不减，无任何多余文字。
+        """
 
     private let session: URLSession = {
         let config = URLSessionConfiguration.default

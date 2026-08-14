@@ -1,0 +1,503 @@
+/* Buttons and nouns shared across areas. Changes here affect the sidebar, list, settings, and dialogs. */
+"common.ok"= "OK";
+"common.cancel"= "Cancel";
+"common.confirm"= "Confirm";
+"common.save"= "Save";
+"common.delete"= "Delete";
+"common.rename"= "Rename…";
+"common.retry"= "Retry";
+"common.unsubscribe"= "Unsubscribe";
+"common.name"= "Name";
+"common.feeds"= "Feeds";
+"common.folder"= "Folder";
+"common.folders"= "Folders";
+"common.noFolder"= "No Folder";
+"common.allFeeds"= "All Feeds";
+"common.followGlobal"= "Follow Global";
+"common.markAllRead"= "Mark All as Read";
+"common.openInBrowser"= "Open in Browser";
+
+/* Sidebar: smart rows, section headers, toolbar, bottom bar */
+"sidebar.smart.today"= "Today";
+"sidebar.smart.starred"= "Starred";
+"sidebar.smart.muted"= "Muted";
+"sidebar.smart.all"= "All Articles";
+"sidebar.section.smart"= "Smart";
+"sidebar.section.savedSearches"= "Saved Searches";
+"sidebar.toolbar.toggleSidebar"= "Show/Hide Sidebar";
+"sidebar.toolbar.refreshAll"= "Refresh All";
+"sidebar.toolbar.refreshAll.help"= "Refresh All (⌘R)";
+"sidebar.bottomBar.add.help"= "Add a feed or folder";
+"sidebar.bottomBar.settings.help"= "Settings (⌘,)";
+
+/* Sidebar feed rows: status icon tooltips */
+"sidebar.feed.hardError.help"= "HTTP %lld, stopped retrying automatically; refresh manually from the shortcut menu to retry";
+"sidebar.feed.deferred.help"= "Deferred until %1$@: %2$@";
+"sidebar.feed.fetchFailed"= "Fetch failed";
+"sidebar.feed.stale.help"= "Last updated %lld days ago";
+
+/* Sidebar folders: rename, new, shortcut menu */
+"sidebar.folder.rename.title"= "Rename Folder";
+"sidebar.folder.new.title"= "New Folder";
+"sidebar.folder.new.namePlaceholder"= "Folder Name";
+"sidebar.folder.new.create"= "Create";
+"sidebar.folder.new.menu"= "New Folder…";
+"sidebar.folder.menu.hideBadge"= "Hide Unread Badge";
+"sidebar.folder.menu.showBadge"= "Show Unread Badge";
+"sidebar.folder.menu.delete"= "Delete Folder";
+
+/* Article list: empty states */
+"list.empty.unread"= "No Unread Articles";
+"list.empty.starred"= "No Starred Articles";
+"list.empty.filtered.description"= "Switch back to Show All to see every article.";
+"list.empty.muted"= "No Muted Articles";
+"list.empty.muted.description"= "Articles matched by a mute rule appear here.";
+"list.empty.none"= "No Articles";
+"list.empty.none.description"= "Add a feed or refresh, and articles will appear here.";
+
+/* Article list: toolbar, title, header stats, unread filter */
+"list.toolbar.undoMarkAllRead"= "Undo Mark All as Read";
+"list.toolbar.undoMarkAllRead.help"= "Undo the last Mark All as Read";
+"list.toolbar.markAllRead"= "Mark All as Read";
+"list.toolbar.markAllRead.help"= "Mark everything in this list as read";
+"list.title.allUnread"= "All Unread";
+"list.title.articles"= "Articles";
+"list.filter.showAll"= "Show All";
+"list.filter.unreadOnly"= "Unread Only";
+"list.header.unreadOnly"= "Unread Only · %lld articles";
+"list.header.summary"= "%1$lld articles, %2$lld unread";
+
+/* Article list: row shortcut menu */
+"list.menu.markUnread"= "Mark as Unread";
+"list.menu.markRead"= "Mark as Read";
+"list.menu.unstar"= "Unstar";
+"list.menu.star"= "Star";
+"list.menu.markReadFromHere"= "Mark This and Below as Read";
+"list.menu.allowMuted"= "Allow and Add to Rule Exceptions";
+"list.menu.copyLink"= "Copy Link";
+
+/* Article list: inline badges and dates */
+"list.badge.collapsed"= "Collapsed";
+"list.badge.paywall"= "Paywall";
+"list.badge.paywall.help"= "This site usually requires a subscription to read the full article";
+"list.badge.duplicateSources"= "%lld sources";
+"list.date.none"= "No Date";
+"list.date.justNow"= "Just Now";
+"list.date.yesterday"= "Yesterday";
+
+/* Reader: empty state and body placeholder */
+"reader.empty.title"= "Select an Article";
+"reader.empty.description"= "↩ Open Original · T Bilingual · ⌘↩ Reading Mode · j/k Next/Prev";
+"reader.empty.body"= "This article has no body text. Try Open in Browser at the top right.";
+
+/* Reader toolbar */
+"reader.toolbar.star.help"= "Star (s)";
+"reader.toolbar.openOriginal.help"= "Open the original in your default browser";
+"reader.toolbar.refreshForum"= "Refresh Replies";
+"reader.toolbar.refreshForum.help"= "Fetch the latest replies (keeps your reading position)";
+
+/* Reader: bilingual view */
+"reader.translate.toggle"= "Bilingual";
+"reader.translate.toggle.help"= "Bilingual (T)";
+"reader.translate.download"= "Download Translation Model";
+"reader.translate.download.help"= "Requires downloading the translation model; click to download";
+"reader.translate.downloadTimeout.help"= "Model download timed out; click to retry";
+"reader.translate.failed.help"= "Translation failed: %@; click to retry";
+"reader.translate.retry"= "Retry Translation";
+
+/* Reader: full text extraction */
+"reader.fullText.extract"= "Extract Full Text";
+"reader.fullText.showOriginal"= "Show Original";
+"reader.fullText.disabled"= "Full Text Off";
+"reader.fullText.disabled.help"= "This feed is set to never extract full text; change it from Reading Settings in the feed's shortcut menu";
+"reader.fullText.failed"= "Couldn't extract full text: %@";
+"reader.fullText.openInBrowser"= "Open in Browser";
+"reader.fullText.neverForFeed"= "Never Extract for This Feed";
+
+/* Reader: link line patched into reformatted Reddit bodies */
+"reader.reddit.link"= "Link: ";
+
+/* Settings → Appearance */
+"settings.appearance.title"= "Appearance";
+"settings.appearance.theme"= "Theme";
+"settings.appearance.theme.system"= "System";
+"settings.appearance.theme.light"= "Light";
+"settings.appearance.theme.dark"= "Dark";
+"settings.appearance.note"= "Theme changes take effect immediately.";
+
+/* Settings → Reading */
+"settings.reading.title"= "Reading";
+"settings.reading.fontSize"= "Body Font Size";
+"settings.reading.fontSize.note"= "Applies to articles opened from now on.";
+"settings.reading.markReadOnOpen"= "Mark as Read on Open";
+"settings.reading.markReadOnScrollEnd"= "Mark as Read at Scroll End";
+"settings.reading.markRead.note"= "The two switches work independently. With both off, mark articles as read manually with m or the shortcut menu.";
+"settings.reading.preview.title"= "Article Title Preview";
+"settings.reading.preview.body"= "Body text appears at this size. The quick brown fox jumps over the lazy dog.";
+"settings.reading.preview.translation"= "Translations use the same size as body text, with a left accent line.";
+
+/* Settings → Shortcuts (shared by the settings pane and the Help menu's full list) */
+"settings.shortcuts.title"= "Shortcuts";
+"settings.shortcuts.window.title"= "2W Shortcuts";
+"settings.shortcuts.recording"= "Press a new key…";
+"settings.shortcuts.change"= "Change";
+"settings.shortcuts.reset"= "Reset";
+"settings.shortcuts.resetAll"= "Reset All to Default";
+"settings.shortcuts.note"= "Click Change, then press the new key. Esc cancels. Changes take effect immediately.";
+"settings.shortcuts.conflict"= "%1$@ is already used by %2$@. Choose a different key.";
+
+/* Settings → Shortcuts: names of rebindable actions */
+"settings.shortcuts.action.nextArticle"= "Next Article";
+"settings.shortcuts.action.prevArticle"= "Previous Article";
+"settings.shortcuts.action.nextUnread"= "Next Unread";
+"settings.shortcuts.action.toggleRead"= "Read/Unread";
+"settings.shortcuts.action.toggleReadAlias"= "Read/Unread (Alternate Key)";
+"settings.shortcuts.action.toggleStar"= "Star";
+"settings.shortcuts.action.translate"= "Bilingual";
+"settings.shortcuts.action.openOriginal"= "Open Original in Browser";
+"settings.shortcuts.action.immersive"= "Reading Mode";
+"settings.shortcuts.action.spaceAdvance"= "Page Down / Next Unread at End";
+
+/* Help menu's full shortcut list: wording here differs from the action names above, so each gets its own entry */
+"settings.shortcuts.key.immersiveToggle"= "Toggle Reading Mode";
+"settings.shortcuts.key.immersiveExit"= "Exit Reading Mode";
+"settings.shortcuts.key.spaceAdvance"= "Page down; jumps to the next unread at the end";
+"settings.shortcuts.key.toggleRead"= "Mark as Read / Unread";
+"settings.shortcuts.key.toggleReadAlias"= "Mark as Read / Unread (same as m)";
+"settings.shortcuts.key.toggleStar"= "Star / Unstar";
+"settings.shortcuts.key.translateToggle"= "Toggle Bilingual";
+"settings.shortcuts.key.addFeed"= "Add Feed";
+"settings.shortcuts.key.savePage"= "Save Page";
+"settings.shortcuts.key.settings"= "Settings";
+
+/* Settings → Translation */
+"settings.translation.title"= "Translation";
+"settings.translation.engine"= "Engine";
+"settings.translation.engine.apple"= "System Translation (Offline)";
+"settings.translation.engine.api"= "API Translation";
+"settings.translation.apiModel"= "Model Name";
+"settings.translation.targetLang"= "Translation Language";
+"settings.translation.targetLang.note"= "Applies to articles opened from now on. Changing the language invalidates cached translations, which are redone automatically.";
+"settings.translation.auto"= "Turn on Bilingual automatically for foreign-language articles";
+"settings.translation.auto.note"= "You can still translate manually with T when this is off. The API key is stored in the local keychain, and this setting applies to articles opened from now on.";
+
+/* Settings → Refresh */
+"settings.refresh.title"= "Refresh";
+"settings.refresh.interval"= "Auto-Refresh Interval";
+"settings.refresh.interval.15"= "15 Minutes";
+"settings.refresh.interval.30"= "30 Minutes";
+"settings.refresh.interval.60"= "1 Hour";
+"settings.refresh.interval.120"= "2 Hours";
+"settings.refresh.interval.note"= "Override this interval for a single feed from Fetch Settings… in its shortcut menu.";
+"settings.refresh.domainInterval"= "Same-Domain Request Interval";
+"settings.refresh.domainInterval.off"= "Off";
+"settings.refresh.domainInterval.5"= "5 Seconds";
+"settings.refresh.domainInterval.10"= "10 Seconds";
+"settings.refresh.domainInterval.30"= "30 Seconds";
+"settings.refresh.domainInterval.note"= "Feeds on the same site wait at least this long between requests.";
+"settings.refresh.initialRead"= "First Batch for New Feeds";
+"settings.refresh.initialRead.unread"= "All Unread";
+"settings.refresh.initialRead.read"= "All Read";
+"settings.refresh.initialRead.recent"= "Keep Only the Most Recent Unread";
+"settings.refresh.initialRead.keepCount"= "Unread Count to Keep";
+"settings.refresh.initialRead.items"= "%lld items";
+"settings.refresh.initialRead.note"= "Applies only to a feed's first fetch after it's added.";
+"settings.refresh.defaultFullText"= "Full Text by Default";
+"settings.refresh.defaultFullText.note"= "Applies only to feeds added from now on. Change existing feeds from Reading Settings… in their shortcut menu.";
+
+/* Settings → Retention */
+"settings.retention.title"= "Retention";
+"settings.retention.section"= "Retention Policy (Starred Articles Kept Forever)";
+"settings.retention.count"= "Articles to Keep per Feed";
+"settings.retention.days"= "Retention Period";
+"settings.retention.days.7"= "7 Days";
+"settings.retention.days.30"= "30 Days";
+"settings.retention.days.90"= "90 Days";
+"settings.retention.days.365"= "1 Year";
+"settings.retention.days.forever"= "Forever";
+"settings.retention.note"= "Override both settings for a single feed from Reading Settings… in its shortcut menu.";
+
+/* Settings → Subscriptions: filters, list, and confirmation for bulk unsubscribe */
+"settings.subscriptions.filter"= "Filter";
+"settings.subscriptions.notUpdated"= "Not Updated For";
+"settings.subscriptions.notRead"= "Not Read For";
+"settings.subscriptions.failingOnly"= "Show only feeds that are failing to fetch";
+"settings.subscriptions.filter.note"= "Not Updated For is based on the latest article; Not Read For is based on the latest read article. Feeds with no articles ever, or never read, are listed under every threshold.";
+"settings.subscriptions.empty"= "No feeds match.";
+"settings.subscriptions.matched"= "Matching Feeds (%lld)";
+"settings.subscriptions.selectAll"= "Select All";
+"settings.subscriptions.deselectAll"= "Deselect All";
+"settings.subscriptions.keepStarred"= "Keep Starred Articles";
+"settings.subscriptions.keepStarred.on"= "Starred articles stay in Starred. Everything else is removed with the feed.";
+"settings.subscriptions.keepStarred.off"= "The feed and all its articles are removed, including starred ones.";
+"settings.subscriptions.unsubscribeSelected"= "Unsubscribe Selected (%lld)";
+"settings.subscriptions.irreversible"= "Unsubscribing can't be undone.";
+"settings.subscriptions.unsubscribe.confirm"= "Unsubscribe from %lld feeds?";
+"settings.subscriptions.andMore"= "… %lld total";
+
+/* Settings → Subscriptions: per-row summary stats */
+"settings.subscriptions.detail.staleDays"= "Not updated for %lld days";
+"settings.subscriptions.detail.neverUpdated"= "Never received an article";
+"settings.subscriptions.detail.unreadDays"= "Unread for %lld days";
+"settings.subscriptions.detail.neverRead"= "Never read";
+"settings.subscriptions.detail.noRecent"= "No new articles in the last 30 days";
+"settings.subscriptions.detail.recent"= "%1$lld in the last 30 days / %2$lld read";
+
+/* Settings → Subscriptions: day thresholds shared by both duration filters */
+"settings.subscriptions.window.any"= "Any";
+"settings.subscriptions.window.d3"= "3 Days";
+"settings.subscriptions.window.d7"= "7 Days";
+"settings.subscriptions.window.d15"= "15 Days";
+"settings.subscriptions.window.d30"= "30+ Days";
+
+/* Settings → Mute: rule list */
+"settings.mute.title"= "Mute";
+"settings.mute.new"= "New Mute Rule…";
+"settings.mute.delete.help"= "Delete this rule";
+"settings.mute.note"= "Saving or deleting a rule rescans history immediately; review and allow muted articles from the sidebar.";
+"settings.mute.scope.global"= "Global";
+"settings.mute.saved"= "Saved. This rule matched %lld articles.";
+"settings.mute.saveFailed"= "Save failed: %@";
+
+/* Settings → Mute: value names for each rule field */
+"settings.mute.matchType.contains"= "Contains";
+"settings.mute.matchType.regex"= "Regex";
+"settings.mute.field.title"= "Title";
+"settings.mute.field.body"= "Body";
+"settings.mute.field.author"= "Author";
+"settings.mute.field.category"= "Category";
+"settings.mute.field.all"= "All Fields";
+"settings.mute.action.hide"= "Hide";
+"settings.mute.action.markRead"= "Mark as Read";
+"settings.mute.action.collapse"= "Collapse";
+
+/* Settings → Mute: new rule editor */
+"settings.mute.editor.title"= "New Mute Rule";
+"settings.mute.editor.condition"= "Condition";
+"settings.mute.editor.matchType"= "Match";
+"settings.mute.editor.pattern.regex"= "Regular Expression";
+"settings.mute.editor.pattern.keyword"= "Keyword";
+"settings.mute.editor.field"= "Field";
+"settings.mute.editor.scope"= "Scope";
+"settings.mute.editor.scope.appliesTo"= "Applies To";
+"settings.mute.editor.exceptions"= "Exceptions (One per Line, Optional)";
+"settings.mute.editor.exceptions.note"= "The rule won't trigger if any field contains an exception word.";
+"settings.mute.editor.action"= "Action";
+"settings.mute.editor.action.onMatch"= "On Match";
+"settings.mute.editor.save"= "Save and Rescan";
+
+/* Settings → Data */
+"settings.data.title"= "Data";
+"settings.data.dbPath"= "Database Location";
+
+/* Add Feed */
+"feed.add.menu"= "Add Feed…";
+"feed.add.title"= "Add Feed";
+"feed.add.placeholder"= "RSS / Atom / JSON Feed or web page URL";
+"feed.add.submit"= "Add";
+"feed.add.candidates.title"= "This page has %lld feeds";
+"feed.add.candidates.submit"= "Subscribe to Selected";
+
+/* Save Page */
+"feed.savePage.menu"= "Save Page…";
+"feed.savePage.title"= "Save Page";
+"feed.savePage.placeholder"= "Web Page URL";
+"feed.savePage.note"= "The extracted article is filed under Saved Pages, alongside your feed articles.";
+
+/* Feed shortcut menu */
+"feed.menu.refresh"= "Refresh Feed";
+"feed.menu.reloadFetchState"= "Reload";
+"feed.menu.clearAndReload"= "Clear and Reload…";
+"feed.menu.readingSettings"= "Reading Settings…";
+"feed.menu.fetchSettings"= "Fetch Settings…";
+"feed.menu.relocate"= "Find New Address…";
+"feed.menu.openSite"= "Open Website";
+"feed.menu.copyURL"= "Copy Feed URL";
+"feed.menu.moveToFolder"= "Move to Folder";
+"feed.menu.folderSuggested"= "%@ (Suggested)";
+
+/* Feed: rename and clear/reload */
+"feed.rename.title"= "Rename Feed";
+"feed.reload.title"= "Clear and Reload";
+"feed.reload.message"= "Deletes the articles already stored for %@, then fetches from scratch. Starred articles are kept; older articles that have already rolled off the feed won't come back.";
+
+/* Feed → Reading Settings */
+"feed.reading.fullText"= "Full Text";
+"feed.reading.fullText.mode"= "Strategy";
+"feed.reading.fullText.mode.auto.note"= "When the feed appears to provide only a summary, full text is extracted after the article is opened.";
+"feed.reading.fullText.mode.always.note"= "Always tries to extract full text from the original site when an article is opened.";
+"feed.reading.fullText.mode.never.note"= "Shows only the feed's own body text and never visits the original site to extract full text.";
+"feed.reading.selector"= "CSS Selector (Optional)";
+"feed.reading.selector.placeholder"= "e.g. article .post-content";
+"feed.reading.selector.note"= "When set, the matching region is extracted first; if nothing matches, the specific failure reason is shown.";
+"feed.reading.unread"= "Unread";
+"feed.reading.unread.badge"= "Show Unread Count in Sidebar";
+"feed.reading.unread.note"= "When off, this feed isn't counted in any unread badge; articles still appear in the list as usual.";
+"feed.reading.retention"= "Retention (Overrides Global Setting)";
+"feed.reading.retention.count"= "Articles to Keep";
+"feed.reading.retention.days"= "Retention Period";
+"feed.reading.retention.note"= "Starred articles are never cleaned up.";
+"feed.reading.youtube.filterShorts"= "Filter Out Shorts";
+"feed.reading.youtube.filterShorts.note"= "When on, newly fetched Shorts videos aren't stored; already-stored items are unaffected.";
+"feed.reading.youtube.limit.note"= "YouTube's official feed provides only the 15 most recent videos.";
+
+/* Feed → Fetch Settings */
+"feed.fetch.interval"= "Refresh Interval";
+"feed.fetch.interval.note"= "Overrides the global interval in Settings; affects only this feed's auto-refresh.";
+"feed.fetch.userAgent"= "User-Agent (Optional)";
+"feed.fetch.userAgent.placeholder"= "Leave blank to use the default";
+"feed.fetch.userAgent.note"= "Some sites reject requests based on the User-Agent. Example: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15";
+"feed.fetch.basicAuth"= "HTTP Basic Auth";
+"feed.fetch.basicAuth.user"= "Username";
+"feed.fetch.basicAuth.password"= "Password";
+"feed.fetch.basicAuth.note"= "For feeds that require a login (such as a private Reddit feed); the password is stored in the local keychain. Clear the username to turn off authentication.";
+
+/* Feed → Find New Address */
+"feed.relocate.current"= "Current Address";
+"feed.relocate.new"= "New Address";
+"feed.relocate.searching"= "Searching the site's page…";
+"feed.relocate.notFound"= "No new address found";
+"feed.relocate.replace"= "Replace";
+
+/* Feed Health panel */
+"feed.health.window.title"= "Feed Health";
+"feed.health.menu"= "Feed Health…";
+"feed.health.column.recent"= "Last 30 Days";
+"feed.health.column.read"= "Read";
+"feed.health.column.muted"= "Muted";
+"feed.health.column.lastArticle"= "Last Article";
+"feed.health.column.status"= "Status";
+"feed.health.unsubscribeSelected"= "Unsubscribe Selected";
+"feed.health.unsubscribe.confirm"= "Unsubscribe from the %lld selected feeds?";
+"feed.health.unsubscribe.message"= "These feeds and their articles will all be deleted. This can't be undone.";
+"feed.health.status.hardError"= "Hard Error HTTP %lld";
+"feed.health.status.deferred"= "Deferred";
+"feed.health.status.ok"= "OK";
+
+/* Feed full-text extraction strategy; names for container feeds and untitled articles */
+"feed.fullTextMode.auto"= "Auto";
+"feed.fullTextMode.always"= "Always Extract";
+"feed.fullTextMode.never"= "Never Extract";
+"feed.container.starredArchive"= "Unsubscribed";
+"feed.container.savedPages"= "Saved Pages";
+"feed.article.untitled"= "(Untitled)";
+
+/* Search and saved searches */
+"search.prompt"= "Search Articles";
+"search.rename.title"= "Rename Search";
+"search.save.title"= "Save Search";
+"search.save.menu"= "Save This Search…";
+"search.save.message"= "Saved searches appear under Saved Searches in the sidebar. Opening one restores this query and scope.";
+"search.scope"= "Scope";
+"search.scope.current"= "Current Scope";
+"search.scope.currentFolder"= "Current Folder";
+"search.scope.currentFeed"= "Current Feed";
+"search.scopeMenu.help"= "Search scope and time range";
+"search.window"= "Time";
+"search.window.any"= "Any Time";
+"search.window.week"= "Last 7 Days";
+"search.window.month"= "Last 30 Days";
+"search.window.year"= "Last Year";
+
+/* OPML import/export */
+"data.opml.import.menu"= "Import OPML…";
+"data.opml.export.menu"= "Export OPML…";
+"data.opml.import.panel"= "Choose an OPML File";
+"data.opml.untitled"= "(Untitled)";
+
+/* Database backup */
+"data.backup.menu"= "Back Up Database…";
+"data.backup.openFolder"= "Open Backup Folder";
+"data.backup.panel"= "Save Database Snapshot";
+"data.backup.running"= "Backing up…";
+"data.backup.done"= "Backed up to %@.";
+"data.backup.failed"= "Backup failed: %@";
+"data.backup.summary"= "%1$lld feeds, %2$lld articles";
+"data.backup.note"= "A backup is a consistent snapshot and can be made while the app is running. The feed list is also backed up automatically as OPML once a day, keeping the most recent 7 copies.";
+
+/* Restore from backup */
+"data.restore.menu"= "Restore from Backup…";
+"data.restore.panel"= "Choose a 2W Database Backup";
+"data.restore.verified"= "Backup verified: %@. Takes effect after restart.";
+"data.restore.pending"= "%1$@ (%2$@) will replace the current database on next launch. The current database is kept as bifeed.sqlite.bak.";
+"data.restore.failed"= "Couldn't restore: %@";
+"data.restore.needsRelaunch"= "Restart Required";
+"data.restore.later"= "Restart Later";
+"data.restore.now"= "Restart Now";
+
+/* Check for Updates */
+"update.menu.check"= "Check for Updates…";
+"update.section.title"= "Updates";
+"update.section.note"= "Only checks and notifies; nothing is downloaded or installed automatically. Clear skipped versions here.";
+"update.checkOnLaunch"= "Check for Updates on Launch";
+"update.currentVersion"= "Current Version";
+"update.skipped"= "Skipped %@";
+"update.unskip"= "Stop Skipping";
+"update.check.title"= "Check for Updates";
+"update.check.upToDate"= "You're up to date (%@).";
+"update.check.failed"= "Couldn't check for updates: %@";
+"update.available.title"= "Version %@ Is Available";
+"update.available.current"= "You have version %@.";
+"update.available.download"= "Download";
+"update.available.skip"= "Skip This Version";
+"update.available.later"= "Later";
+
+/* Forum threads */
+"forum.replies"= "Replies";
+"forum.comments"= "Comments";
+"forum.opBadge"= "OP";
+"forum.score"= "%lld points";
+"forum.loading"= "Loading replies…";
+"forum.loadFailed"= "Couldn't load replies: %@";
+"forum.more.reddit"= "%lld more replies — view on Reddit";
+"forum.more.generic"= "%lld more replies — view original thread";
+
+/* Errors: subscribing and fetching */
+"error.feed.duplicate"= "Already subscribed to this feed";
+"error.fetch.badURL"= "Invalid URL: %@";
+"error.fetch.tooLarge"= "Response exceeds the 10 MB limit";
+"error.fetch.notHTTP"= "Not an HTTP response";
+"error.parse.unparseable"= "Couldn't parse feed: %@";
+"error.opml.malformed"= "Malformed OPML";
+"error.subscribe.noFeedFound"= "No feed found at this address";
+
+/* Errors: backup and updates */
+"error.backup.notBiFeedDatabase"= "This file isn't a 2W database backup.";
+"error.backup.newerVersion"= "This backup is from a newer version of 2W (unknown migration: %@). Update the app before restoring.";
+"error.update.rateLimited"= "GitHub is temporarily rate-limiting requests. Try again in a bit.";
+"error.update.badResponse"= "Couldn't read version information from GitHub.";
+
+/* Errors: API translation */
+"error.api.notConfigured"= "API Translation isn't configured: enter the base URL, model name, and API key in Settings";
+"error.api.badStatus"= "API returned HTTP %lld";
+"error.api.badPayload"= "API response doesn't match the expected format";
+
+/* Errors: full text extraction */
+"error.fullText.loadFailed"= "Page failed to load: %@";
+"error.fullText.timeout"= "Page load timed out (20 seconds)";
+"error.fullText.scriptFailed"= "Body extraction failed: %@";
+"error.fullText.emptyContent"= "Couldn't extract any body text";
+"error.fullText.selectorNoMatch"= "CSS selector matched nothing:";
+
+/* Errors: forum threads. detail gets interpolated into error.forum.badResponse */
+"error.forum.badResponse"= "Couldn't parse forum data: %@";
+"error.forum.notForum"= "This isn't a forum thread";
+"error.forum.redditBlocked"= "Reddit is rejecting unauthenticated comment requests from your current network exit (IP-based rate limiting). The article itself is unaffected; use Open in Browser to read replies, or route reddit.com through a residential-style proxy exit.";
+"error.forum.detail.v2ex"= "V2EX replies %lld";
+"error.forum.detail.reddit"= "Reddit response isn't a two-element array";
+"error.forum.detail.discourse"= "Discourse topic %@";
+"error.forum.detail.lobsters"= "Lobsters response isn't an object";
+"error.forum.detail.unexpected304"= "Unexpected 304 response";
+
+/* Exported Markdown document */
+"export.markdown.action"= "Export Markdown";
+"export.untitled"= "Untitled";
+"export.translationPrefix"= "Translation: ";
+"export.forum.heading"= "%1$@ (%2$lld)";
+
+/* Per-feed auto-translate (feed shortcut menu → Reading Settings…) */
+"feed.reading.autoTranslate"= "Auto-Translate";
+"feed.reading.autoTranslate.note"= "Follow Global uses the master switch in Settings; only foreign-language articles are translated.";
+"feed.autoTranslate.inherit"= "Follow Global";
+"feed.autoTranslate.always"= "Always";
+"feed.autoTranslate.never"= "Never";

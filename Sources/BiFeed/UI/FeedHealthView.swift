@@ -21,42 +21,42 @@ struct FeedHealthView: View {
 
     var body: some View {
         Table(rows, selection: $selection, sortOrder: $sortOrder) {
-            TableColumn("订阅", value: \.title) { Text($0.title).lineLimit(1) }
+            TableColumn(L("common.feeds"), value: \.title) { Text($0.title).lineLimit(1) }
                 .width(min: 140, ideal: 200)
-            TableColumn("近 30 天", value: \.recentCount) {
+            TableColumn(L("feed.health.column.recent"), value: \.recentCount) {
                 Text($0.recentCount.formatted()).monospacedDigit()
             }
             .width(70)
-            TableColumn("已读", value: \.recentReadCount) {
+            TableColumn(L("feed.health.column.read"), value: \.recentReadCount) {
                 Text($0.recentReadCount.formatted()).monospacedDigit()
             }
             .width(60)
-            TableColumn("静音命中", value: \.mutedCount) {
+            TableColumn(L("feed.health.column.muted"), value: \.mutedCount) {
                 Text($0.mutedCount.formatted()).monospacedDigit()
             }
             .width(70)
-            TableColumn("最后一篇", value: \.lastPublishedSort) { row in
+            TableColumn(L("feed.health.column.lastArticle"), value: \.lastPublishedSort) { row in
                 Text(row.lastPublishedAt?.formatted(date: .numeric, time: .omitted) ?? "—")
             }
             .width(100)
-            TableColumn("状态", value: \.status) { Text($0.status).lineLimit(1) }
+            TableColumn(L("feed.health.column.status"), value: \.status) { Text($0.status).lineLimit(1) }
                 .width(min: 80, ideal: 120)
         }
         .safeAreaInset(edge: .bottom, spacing: 0) {
             HStack {
                 Spacer()
-                Button("退订所选") { confirmingUnsubscribe = true }
+                Button(L("feed.health.unsubscribeSelected")) { confirmingUnsubscribe = true }
                     .disabled(selection.isEmpty)
             }
             .padding(DesignTokens.Spacing.lg)
             .background(.bar)
             .overlay(alignment: .top) { Divider() }
         }
-        .alert("退订所选的 \(selection.count) 个订阅？", isPresented: $confirmingUnsubscribe) {
-            Button("取消", role: .cancel) {}
-            Button("退订", role: .destructive) { unsubscribeSelected() }
+        .alert(L("feed.health.unsubscribe.confirm", selection.count), isPresented: $confirmingUnsubscribe) {
+            Button(L("common.cancel"), role: .cancel) {}
+            Button(L("common.unsubscribe"), role: .destructive) { unsubscribeSelected() }
         } message: {
-            Text("这些订阅和它们的文章都会被删除，不能撤销。")
+            Text(L("feed.health.unsubscribe.message"))
         }
     }
 

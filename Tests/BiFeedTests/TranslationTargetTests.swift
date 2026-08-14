@@ -59,4 +59,49 @@ final class TranslationTargetTests: XCTestCase {
         XCTAssertNil(TranslationService.detectSourceLanguage(sample: "2026-08-14  #1 #2", target: "zh-Hans"),
                      "几乎没有字母的样本不该拿去猜语言")
     }
+
+    // MARK: - 按源自动翻译（Paul：让我自己设置哪些源自动翻译）
+
+    func testAutoTranslateModeResolution() {
+        XCTAssertTrue(AutoTranslateMode.inherit.resolved(global: true))
+        XCTAssertFalse(AutoTranslateMode.inherit.resolved(global: false))
+        XCTAssertTrue(AutoTranslateMode.always.resolved(global: false), "按源始终，压过全局关闭")
+        XCTAssertFalse(AutoTranslateMode.never.resolved(global: true), "按源从不，压过全局开启")
+    }
+
+    func testAutoTranslateModePersistsPerFeed() async throws {
+        let db = try makeTempDB()
+        let feed = try await db.addFeed(url: "https://a.example/rss", title: "A", siteURL: nil, folderId: nil)
+        let fresh = try await db.feed(id: feed.id!)
+        XCTAssertEqual(fresh?.autoTranslateMode, .inherit, "默认跟随全局")
+
+        try await db.setAutoTranslate(feedId: feed.id!, .never)
+        let stored = try await db.feed(id: feed.id!)
+        XCTAssertEqual(stored?.autoTranslateMode, .never)
+
+        // 阅读器要拿得到，否则按源开关形同虚设
+        try await db.applyFetchSuccess(
+            feedId: feed.id!, etag: nil, lastModified: nil,
+            items: [MuteEvaluation(item: ParsedItem(
+                guid: "g", url: nil, title: "t", author: nil, publishedAt: Date(),
+                contentHTML: "<p>x</p>", summaryText: ""), action: nil)])
+        let articleId = try await db.pool.read { try Int64.fetchOne($0, sql: "SELECT id FROM article")! }
+        let data = try await db.readerData(articleId: articleId)
+        XCTAssertEqual(data?.autoTranslateMode, .never)
+    }
+
+    /// HN 的 feed 正文只有一个 Comments 链接，样本不足以判语言——
+    /// 真正的文字要等楼层注入之后才有（回归见 0.1.3）。
+    func testForumStubIsNotEnoughToDetectButThreadTextIs() {
+        let stub = "Comments"
+        XCTAssertNil(TranslationService.detectSourceLanguage(sample: stub, target: "zh-Hans"),
+                     "一个单词判不出语言，不该猜")
+
+        let thread = """
+        This is exactly the kind of problem that shows up once you have enough users.
+        I ran into the same thing last year and ended up rewriting the whole pipeline.
+        """
+        XCTAssertEqual(TranslationService.detectSourceLanguage(sample: thread, target: "zh-Hans"), "en",
+                       "楼层文字足够长，识别得出来")
+    }
 }

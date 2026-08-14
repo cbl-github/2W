@@ -1,0 +1,503 @@
+/* Botones y términos comunes reutilizados en varias zonas. Cambiar esto afecta a la vez a la barra lateral, la lista, los ajustes y los diálogos. */
+"common.ok"= "Aceptar";
+"common.cancel"= "Cancelar";
+"common.confirm"= "Confirmar";
+"common.save"= "Guardar";
+"common.delete"= "Eliminar";
+"common.rename"= "Cambiar nombre…";
+"common.retry"= "Reintentar";
+"common.unsubscribe"= "Cancelar suscripción";
+"common.name"= "Nombre";
+"common.feeds"= "Fuentes";
+"common.folder"= "Carpeta";
+"common.folders"= "Carpetas";
+"common.noFolder"= "Sin carpeta";
+"common.allFeeds"= "Todas las fuentes";
+"common.followGlobal"= "Igual que el ajuste global";
+"common.markAllRead"= "Marcar todo como leído";
+"common.openInBrowser"= "Abrir en el navegador";
+
+/* Barra lateral: filas inteligentes, títulos de sección, barra de herramientas, barra inferior */
+"sidebar.smart.today"= "Hoy";
+"sidebar.smart.starred"= "Destacados";
+"sidebar.smart.muted"= "Silenciados";
+"sidebar.smart.all"= "Todos los artículos";
+"sidebar.section.smart"= "Inteligente";
+"sidebar.section.savedSearches"= "Búsquedas guardadas";
+"sidebar.toolbar.toggleSidebar"= "Contraer/expandir barra lateral";
+"sidebar.toolbar.refreshAll"= "Actualizar todo";
+"sidebar.toolbar.refreshAll.help"= "Actualizar todo (⌘R)";
+"sidebar.bottomBar.add.help"= "Añadir fuente o carpeta";
+"sidebar.bottomBar.settings.help"= "Ajustes (⌘,)";
+
+/* Sugerencias del icono de estado en las filas de fuentes de la barra lateral */
+"sidebar.feed.hardError.help"= "HTTP %lld: se detuvieron los reintentos automáticos; el clic derecho permite volver a intentarlo manualmente";
+"sidebar.feed.deferred.help"= "Aplazado hasta %1$@: %2$@";
+"sidebar.feed.fetchFailed"= "Error de descarga";
+"sidebar.feed.stale.help"= "Última actualización hace %lld días";
+
+/* Carpetas de la barra lateral: cambiar nombre, crear y menú contextual */
+"sidebar.folder.rename.title"= "Cambiar nombre de la carpeta";
+"sidebar.folder.new.title"= "Nueva carpeta";
+"sidebar.folder.new.namePlaceholder"= "Nombre de la carpeta";
+"sidebar.folder.new.create"= "Crear";
+"sidebar.folder.new.menu"= "Nueva carpeta…";
+"sidebar.folder.menu.hideBadge"= "Desactivar insignia de no leídos";
+"sidebar.folder.menu.showBadge"= "Activar insignia de no leídos";
+"sidebar.folder.menu.delete"= "Eliminar carpeta";
+
+/* Lista de artículos: estados vacíos */
+"list.empty.unread"= "No hay artículos sin leer";
+"list.empty.starred"= "No hay artículos destacados";
+"list.empty.filtered.description"= "El filtro «Todos» permite ver todos los artículos.";
+"list.empty.muted"= "No hay artículos silenciados";
+"list.empty.muted.description"= "Los artículos que coincidan con una regla de silencio aparecerán aquí.";
+"list.empty.none"= "No hay artículos";
+"list.empty.none.description"= "Los artículos aparecerán aquí después de añadir una fuente o actualizar.";
+
+/* Lista de artículos: barra de herramientas, título, resumen de cabecera, filtro de no leídos */
+"list.toolbar.undoMarkAllRead"= "Deshacer marcar todo como leído";
+"list.toolbar.undoMarkAllRead.help"= "Deshacer la última acción de marcar todo como leído";
+"list.toolbar.markAllRead"= "Marcar todo como leído";
+"list.toolbar.markAllRead.help"= "Marcar como leído todo lo de esta lista";
+"list.title.allUnread"= "Todos los no leídos";
+"list.title.articles"= "Artículos";
+"list.filter.showAll"= "Mostrar todo";
+"list.filter.unreadOnly"= "Solo no leídos";
+"list.header.unreadOnly"= "Solo no leídos · %lld artículos";
+"list.header.summary"= "%1$lld artículos, %2$lld sin leer";
+
+/* Lista de artículos: menú contextual de fila */
+"list.menu.markUnread"= "Marcar como no leído";
+"list.menu.markRead"= "Marcar como leído";
+"list.menu.unstar"= "Quitar destacado";
+"list.menu.star"= "Destacar";
+"list.menu.markReadFromHere"= "Marcar como leído desde aquí";
+"list.menu.allowMuted"= "Permitir y añadir a las excepciones de la regla";
+"list.menu.copyLink"= "Copiar enlace";
+
+/* Lista de artículos: marcas en línea y fechas */
+"list.badge.collapsed"= "Plegado";
+"list.badge.paywall"= "Muro de pago";
+"list.badge.paywall.help"= "Este sitio suele requerir una suscripción para leer el texto completo";
+"list.badge.duplicateSources"= "%lld fuentes";
+"list.date.none"= "Sin fecha";
+"list.date.justNow"= "Ahora mismo";
+"list.date.yesterday"= "Ayer";
+
+/* Lector: estado vacío y marcador de posición del cuerpo */
+"reader.empty.title"= "Ningún artículo seleccionado";
+"reader.empty.description"= "↩ Abrir original · T bilingüe · ⌘↩ Modo lectura · j/k artículo anterior/siguiente";
+"reader.empty.body"= "Este artículo no tiene cuerpo; el botón de la esquina superior derecha permite abrir el original en el navegador.";
+
+/* Barra de herramientas del lector */
+"reader.toolbar.star.help"= "Destacar (s)";
+"reader.toolbar.openOriginal.help"= "Abrir original en el navegador predeterminado";
+"reader.toolbar.refreshForum"= "Actualizar respuestas";
+"reader.toolbar.refreshForum.help"= "Obtener las respuestas más recientes (sin cambiar la posición de lectura)";
+
+/* Lector: vista bilingüe */
+"reader.translate.toggle"= "Bilingüe";
+"reader.translate.toggle.help"= "Bilingüe (T)";
+"reader.translate.download"= "Descargar modelo de traducción";
+"reader.translate.download.help"= "Es necesario descargar el modelo de traducción. Clic para descargarlo.";
+"reader.translate.downloadTimeout.help"= "Se agotó el tiempo de descarga del modelo. Clic para reintentarlo.";
+"reader.translate.failed.help"= "Error de traducción: %@. Clic para reintentarlo.";
+"reader.translate.retry"= "Reintentar traducción";
+
+/* Lector: texto completo */
+"reader.fullText.extract"= "Extraer texto completo";
+"reader.fullText.showOriginal"= "Mostrar original";
+"reader.fullText.disabled"= "Texto completo desactivado";
+"reader.fullText.disabled.help"= "Esta fuente está configurada para no extraer nunca el texto completo; se puede cambiar en «Ajustes de lectura…» del menú contextual de la fuente";
+"reader.fullText.failed"= "No se pudo extraer el texto completo: %@";
+"reader.fullText.openInBrowser"= "Abrir en el navegador";
+"reader.fullText.neverForFeed"= "Esta fuente nunca extrae el texto completo";
+
+/* Lector: línea de enlace añadida al reformatear el cuerpo en publicaciones de Reddit */
+"reader.reddit.link"= "Enlace:";
+
+/* Ajustes → Apariencia */
+"settings.appearance.title"= "Apariencia";
+"settings.appearance.theme"= "Tema";
+"settings.appearance.theme.system"= "Sistema";
+"settings.appearance.theme.light"= "Claro";
+"settings.appearance.theme.dark"= "Oscuro";
+"settings.appearance.note"= "El tema se aplica de inmediato.";
+
+/* Ajustes → Lectura */
+"settings.reading.title"= "Lectura";
+"settings.reading.fontSize"= "Tamaño de letra";
+"settings.reading.fontSize.note"= "El tamaño de letra se aplica a los artículos que se abran a partir de ahora.";
+"settings.reading.markReadOnOpen"= "Marcar como leído al abrir";
+"settings.reading.markReadOnScrollEnd"= "Marcar como leído al llegar al final";
+"settings.reading.markRead.note"= "Los dos interruptores son independientes entre sí; si ambos están desactivados, solo se puede marcar manualmente con m o con el clic derecho.";
+"settings.reading.preview.title"= "Vista previa del título del artículo";
+"settings.reading.preview.body"= "El cuerpo se mostrará a este tamaño. The quick brown fox jumps over the lazy dog.";
+"settings.reading.preview.translation"= "La traducción usa el mismo tamaño que el cuerpo, con una línea de énfasis a la izquierda.";
+
+/* Ajustes → Atajos de teclado (compartido entre la pestaña de categoría y la tabla del menú de ayuda) */
+"settings.shortcuts.title"= "Atajos de teclado";
+"settings.shortcuts.window.title"= "Atajos de teclado de 2W";
+"settings.shortcuts.recording"= "Esperando nueva combinación…";
+"settings.shortcuts.change"= "Cambiar";
+"settings.shortcuts.reset"= "Restablecer";
+"settings.shortcuts.resetAll"= "Restablecer todo";
+"settings.shortcuts.note"= "Después de pulsar «Cambiar», la siguiente combinación pulsada queda registrada; Esc cancela. Los cambios se aplican de inmediato.";
+"settings.shortcuts.conflict"= "«%1$@» ya está asignada a «%2$@»; hay que elegir otra combinación.";
+
+/* Ajustes → Atajos de teclado: nombres de las acciones reasignables */
+"settings.shortcuts.action.nextArticle"= "Artículo siguiente";
+"settings.shortcuts.action.prevArticle"= "Artículo anterior";
+"settings.shortcuts.action.nextUnread"= "Siguiente sin leer";
+"settings.shortcuts.action.toggleRead"= "Leído o no leído";
+"settings.shortcuts.action.toggleReadAlias"= "Leído o no leído (tecla alternativa)";
+"settings.shortcuts.action.toggleStar"= "Destacado";
+"settings.shortcuts.action.translate"= "Bilingüe";
+"settings.shortcuts.action.openOriginal"= "Abrir original en el navegador";
+"settings.shortcuts.action.immersive"= "Modo de lectura";
+"settings.shortcuts.action.spaceAdvance"= "Avanzar pantalla / siguiente sin leer al final";
+
+/* Tabla de atajos del menú de ayuda: la redacción de esta columna difiere de los nombres de acción anteriores, por eso cada uno tiene su propia entrada */
+"settings.shortcuts.key.immersiveToggle"= "Activar o desactivar el modo inmersivo";
+"settings.shortcuts.key.immersiveExit"= "Salir del modo inmersivo";
+"settings.shortcuts.key.spaceAdvance"= "Avanzar una pantalla; saltar al siguiente sin leer al llegar al final";
+"settings.shortcuts.key.toggleRead"= "Marcar como leído o no leído";
+"settings.shortcuts.key.toggleReadAlias"= "Marcar como leído o no leído (igual que m)";
+"settings.shortcuts.key.toggleStar"= "Destacar o quitar el destacado";
+"settings.shortcuts.key.translateToggle"= "Activar o desactivar la vista bilingüe";
+"settings.shortcuts.key.addFeed"= "Añadir fuente";
+"settings.shortcuts.key.savePage"= "Guardar página web";
+"settings.shortcuts.key.settings"= "Ajustes";
+
+/* Ajustes → Traducción */
+"settings.translation.title"= "Traducción";
+"settings.translation.engine"= "Motor";
+"settings.translation.engine.apple"= "Traducción del sistema (sin conexión)";
+"settings.translation.engine.api"= "Traducción por API";
+"settings.translation.apiModel"= "Nombre del modelo";
+"settings.translation.targetLang"= "Idioma de traducción";
+"settings.translation.targetLang.note"= "Se aplica a los artículos que se abran a partir de ahora; al cambiar de idioma, la caché de traducciones anteriores se invalida y se vuelve a traducir automáticamente.";
+"settings.translation.auto"= "Activar automáticamente la vista bilingüe en artículos extranjeros";
+"settings.translation.auto.note"= "Si se desactiva, aún se puede traducir manualmente con T; la clave se guarda en el llavero local y el ajuste se aplica a los artículos que se abran a partir de ahora.";
+
+/* Ajustes → Actualización */
+"settings.refresh.title"= "Actualización";
+"settings.refresh.interval"= "Intervalo de actualización automática";
+"settings.refresh.interval.15"= "15 minutos";
+"settings.refresh.interval.30"= "30 minutos";
+"settings.refresh.interval.60"= "1 hora";
+"settings.refresh.interval.120"= "2 horas";
+"settings.refresh.interval.note"= "Cada fuente puede anular este intervalo en «Ajustes de descarga…» del clic derecho.";
+"settings.refresh.domainInterval"= "Intervalo entre solicitudes al mismo dominio";
+"settings.refresh.domainInterval.off"= "Desactivado";
+"settings.refresh.domainInterval.5"= "5 segundos";
+"settings.refresh.domainInterval.10"= "10 segundos";
+"settings.refresh.domainInterval.30"= "30 segundos";
+"settings.refresh.domainInterval.note"= "Entre varias fuentes del mismo sitio, se espera al menos este tiempo antes de enviar la siguiente solicitud.";
+"settings.refresh.initialRead"= "Primer lote de artículos de una fuente nueva";
+"settings.refresh.initialRead.unread"= "Todos sin leer";
+"settings.refresh.initialRead.read"= "Todos leídos";
+"settings.refresh.initialRead.recent"= "Dejar sin leer solo los más recientes";
+"settings.refresh.initialRead.keepCount"= "Artículos sin leer a conservar";
+"settings.refresh.initialRead.items"= "%lld artículos";
+"settings.refresh.initialRead.note"= "Solo afecta al lote de artículos de la primera descarga de esa fuente.";
+"settings.refresh.defaultFullText"= "Texto completo predeterminado";
+"settings.refresh.defaultFullText.note"= "Solo afecta a las fuentes que se añadan a partir de ahora; las fuentes existentes se cambian en «Ajustes de lectura…» del clic derecho.";
+
+/* Ajustes → Conservación */
+"settings.retention.title"= "Conservación";
+"settings.retention.section"= "Conservación (los destacados se conservan siempre)";
+"settings.retention.count"= "Artículos a conservar por fuente";
+"settings.retention.days"= "Tiempo de conservación";
+"settings.retention.days.7"= "7 días";
+"settings.retention.days.30"= "30 días";
+"settings.retention.days.90"= "90 días";
+"settings.retention.days.365"= "Un año";
+"settings.retention.days.forever"= "Siempre";
+"settings.retention.note"= "Cada fuente puede anular estos dos ajustes en «Ajustes de lectura…» del clic derecho.";
+
+/* Ajustes → Fuentes: filtro, lista y confirmación de cancelación masiva */
+"settings.subscriptions.filter"= "Filtro";
+"settings.subscriptions.notUpdated"= "Tiempo sin actualizarse";
+"settings.subscriptions.notRead"= "Sin leer recientemente";
+"settings.subscriptions.failingOnly"= "Mostrar solo las fuentes con error de descarga";
+"settings.subscriptions.filter.note"= "El tiempo sin actualizarse se calcula desde el último artículo; el «sin leer recientemente», desde el último artículo leído. Las fuentes que nunca han recibido artículos o que nunca se han leído aparecen en cualquier nivel.";
+"settings.subscriptions.empty"= "No hay fuentes que cumplan los criterios.";
+"settings.subscriptions.matched"= "Fuentes que cumplen los criterios (%lld)";
+"settings.subscriptions.selectAll"= "Seleccionar todo";
+"settings.subscriptions.deselectAll"= "Deseleccionar todo";
+"settings.subscriptions.keepStarred"= "Conservar artículos destacados";
+"settings.subscriptions.keepStarred.on"= "Los artículos destacados se conservan en «Destacados»; el resto se elimina junto con la fuente.";
+"settings.subscriptions.keepStarred.off"= "La fuente y todos sus artículos se eliminan, incluidos los destacados.";
+"settings.subscriptions.unsubscribeSelected"= "Cancelar suscripción de los seleccionados (%lld)";
+"settings.subscriptions.irreversible"= "Cancelar la suscripción no se puede deshacer.";
+"settings.subscriptions.unsubscribe.confirm"= "¿Cancelar la suscripción a %lld fuentes?";
+"settings.subscriptions.andMore"= "… %lld en total";
+
+/* Ajustes → Fuentes: resumen estadístico de cada fila */
+"settings.subscriptions.detail.staleDays"= "%lld días sin actualizarse";
+"settings.subscriptions.detail.neverUpdated"= "Nunca ha recibido artículos";
+"settings.subscriptions.detail.unreadDays"= "%lld días sin leer";
+"settings.subscriptions.detail.neverRead"= "Nunca se ha leído";
+"settings.subscriptions.detail.noRecent"= "Sin artículos nuevos en 30 días";
+"settings.subscriptions.detail.recent"= "%1$lld en 30 días / %2$lld leídos";
+
+/* Ajustes → Fuentes: niveles de días compartidos por ambos criterios de tiempo */
+"settings.subscriptions.window.any"= "Sin límite";
+"settings.subscriptions.window.d3"= "3 días";
+"settings.subscriptions.window.d7"= "7 días";
+"settings.subscriptions.window.d15"= "15 días";
+"settings.subscriptions.window.d30"= "30 días o más";
+
+/* Ajustes → Silencio: lista de reglas */
+"settings.mute.title"= "Silencio";
+"settings.mute.new"= "Nueva regla de silencio…";
+"settings.mute.delete.help"= "Eliminar esta regla";
+"settings.mute.note"= "Al guardar o eliminar una regla, se reescanea el historial de inmediato; los artículos silenciados se pueden revisar y permitir desde la barra lateral.";
+"settings.mute.scope.global"= "Global";
+"settings.mute.saved"= "Guardado correctamente; %lld artículos coincidieron esta vez.";
+"settings.mute.saveFailed"= "Error al guardar: %@";
+
+/* Ajustes → Silencio: valores de cada campo de la regla */
+"settings.mute.matchType.contains"= "Contiene";
+"settings.mute.matchType.regex"= "Regex";
+"settings.mute.field.title"= "Título";
+"settings.mute.field.body"= "Cuerpo";
+"settings.mute.field.author"= "Autor";
+"settings.mute.field.category"= "Etiqueta de categoría";
+"settings.mute.field.all"= "Todos los campos";
+"settings.mute.action.hide"= "Ocultar";
+"settings.mute.action.markRead"= "Marcar como leído";
+"settings.mute.action.collapse"= "Plegar";
+
+/* Ajustes → Silencio: diálogo de nueva regla */
+"settings.mute.editor.title"= "Nueva regla de silencio";
+"settings.mute.editor.condition"= "Condición";
+"settings.mute.editor.matchType"= "Coincidencia";
+"settings.mute.editor.pattern.regex"= "Expresión regular";
+"settings.mute.editor.pattern.keyword"= "Palabra clave";
+"settings.mute.editor.field"= "Campo";
+"settings.mute.editor.scope"= "Ámbito";
+"settings.mute.editor.scope.appliesTo"= "Se aplica a";
+"settings.mute.editor.exceptions"= "Palabras de excepción (una por línea; puede dejarse vacío)";
+"settings.mute.editor.exceptions.note"= "Si algún campo contiene una palabra de excepción, la regla no se activa.";
+"settings.mute.editor.action"= "Acción";
+"settings.mute.editor.action.onMatch"= "Al coincidir";
+"settings.mute.editor.save"= "Guardar y reescanear";
+
+/* Ajustes → Datos */
+"settings.data.title"= "Datos";
+"settings.data.dbPath"= "Ubicación de la base de datos";
+
+/* Añadir fuente */
+"feed.add.menu"= "Añadir fuente…";
+"feed.add.title"= "Añadir fuente";
+"feed.add.placeholder"= "RSS, Atom, JSON Feed o dirección web";
+"feed.add.submit"= "Añadir";
+"feed.add.candidates.title"= "Esta página tiene %lld feeds";
+"feed.add.candidates.submit"= "Suscribirse a los seleccionados";
+
+/* Guardar página web */
+"feed.savePage.menu"= "Guardar página web…";
+"feed.savePage.title"= "Guardar página web";
+"feed.savePage.placeholder"= "Dirección web";
+"feed.savePage.note"= "Se extrae el cuerpo de la página y se guarda en «Guardado manual», junto con los artículos de las fuentes.";
+
+/* Menú contextual de la fuente */
+"feed.menu.refresh"= "Actualizar fuente";
+"feed.menu.reloadFetchState"= "Recargar";
+"feed.menu.clearAndReload"= "Vaciar y recargar…";
+"feed.menu.readingSettings"= "Ajustes de lectura…";
+"feed.menu.fetchSettings"= "Ajustes de descarga…";
+"feed.menu.relocate"= "Buscar nueva dirección…";
+"feed.menu.openSite"= "Abrir sitio web";
+"feed.menu.copyURL"= "Copiar enlace del feed";
+"feed.menu.moveToFolder"= "Mover a carpeta";
+"feed.menu.folderSuggested"= "%@ (sugerida)";
+
+/* Fuente: cambiar nombre y vaciar y recargar */
+"feed.rename.title"= "Cambiar nombre de la fuente";
+"feed.reload.title"= "Vaciar y recargar";
+"feed.reload.message"= "Se eliminan los artículos ya guardados de «%@» y se vuelven a descargar desde cero. Los artículos destacados se conservan; los artículos antiguos que ya hayan salido del feed no volverán.";
+
+/* Fuente → Ajustes de lectura */
+"feed.reading.fullText"= "Texto completo";
+"feed.reading.fullText.mode"= "Modo";
+"feed.reading.fullText.mode.auto.note"= "Si el feed solo ofrece un resumen, se extrae el texto completo al abrir el artículo.";
+"feed.reading.fullText.mode.always.note"= "Al abrir el artículo, siempre se intenta extraer el texto completo del sitio original.";
+"feed.reading.fullText.mode.never.note"= "Solo se muestra el cuerpo incluido en el feed; no se accede al sitio original para extraer el texto completo.";
+"feed.reading.selector"= "Selector CSS (opcional)";
+"feed.reading.selector.placeholder"= "Por ejemplo, article .post-content";
+"feed.reading.selector.note"= "Si se rellena, se prioriza extraer esa área; si no coincide, se muestra el motivo exacto del fallo.";
+"feed.reading.unread"= "No leído";
+"feed.reading.unread.badge"= "Mostrar el número de no leídos en la barra lateral";
+"feed.reading.unread.note"= "Si se desactiva, esta fuente no cuenta en ninguna insignia de no leídos; los artículos siguen apareciendo en la lista con normalidad.";
+"feed.reading.retention"= "Conservación (anula el ajuste global)";
+"feed.reading.retention.count"= "Artículos a conservar";
+"feed.reading.retention.days"= "Tiempo de conservación";
+"feed.reading.retention.note"= "Los artículos destacados nunca se eliminan.";
+"feed.reading.youtube.filterShorts"= "Filtrar Shorts";
+"feed.reading.youtube.filterShorts.note"= "Si se activa, los vídeos de Shorts nuevos no se guardan; los elementos ya guardados no se ven afectados.";
+"feed.reading.youtube.limit.note"= "El feed oficial de YouTube solo ofrece los 15 vídeos más recientes.";
+
+/* Fuente → Ajustes de descarga */
+"feed.fetch.interval"= "Intervalo de actualización";
+"feed.fetch.interval.note"= "Anula el intervalo global de los ajustes; solo afecta a la actualización automática de esta fuente.";
+"feed.fetch.userAgent"= "User-Agent (opcional)";
+"feed.fetch.userAgent.placeholder"= "Vacío: se usa el valor predeterminado";
+"feed.fetch.userAgent.note"= "Algunos sitios rechazan solicitudes según el UA. Ejemplo: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15";
+"feed.fetch.basicAuth"= "Autenticación HTTP Basic";
+"feed.fetch.basicAuth.user"= "Usuario";
+"feed.fetch.basicAuth.password"= "Contraseña";
+"feed.fetch.basicAuth.note"= "Solo para feeds que requieren inicio de sesión (como una fuente privada de Reddit); la contraseña se guarda en el llavero local. Al vaciar el usuario se desactiva la autenticación.";
+
+/* Fuente → Buscar nueva dirección */
+"feed.relocate.current"= "Dirección actual";
+"feed.relocate.new"= "Dirección nueva";
+"feed.relocate.searching"= "Buscando en la página del sitio…";
+"feed.relocate.notFound"= "No se encontró ninguna dirección nueva";
+"feed.relocate.replace"= "Reemplazar";
+
+/* Panel de estado de las fuentes */
+"feed.health.window.title"= "Estado de las fuentes";
+"feed.health.menu"= "Estado de las fuentes…";
+"feed.health.column.recent"= "Últimos 30 días";
+"feed.health.column.read"= "Leídos";
+"feed.health.column.muted"= "Coincidencias de silencio";
+"feed.health.column.lastArticle"= "Último artículo";
+"feed.health.column.status"= "Estado";
+"feed.health.unsubscribeSelected"= "Cancelar suscripción de los seleccionados";
+"feed.health.unsubscribe.confirm"= "¿Cancelar la suscripción a las %lld fuentes seleccionadas?";
+"feed.health.unsubscribe.message"= "Estas fuentes y sus artículos se eliminarán; la acción no se puede deshacer.";
+"feed.health.status.hardError"= "Error permanente HTTP %lld";
+"feed.health.status.deferred"= "Aplazado";
+"feed.health.status.ok"= "Correcto";
+
+/* Modo de texto completo de la fuente; nombres de fuentes contenedoras y de artículos sin título */
+"feed.fullTextMode.auto"= "Automático";
+"feed.fullTextMode.always"= "Extraer siempre";
+"feed.fullTextMode.never"= "Nunca extraer";
+"feed.container.starredArchive"= "Suscripción cancelada";
+"feed.container.savedPages"= "Guardado manual";
+"feed.article.untitled"= "(sin título)";
+
+/* Búsqueda y búsquedas guardadas */
+"search.prompt"= "Buscar artículos";
+"search.rename.title"= "Cambiar nombre de la búsqueda";
+"search.save.title"= "Guardar búsqueda";
+"search.save.menu"= "Guardar esta búsqueda…";
+"search.save.message"= "Al guardarla, aparece en «Búsquedas guardadas» de la barra lateral; al abrirla, se vuelve a los mismos términos y al mismo ámbito.";
+"search.scope"= "Ámbito";
+"search.scope.current"= "Ámbito actual";
+"search.scope.currentFolder"= "Carpeta actual";
+"search.scope.currentFeed"= "Fuente actual";
+"search.scopeMenu.help"= "Ámbito y periodo de búsqueda";
+"search.window"= "Periodo";
+"search.window.any"= "Cualquier periodo";
+"search.window.week"= "Últimos 7 días";
+"search.window.month"= "Últimos 30 días";
+"search.window.year"= "Último año";
+
+/* Importar y exportar OPML */
+"data.opml.import.menu"= "Importar OPML…";
+"data.opml.export.menu"= "Exportar OPML…";
+"data.opml.import.panel"= "Seleccionar archivo OPML";
+"data.opml.untitled"= "(sin nombre)";
+
+/* Copia de seguridad de la base de datos */
+"data.backup.menu"= "Copia de seguridad de la base de datos…";
+"data.backup.openFolder"= "Abrir carpeta de copias de seguridad";
+"data.backup.panel"= "Guardar instantánea de la base de datos";
+"data.backup.running"= "Creando copia de seguridad…";
+"data.backup.done"= "Copia de seguridad guardada en %@.";
+"data.backup.failed"= "Error al crear la copia de seguridad: %@";
+"data.backup.summary"= "%1$lld fuentes, %2$lld artículos";
+"data.backup.note"= "La copia de seguridad es una instantánea coherente y puede hacerse con la aplicación en funcionamiento. Cada día se genera automáticamente una copia OPML de la lista de fuentes, conservando las últimas 7.";
+
+/* Restaurar desde una copia de seguridad */
+"data.restore.menu"= "Restaurar desde una copia de seguridad…";
+"data.restore.panel"= "Seleccionar copia de seguridad de la base de datos de 2W";
+"data.restore.verified"= "Copia de seguridad verificada: %@. Se aplicará después de reiniciar.";
+"data.restore.pending"= "%1$@ (%2$@) reemplazará la base de datos actual en el próximo inicio; la base de datos actual se conservará como bifeed.sqlite.bak.";
+"data.restore.failed"= "No se pudo restaurar: %@";
+"data.restore.needsRelaunch"= "Es necesario reiniciar tras la restauración";
+"data.restore.later"= "Reiniciar más tarde";
+"data.restore.now"= "Reiniciar ahora";
+
+/* Buscar actualizaciones */
+"update.menu.check"= "Buscar actualizaciones…";
+"update.section.title"= "Actualizaciones";
+"update.section.note"= "Solo comprueba y avisa; no descarga ni instala automáticamente. Las versiones omitidas se pueden borrar aquí.";
+"update.checkOnLaunch"= "Buscar actualizaciones al iniciar";
+"update.currentVersion"= "Versión actual";
+"update.skipped"= "%@ omitida";
+"update.unskip"= "Dejar de omitir";
+"update.check.title"= "Buscar actualizaciones";
+"update.check.upToDate"= "Ya está instalada la versión más reciente (%@).";
+"update.check.failed"= "Error al buscar actualizaciones: %@";
+"update.available.title"= "Nueva versión %@ disponible";
+"update.available.current"= "Versión actual: %@.";
+"update.available.download"= "Descargar";
+"update.available.skip"= "Omitir esta versión";
+"update.available.later"= "Más tarde";
+
+/* Hilos de foro */
+"forum.replies"= "Respuestas";
+"forum.comments"= "Comentarios";
+"forum.opBadge"= "OP";
+"forum.score"= "%lld puntos";
+"forum.loading"= "Cargando respuestas…";
+"forum.loadFailed"= "Error al cargar las respuestas: %@";
+"forum.more.reddit"= "%lld respuestas más; ver en Reddit";
+"forum.more.generic"= "%lld respuestas más; ver en la publicación original";
+
+/* Errores: fuentes y descargas */
+"error.feed.duplicate"= "Ya existe una suscripción a esta fuente";
+"error.fetch.badURL"= "URL no válida: %@";
+"error.fetch.tooLarge"= "La respuesta supera el límite de 10 MB";
+"error.fetch.notHTTP"= "Respuesta no HTTP";
+"error.parse.unparseable"= "No se pudo analizar el feed: %@";
+"error.opml.malformed"= "Formato de OPML incorrecto";
+"error.subscribe.noFeedFound"= "No se encontró ningún feed en esta dirección";
+
+/* Errores: copias de seguridad y actualizaciones */
+"error.backup.notBiFeedDatabase"= "Este archivo no es una copia de seguridad de la base de datos de 2W.";
+"error.backup.newerVersion"= "La copia de seguridad proviene de una versión más reciente de 2W (migración desconocida: %@); hay que actualizar la aplicación antes de restaurar.";
+"error.update.rateLimited"= "GitHub ha limitado temporalmente la frecuencia de solicitudes; se puede reintentar más tarde.";
+"error.update.badResponse"= "No se pudo leer la información de versión de GitHub.";
+
+/* Errores: traducción por API */
+"error.api.notConfigured"= "La traducción por API no está configurada: hay que indicar la Base URL, el nombre del modelo y la API Key en los ajustes";
+"error.api.badStatus"= "La API devolvió HTTP %lld";
+"error.api.badPayload"= "El formato de la respuesta de la API no es el esperado";
+
+/* Errores: texto completo */
+"error.fullText.loadFailed"= "Error al cargar la página: %@";
+"error.fullText.timeout"= "Tiempo de carga de la página agotado (20 segundos)";
+"error.fullText.scriptFailed"= "Error al extraer el cuerpo: %@";
+"error.fullText.emptyContent"= "No se pudo extraer el cuerpo";
+"error.fullText.selectorNoMatch"= "El selector CSS no coincidió con ningún contenido:";
+
+/* Errores: hilos de foro. «detail» se inserta en error.forum.badResponse */
+"error.forum.badResponse"= "No se pudieron analizar los datos del foro: %@";
+"error.forum.notForum"= "Esto no es una publicación de foro";
+"error.forum.redditBlocked"= "Reddit rechazó la solicitud de comentarios sin iniciar sesión desde la salida de red actual (control de riesgo por IP). El artículo no se ve afectado; las respuestas pueden verse con «Abrir en el navegador», o configurando el proxy para que reddit.com salga por una IP de tipo residencial.";
+"error.forum.detail.v2ex"= "Respuestas de V2EX %lld";
+"error.forum.detail.reddit"= "La respuesta de Reddit no es un array de dos elementos";
+"error.forum.detail.discourse"= "Tema de Discourse %@";
+"error.forum.detail.lobsters"= "La respuesta de Lobsters no es un objeto";
+"error.forum.detail.unexpected304"= "Respuesta 304 inesperada";
+
+/* Documento Markdown exportado */
+"export.markdown.action"= "Exportar Markdown";
+"export.untitled"= "Sin título";
+"export.translationPrefix"= "Trad.: ";
+"export.forum.heading"= "%1$@ (%2$lld)";
+
+/* Traducción automática por fuente (clic derecho en la fuente → «Ajustes de lectura…») */
+"feed.reading.autoTranslate"= "Traducción automática";
+"feed.reading.autoTranslate.note"= "«Igual que el ajuste global» usa el interruptor general de los ajustes; solo se traducen los artículos en idioma extranjero.";
+"feed.autoTranslate.inherit"= "Igual que el ajuste global";
+"feed.autoTranslate.always"= "Siempre";
+"feed.autoTranslate.never"= "Nunca";

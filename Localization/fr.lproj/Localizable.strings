@@ -1,0 +1,503 @@
+/* Boutons et noms réutilisés dans plusieurs zones. Modifier ici affecte aussi la barre latérale, la liste, les réglages et les boîtes de dialogue. */
+"common.ok"= "OK";
+"common.cancel"= "Annuler";
+"common.confirm"= "OK";
+"common.save"= "Enregistrer";
+"common.delete"= "Supprimer";
+"common.rename"= "Renommer…";
+"common.retry"= "Réessayer";
+"common.unsubscribe"= "Se désabonner";
+"common.name"= "Nom";
+"common.feeds"= "Flux";
+"common.folder"= "Dossier";
+"common.folders"= "Dossiers";
+"common.noFolder"= "Aucun dossier";
+"common.allFeeds"= "Tous les flux";
+"common.followGlobal"= "Suivre le réglage global";
+"common.markAllRead"= "Tout marquer comme lu";
+"common.openInBrowser"= "Ouvrir dans le navigateur";
+
+/* Barre latérale : lignes intelligentes, titres de section, barre d’outils, barre inférieure */
+"sidebar.smart.today"= "Aujourd’hui";
+"sidebar.smart.starred"= "Favoris";
+"sidebar.smart.muted"= "Filtrés";
+"sidebar.smart.all"= "Tous les articles";
+"sidebar.section.smart"= "Intelligent";
+"sidebar.section.savedSearches"= "Recherches enregistrées";
+"sidebar.toolbar.toggleSidebar"= "Réduire/développer la barre latérale";
+"sidebar.toolbar.refreshAll"= "Tout actualiser";
+"sidebar.toolbar.refreshAll.help"= "Tout actualiser (⌘R)";
+"sidebar.bottomBar.add.help"= "Ajouter un flux ou un dossier";
+"sidebar.bottomBar.settings.help"= "Réglages (⌘,)";
+
+/* Barre latérale : infobulles des icônes d’état sur les lignes de flux */
+"sidebar.feed.hardError.help"= "HTTP %lld, nouvelles tentatives automatiques arrêtées ; clic droit pour réessayer manuellement";
+"sidebar.feed.deferred.help"= "Reporté à %1$@ : %2$@";
+"sidebar.feed.fetchFailed"= "Échec de la récupération";
+"sidebar.feed.stale.help"= "Dernière mise à jour il y a %lld jours";
+
+/* Barre latérale, dossiers : renommer, créer, menu contextuel */
+"sidebar.folder.rename.title"= "Renommer le dossier";
+"sidebar.folder.new.title"= "Nouveau dossier";
+"sidebar.folder.new.namePlaceholder"= "Nom du dossier";
+"sidebar.folder.new.create"= "Créer";
+"sidebar.folder.new.menu"= "Nouveau dossier…";
+"sidebar.folder.menu.hideBadge"= "Désactiver le badge des non lus";
+"sidebar.folder.menu.showBadge"= "Activer le badge des non lus";
+"sidebar.folder.menu.delete"= "Supprimer le dossier";
+
+/* Liste des articles : état vide */
+"list.empty.unread"= "Aucun article non lu";
+"list.empty.starred"= "Aucun article favori";
+"list.empty.filtered.description"= "Retour à « Tous » pour afficher tous les articles.";
+"list.empty.muted"= "Aucun article filtré";
+"list.empty.muted.description"= "Les articles correspondant à une règle de filtrage apparaissent ici.";
+"list.empty.none"= "Aucun article";
+"list.empty.none.description"= "Les articles apparaissent ici après l’ajout d’un flux ou une actualisation.";
+
+/* Liste des articles : barre d’outils, titre, statistiques d’en-tête, filtre des non lus */
+"list.toolbar.undoMarkAllRead"= "Annuler « Tout marquer comme lu »";
+"list.toolbar.undoMarkAllRead.help"= "Annuler le marquage global comme lu effectué à l’instant";
+"list.toolbar.markAllRead"= "Tout marquer comme lu";
+"list.toolbar.markAllRead.help"= "Marquer tous les articles de cette liste comme lus";
+"list.title.allUnread"= "Tous les non lus";
+"list.title.articles"= "Articles";
+"list.filter.showAll"= "Tout afficher";
+"list.filter.unreadOnly"= "Non lus uniquement";
+"list.header.unreadOnly"= "Non lus uniquement · %lld articles";
+"list.header.summary"= "%1$lld articles, %2$lld non lus";
+
+/* Liste des articles : menu contextuel de la ligne */
+"list.menu.markUnread"= "Marquer comme non lu";
+"list.menu.markRead"= "Marquer comme lu";
+"list.menu.unstar"= "Retirer des favoris";
+"list.menu.star"= "Ajouter aux favoris";
+"list.menu.markReadFromHere"= "Marquer cet article et les suivants comme lus";
+"list.menu.allowMuted"= "Autoriser et ajouter aux exceptions de la règle";
+"list.menu.copyLink"= "Copier le lien";
+
+/* Liste des articles : indicateurs et horodatage en ligne */
+"list.badge.collapsed"= "Réduit";
+"list.badge.paywall"= "Paywall";
+"list.badge.paywall.help"= "Ce site nécessite généralement un abonnement pour lire l’article dans son intégralité";
+"list.badge.duplicateSources"= "%lld sources";
+"list.date.none"= "Sans date";
+"list.date.justNow"= "À l’instant";
+"list.date.yesterday"= "Hier";
+
+/* Lecteur : état vide et texte de remplacement */
+"reader.empty.title"= "Aucun article sélectionné";
+"reader.empty.description"= "↩ Ouvrir l’original · T bilingue · ⌘↩ Mode lecture · j/k Article précédent/suivant";
+"reader.empty.body"= "Cet article n’a pas de contenu. Le bouton en haut à droite ouvre l’original dans le navigateur.";
+
+/* Barre d’outils du lecteur */
+"reader.toolbar.star.help"= "Favori (s)";
+"reader.toolbar.openOriginal.help"= "Ouvrir l’original dans le navigateur par défaut";
+"reader.toolbar.refreshForum"= "Actualiser les réponses";
+"reader.toolbar.refreshForum.help"= "Récupérer les dernières réponses (sans changer la position de lecture)";
+
+/* Lecteur : affichage bilingue */
+"reader.translate.toggle"= "Bilingue";
+"reader.translate.toggle.help"= "Bilingue (T)";
+"reader.translate.download"= "Télécharger le modèle de traduction";
+"reader.translate.download.help"= "Le modèle de traduction doit être téléchargé ; cliquer pour lancer le téléchargement";
+"reader.translate.downloadTimeout.help"= "Délai de téléchargement du modèle dépassé ; cliquer pour réessayer";
+"reader.translate.failed.help"= "Échec de la traduction : %@, cliquer pour réessayer";
+"reader.translate.retry"= "Réessayer la traduction";
+
+/* Lecteur : extraction du texte intégral */
+"reader.fullText.extract"= "Extraire le texte intégral";
+"reader.fullText.showOriginal"= "Rétablir le texte d’origine";
+"reader.fullText.disabled"= "Extraction du texte intégral désactivée";
+"reader.fullText.disabled.help"= "Ce flux est réglé pour ne jamais extraire le texte intégral ; ce choix se modifie dans Réglages de lecture, via le clic droit sur le flux";
+"reader.fullText.failed"= "Échec de l’extraction du texte intégral : %@";
+"reader.fullText.openInBrowser"= "Ouvrir dans le navigateur";
+"reader.fullText.neverForFeed"= "Ce flux n’extrait jamais";
+
+/* Lecteur : ligne de lien ajoutée lors de la remise en forme du contenu Reddit */
+"reader.reddit.link"= "Lien :";
+
+/* Réglages → Apparence */
+"settings.appearance.title"= "Apparence";
+"settings.appearance.theme"= "Thème";
+"settings.appearance.theme.system"= "Système";
+"settings.appearance.theme.light"= "Clair";
+"settings.appearance.theme.dark"= "Sombre";
+"settings.appearance.note"= "Le thème s’applique immédiatement.";
+
+/* Réglages → Lecture */
+"settings.reading.title"= "Lecture";
+"settings.reading.fontSize"= "Taille du texte";
+"settings.reading.fontSize.note"= "La taille s’applique aux articles ouverts par la suite.";
+"settings.reading.markReadOnOpen"= "Marquer comme lu à l’ouverture";
+"settings.reading.markReadOnScrollEnd"= "Marquer comme lu en fin de défilement";
+"settings.reading.markRead.note"= "Les deux réglages sont indépendants ; si les deux sont désactivés, seul m ou le clic droit permet de marquer manuellement.";
+"settings.reading.preview.title"= "Aperçu du titre d’article";
+"settings.reading.preview.body"= "Le texte s’affiche à cette taille. The quick brown fox jumps over the lazy dog.";
+"settings.reading.preview.translation"= "La traduction utilise la même taille que le texte, avec un trait d’accent à gauche.";
+
+/* Réglages → Raccourcis (page de catégorie et tableau récapitulatif du menu Aide, en commun) */
+"settings.shortcuts.title"= "Raccourcis";
+"settings.shortcuts.window.title"= "Raccourcis 2W";
+"settings.shortcuts.recording"= "Appuyer sur la nouvelle touche…";
+"settings.shortcuts.change"= "Modifier";
+"settings.shortcuts.reset"= "Réinitialiser";
+"settings.shortcuts.resetAll"= "Tout réinitialiser";
+"settings.shortcuts.note"= "Après un clic sur « Modifier », appuyer directement sur la touche voulue ; Échap pour annuler. La modification s’applique immédiatement.";
+"settings.shortcuts.conflict"= "« %1$@ » est déjà utilisé par « %2$@ » ; choisir une autre touche.";
+
+/* Réglages → Raccourcis : noms des actions réattribuables */
+"settings.shortcuts.action.nextArticle"= "Article suivant";
+"settings.shortcuts.action.prevArticle"= "Article précédent";
+"settings.shortcuts.action.nextUnread"= "Prochain non lu";
+"settings.shortcuts.action.toggleRead"= "Lu/non lu";
+"settings.shortcuts.action.toggleReadAlias"= "Lu/non lu (touche alternative)";
+"settings.shortcuts.action.toggleStar"= "Favori";
+"settings.shortcuts.action.translate"= "Bilingue";
+"settings.shortcuts.action.openOriginal"= "Ouvrir l’original dans le navigateur";
+"settings.shortcuts.action.immersive"= "Mode lecture";
+"settings.shortcuts.action.spaceAdvance"= "Écran suivant / prochain non lu";
+
+/* Tableau récapitulatif des raccourcis du menu Aide : le libellé de cette colonne diffère des noms d’action ci-dessus, d’où des entrées séparées */
+"settings.shortcuts.key.immersiveToggle"= "Activer/désactiver le mode immersif";
+"settings.shortcuts.key.immersiveExit"= "Quitter le mode immersif";
+"settings.shortcuts.key.spaceAdvance"= "Défiler d’un écran ; passe au prochain non lu une fois en bas";
+"settings.shortcuts.key.toggleRead"= "Marquer comme lu / non lu";
+"settings.shortcuts.key.toggleReadAlias"= "Marquer comme lu / non lu (identique à m)";
+"settings.shortcuts.key.toggleStar"= "Ajouter / retirer des favoris";
+"settings.shortcuts.key.translateToggle"= "Activer/désactiver le bilingue";
+"settings.shortcuts.key.addFeed"= "Ajouter un flux";
+"settings.shortcuts.key.savePage"= "Enregistrer la page web";
+"settings.shortcuts.key.settings"= "Réglages";
+
+/* Réglages → Traduction */
+"settings.translation.title"= "Traduction";
+"settings.translation.engine"= "Moteur";
+"settings.translation.engine.apple"= "Traduction système (hors connexion)";
+"settings.translation.engine.api"= "Traduction par API";
+"settings.translation.apiModel"= "Nom du modèle";
+"settings.translation.targetLang"= "Langue de traduction";
+"settings.translation.targetLang.note"= "S’applique aux articles ouverts par la suite ; un changement de langue invalide automatiquement le cache des anciennes traductions, qui sont retraduites.";
+"settings.translation.auto"= "Activer automatiquement le bilingue pour les articles en langue étrangère";
+"settings.translation.auto.note"= "Une fois désactivé, T reste disponible pour traduire manuellement ; la clé est stockée dans le trousseau local, et ce réglage s’applique aux articles ouverts par la suite.";
+
+/* Réglages → Actualisation */
+"settings.refresh.title"= "Actualisation";
+"settings.refresh.interval"= "Intervalle d’actualisation automatique";
+"settings.refresh.interval.15"= "15 minutes";
+"settings.refresh.interval.30"= "30 minutes";
+"settings.refresh.interval.60"= "1 heure";
+"settings.refresh.interval.120"= "2 heures";
+"settings.refresh.interval.note"= "Un flux peut remplacer cet intervalle via clic droit, « Réglages de récupération… ».";
+"settings.refresh.domainInterval"= "Intervalle entre requêtes du même domaine";
+"settings.refresh.domainInterval.off"= "Désactivé";
+"settings.refresh.domainInterval.5"= "5 secondes";
+"settings.refresh.domainInterval.10"= "10 secondes";
+"settings.refresh.domainInterval.30"= "30 secondes";
+"settings.refresh.domainInterval.note"= "Entre plusieurs flux du même site, au moins ce délai s’écoule avant la requête suivante.";
+"settings.refresh.initialRead"= "Premiers articles d’un flux nouvellement ajouté";
+"settings.refresh.initialRead.unread"= "Tous non lus";
+"settings.refresh.initialRead.read"= "Tous lus";
+"settings.refresh.initialRead.recent"= "Quelques non lus récents";
+"settings.refresh.initialRead.keepCount"= "Nombre de non lus conservés";
+"settings.refresh.initialRead.items"= "%lld articles";
+"settings.refresh.initialRead.note"= "N’affecte que les articles de la toute première récupération de ce flux.";
+"settings.refresh.defaultFullText"= "Extraction du texte intégral par défaut";
+"settings.refresh.defaultFullText.note"= "N’affecte que les flux ajoutés par la suite ; pour un flux existant, clic droit « Réglages de lecture… ».";
+
+/* Réglages → Conservation */
+"settings.retention.title"= "Conservation";
+"settings.retention.section"= "Politique de conservation (les favoris sont conservés indéfiniment)";
+"settings.retention.count"= "Articles conservés par flux";
+"settings.retention.days"= "Durée de conservation";
+"settings.retention.days.7"= "7 jours";
+"settings.retention.days.30"= "30 jours";
+"settings.retention.days.90"= "90 jours";
+"settings.retention.days.365"= "1 an";
+"settings.retention.days.forever"= "Indéfiniment";
+"settings.retention.note"= "Un flux peut remplacer ces deux réglages via clic droit « Réglages de lecture… ».";
+
+/* Réglages → Flux : filtre, liste et confirmation du désabonnement groupé */
+"settings.subscriptions.filter"= "Filtre";
+"settings.subscriptions.notUpdated"= "Durée sans mise à jour";
+"settings.subscriptions.notRead"= "Non lu récemment";
+"settings.subscriptions.failingOnly"= "Afficher uniquement les flux en échec de récupération";
+"settings.subscriptions.filter.note"= "La durée sans mise à jour se calcule depuis le dernier article, et le délai sans lecture depuis le dernier article lu. Un flux n’ayant jamais reçu ou jamais lu d’article apparaît quel que soit le palier choisi.";
+"settings.subscriptions.empty"= "Aucun flux ne correspond aux critères.";
+"settings.subscriptions.matched"= "Flux correspondants (%lld)";
+"settings.subscriptions.selectAll"= "Tout sélectionner";
+"settings.subscriptions.deselectAll"= "Tout désélectionner";
+"settings.subscriptions.keepStarred"= "Conserver les articles favoris";
+"settings.subscriptions.keepStarred.on"= "Les articles favoris restent dans « Favoris » ; les autres sont supprimés avec le flux.";
+"settings.subscriptions.keepStarred.off"= "Le flux et tous ses articles sont supprimés, y compris les favoris.";
+"settings.subscriptions.unsubscribeSelected"= "Se désabonner de la sélection (%lld)";
+"settings.subscriptions.irreversible"= "Le désabonnement est irréversible.";
+"settings.subscriptions.unsubscribe.confirm"= "Se désabonner de %lld flux ?";
+"settings.subscriptions.andMore"= "… %lld au total";
+
+/* Réglages → Flux : résumé statistique par ligne */
+"settings.subscriptions.detail.staleDays"= "Sans mise à jour depuis %lld jours";
+"settings.subscriptions.detail.neverUpdated"= "Aucun article jamais reçu";
+"settings.subscriptions.detail.unreadDays"= "Non lu depuis %lld jours";
+"settings.subscriptions.detail.neverRead"= "Jamais lu";
+"settings.subscriptions.detail.noRecent"= "Aucun nouvel article depuis 30 jours";
+"settings.subscriptions.detail.recent"= "%1$lld articles sur 30 jours / %2$lld lus";
+
+/* Réglages → Flux : paliers de jours communs aux deux critères de durée */
+"settings.subscriptions.window.any"= "Illimité";
+"settings.subscriptions.window.d3"= "3 jours";
+"settings.subscriptions.window.d7"= "7 jours";
+"settings.subscriptions.window.d15"= "15 jours";
+"settings.subscriptions.window.d30"= "30 jours et plus";
+
+/* Réglages → Filtrage : liste des règles */
+"settings.mute.title"= "Filtrage";
+"settings.mute.new"= "Nouvelle règle de filtrage…";
+"settings.mute.delete.help"= "Supprimer cette règle";
+"settings.mute.note"= "Un enregistrement ou une suppression relance aussitôt une analyse de l’historique ; les articles filtrés peuvent être vérifiés et autorisés depuis la barre latérale.";
+"settings.mute.scope.global"= "Global";
+"settings.mute.saved"= "Enregistrement réussi : %lld articles correspondants cette fois.";
+"settings.mute.saveFailed"= "Échec de l’enregistrement : %@";
+
+/* Réglages → Filtrage : valeurs possibles des champs de règle */
+"settings.mute.matchType.contains"= "Contient";
+"settings.mute.matchType.regex"= "Regex";
+"settings.mute.field.title"= "Titre";
+"settings.mute.field.body"= "Contenu";
+"settings.mute.field.author"= "Auteur";
+"settings.mute.field.category"= "Catégorie";
+"settings.mute.field.all"= "Tous les champs";
+"settings.mute.action.hide"= "Masquer";
+"settings.mute.action.markRead"= "Marquer comme lu";
+"settings.mute.action.collapse"= "Réduire";
+
+/* Réglages → Filtrage : fenêtre de nouvelle règle */
+"settings.mute.editor.title"= "Nouvelle règle de filtrage";
+"settings.mute.editor.condition"= "Condition";
+"settings.mute.editor.matchType"= "Correspondance";
+"settings.mute.editor.pattern.regex"= "Expression régulière";
+"settings.mute.editor.pattern.keyword"= "Mot-clé";
+"settings.mute.editor.field"= "Champ";
+"settings.mute.editor.scope"= "Portée";
+"settings.mute.editor.scope.appliesTo"= "S’applique à";
+"settings.mute.editor.exceptions"= "Mots d’exception (un par ligne, facultatif)";
+"settings.mute.editor.exceptions.note"= "La règle ne se déclenche pas si un champ contient un mot d’exception.";
+"settings.mute.editor.action"= "Action";
+"settings.mute.editor.action.onMatch"= "En cas de correspondance";
+"settings.mute.editor.save"= "Enregistrer et réanalyser";
+
+/* Réglages → Données */
+"settings.data.title"= "Données";
+"settings.data.dbPath"= "Emplacement de la base de données";
+
+/* Ajouter un flux */
+"feed.add.menu"= "Ajouter un flux…";
+"feed.add.title"= "Ajouter un flux";
+"feed.add.placeholder"= "URL RSS, Atom, JSON Feed ou page web";
+"feed.add.submit"= "Ajouter";
+"feed.add.candidates.title"= "Cette page contient %lld flux";
+"feed.add.candidates.submit"= "S’abonner à la sélection";
+
+/* Enregistrer une page web */
+"feed.savePage.menu"= "Enregistrer une page web…";
+"feed.savePage.title"= "Enregistrer une page web";
+"feed.savePage.placeholder"= "Adresse de la page web";
+"feed.savePage.note"= "Le contenu extrait est enregistré dans « Pages enregistrées », dans la même liste que les articles de flux.";
+
+/* Menu contextuel du flux */
+"feed.menu.refresh"= "Actualiser le flux";
+"feed.menu.reloadFetchState"= "Recharger";
+"feed.menu.clearAndReload"= "Vider et recharger…";
+"feed.menu.readingSettings"= "Réglages de lecture…";
+"feed.menu.fetchSettings"= "Réglages de récupération…";
+"feed.menu.relocate"= "Rechercher une nouvelle adresse…";
+"feed.menu.openSite"= "Ouvrir le site";
+"feed.menu.copyURL"= "Copier le lien du flux";
+"feed.menu.moveToFolder"= "Déplacer vers un dossier";
+"feed.menu.folderSuggested"= "%@ (suggestion)";
+
+/* Flux : renommer et vider/recharger */
+"feed.rename.title"= "Renommer le flux";
+"feed.reload.title"= "Vider et recharger";
+"feed.reload.message"= "Supprime les articles déjà enregistrés de « %@ », puis récupère tout depuis le début. Les favoris sont conservés ; les anciens articles sortis du flux ne reviendront pas.";
+
+/* Flux → Réglages de lecture */
+"feed.reading.fullText"= "Texte intégral";
+"feed.reading.fullText.mode"= "Stratégie";
+"feed.reading.fullText.mode.auto.note"= "Le texte intégral est extrait à l’ouverture de l’article si le flux ne fournit qu’un résumé.";
+"feed.reading.fullText.mode.always.note"= "Le texte intégral est toujours extrait du site d’origine à l’ouverture de l’article.";
+"feed.reading.fullText.mode.never.note"= "Seul le contenu fourni par le flux s’affiche ; le site d’origine n’est jamais consulté.";
+"feed.reading.selector"= "Sélecteur CSS (facultatif)";
+"feed.reading.selector.placeholder"= "Par exemple article .post-content";
+"feed.reading.selector.note"= "Une fois renseigné, la zone correspondante est extraite en priorité ; en l’absence de correspondance, la raison précise de l’échec s’affiche.";
+"feed.reading.unread"= "Non lu";
+"feed.reading.unread.badge"= "Afficher le nombre de non lus dans la barre latérale";
+"feed.reading.unread.note"= "Une fois désactivé, ce flux ne compte plus dans aucun badge de non lus ; les articles continuent d’apparaître normalement dans la liste.";
+"feed.reading.retention"= "Conservation (remplace le réglage global)";
+"feed.reading.retention.count"= "Nombre d’articles conservés";
+"feed.reading.retention.days"= "Durée de conservation";
+"feed.reading.retention.note"= "Les articles favoris ne sont jamais supprimés.";
+"feed.reading.youtube.filterShorts"= "Filtrer les Shorts";
+"feed.reading.youtube.filterShorts.note"= "Une fois activé, les nouvelles vidéos Shorts récupérées ne sont pas enregistrées ; les entrées déjà présentes ne sont pas affectées.";
+"feed.reading.youtube.limit.note"= "Le flux officiel YouTube ne fournit que les 15 dernières vidéos.";
+
+/* Flux → Réglages de récupération */
+"feed.fetch.interval"= "Intervalle d’actualisation";
+"feed.fetch.interval.note"= "Remplace l’intervalle global des réglages ; n’affecte que l’actualisation automatique de ce flux.";
+"feed.fetch.userAgent"= "User-Agent (facultatif)";
+"feed.fetch.userAgent.placeholder"= "Laisser vide pour utiliser la valeur par défaut";
+"feed.fetch.userAgent.note"= "Certains sites refusent les requêtes selon le user-agent. Exemple : Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15";
+"feed.fetch.basicAuth"= "Authentification HTTP Basic";
+"feed.fetch.basicAuth.user"= "Nom d’utilisateur";
+"feed.fetch.basicAuth.password"= "Mot de passe";
+"feed.fetch.basicAuth.note"= "Réservé aux flux nécessitant une connexion (par exemple un flux Reddit privé) ; le mot de passe est stocké dans le trousseau local. Vider le nom d’utilisateur désactive l’authentification.";
+
+/* Flux → Rechercher une nouvelle adresse */
+"feed.relocate.current"= "Adresse actuelle";
+"feed.relocate.new"= "Nouvelle adresse";
+"feed.relocate.searching"= "Recherche en cours sur la page du site…";
+"feed.relocate.notFound"= "Aucune nouvelle adresse trouvée";
+"feed.relocate.replace"= "Remplacer";
+
+/* Panneau d’état des flux */
+"feed.health.window.title"= "État des flux";
+"feed.health.menu"= "État des flux…";
+"feed.health.column.recent"= "30 derniers jours";
+"feed.health.column.read"= "Lu";
+"feed.health.column.muted"= "Filtrés";
+"feed.health.column.lastArticle"= "Dernier article";
+"feed.health.column.status"= "État";
+"feed.health.unsubscribeSelected"= "Se désabonner de la sélection";
+"feed.health.unsubscribe.confirm"= "Se désabonner des %lld flux sélectionnés ?";
+"feed.health.unsubscribe.message"= "Ces flux et leurs articles seront supprimés, action irréversible.";
+"feed.health.status.hardError"= "Erreur définitive HTTP %lld";
+"feed.health.status.deferred"= "Reporté";
+"feed.health.status.ok"= "Normal";
+
+/* Stratégies d’extraction du texte intégral des flux ; noms des flux conteneurs et des articles sans titre */
+"feed.fullTextMode.auto"= "Automatique";
+"feed.fullTextMode.always"= "Toujours extraire";
+"feed.fullTextMode.never"= "Ne jamais extraire";
+"feed.container.starredArchive"= "Désabonnés";
+"feed.container.savedPages"= "Pages enregistrées";
+"feed.article.untitled"= "(sans titre)";
+
+/* Recherche et recherches enregistrées */
+"search.prompt"= "Rechercher des articles";
+"search.rename.title"= "Renommer la recherche";
+"search.save.title"= "Enregistrer la recherche";
+"search.save.menu"= "Enregistrer cette recherche…";
+"search.save.message"= "Une fois enregistrée, elle apparaît dans « Recherches enregistrées » dans la barre latérale ; l’ouvrir restaure les mêmes termes et la même portée.";
+"search.scope"= "Portée";
+"search.scope.current"= "Portée actuelle";
+"search.scope.currentFolder"= "Dossier actuel";
+"search.scope.currentFeed"= "Flux actuel";
+"search.scopeMenu.help"= "Portée et période de recherche";
+"search.window"= "Période";
+"search.window.any"= "Toute période";
+"search.window.week"= "7 derniers jours";
+"search.window.month"= "30 derniers jours";
+"search.window.year"= "Dernière année";
+
+/* Importer/exporter OPML */
+"data.opml.import.menu"= "Importer OPML…";
+"data.opml.export.menu"= "Exporter OPML…";
+"data.opml.import.panel"= "Choisir un fichier OPML";
+"data.opml.untitled"= "(sans titre)";
+
+/* Sauvegarde de la base de données */
+"data.backup.menu"= "Sauvegarder la base de données…";
+"data.backup.openFolder"= "Ouvrir le dossier des sauvegardes";
+"data.backup.panel"= "Enregistrer l’instantané de la base de données";
+"data.backup.running"= "Sauvegarde en cours…";
+"data.backup.done"= "Sauvegardé dans %@.";
+"data.backup.failed"= "Échec de la sauvegarde : %@";
+"data.backup.summary"= "%1$lld flux, %2$lld articles";
+"data.backup.note"= "La sauvegarde est un instantané cohérent, réalisable pendant l’exécution de l’app. La liste des flux est sauvegardée automatiquement chaque jour au format OPML, avec conservation des 7 dernières.";
+
+/* Restaurer depuis une sauvegarde */
+"data.restore.menu"= "Restaurer depuis une sauvegarde…";
+"data.restore.panel"= "Choisir une sauvegarde de base de données 2W";
+"data.restore.verified"= "Sauvegarde vérifiée : %@. Effective après redémarrage.";
+"data.restore.pending"= "%1$@ (%2$@) remplacera la base de données actuelle au prochain démarrage ; l’actuelle sera conservée sous le nom bifeed.sqlite.bak.";
+"data.restore.failed"= "Restauration impossible : %@";
+"data.restore.needsRelaunch"= "Redémarrage nécessaire après restauration";
+"data.restore.later"= "Redémarrer plus tard";
+"data.restore.now"= "Redémarrer maintenant";
+
+/* Vérifier les mises à jour */
+"update.menu.check"= "Vérifier les mises à jour…";
+"update.section.title"= "Mise à jour";
+"update.section.note"= "Seule une vérification avec notification est effectuée, sans téléchargement ni installation automatique. Les versions ignorées peuvent être réinitialisées ici.";
+"update.checkOnLaunch"= "Vérifier les mises à jour au lancement";
+"update.currentVersion"= "Version actuelle";
+"update.skipped"= "%@ ignorée";
+"update.unskip"= "Ne plus ignorer";
+"update.check.title"= "Vérifier les mises à jour";
+"update.check.upToDate"= "Déjà à jour (%@).";
+"update.check.failed"= "Échec de la vérification : %@";
+"update.available.title"= "Nouvelle version %@ disponible";
+"update.available.current"= "Version actuelle : %@.";
+"update.available.download"= "Télécharger";
+"update.available.skip"= "Ignorer cette version";
+"update.available.later"= "Plus tard";
+
+/* Fils de discussion (forum) */
+"forum.replies"= "Réponses";
+"forum.comments"= "Commentaires";
+"forum.opBadge"= "Auteur";
+"forum.score"= "%lld points";
+"forum.loading"= "Chargement des réponses…";
+"forum.loadFailed"= "Échec du chargement des réponses : %@";
+"forum.more.reddit"= "%lld réponses de plus, à consulter sur Reddit";
+"forum.more.generic"= "%lld réponses de plus, à consulter sur le fil d’origine";
+
+/* Erreurs : abonnement et récupération */
+"error.feed.duplicate"= "Abonnement déjà existant pour ce flux";
+"error.fetch.badURL"= "URL non valide : %@";
+"error.fetch.tooLarge"= "Réponse supérieure à la limite de 10 Mo";
+"error.fetch.notHTTP"= "Réponse non HTTP";
+"error.parse.unparseable"= "Impossible d’analyser le flux : %@";
+"error.opml.malformed"= "Format OPML incorrect";
+"error.subscribe.noFeedFound"= "Aucun flux détecté à cette adresse";
+
+/* Erreurs : sauvegarde et mise à jour */
+"error.backup.notBiFeedDatabase"= "Ce fichier n’est pas une sauvegarde de base de données 2W.";
+"error.backup.newerVersion"= "Cette sauvegarde provient d’une version plus récente de 2W (migration inconnue : %@). Mettre à jour l’app avant de restaurer.";
+"error.update.rateLimited"= "GitHub limite temporairement la fréquence des requêtes ; réessayer un peu plus tard.";
+"error.update.badResponse"= "Impossible de lire les informations de version sur GitHub.";
+
+/* Erreurs : traduction par API */
+"error.api.notConfigured"= "Traduction par API non configurée : renseigner l’URL de base, le nom du modèle et la clé API dans les réglages";
+"error.api.badStatus"= "L’API a renvoyé HTTP %lld";
+"error.api.badPayload"= "Format de réponse de l’API non conforme";
+
+/* Erreurs : extraction du texte intégral */
+"error.fullText.loadFailed"= "Échec du chargement de la page : %@";
+"error.fullText.timeout"= "Délai de chargement de la page dépassé (20 secondes)";
+"error.fullText.scriptFailed"= "Échec de l’extraction du contenu : %@";
+"error.fullText.emptyContent"= "Aucun contenu extrait";
+"error.fullText.selectorNoMatch"= "Le sélecteur CSS ne correspond à aucun contenu :";
+
+/* Erreurs : fil de discussion. Le détail est inséré dans error.forum.badResponse */
+"error.forum.badResponse"= "Impossible d’analyser les données du forum : %@";
+"error.forum.notForum"= "Ce n’est pas un fil de discussion";
+"error.forum.redditBlocked"= "Reddit refuse les requêtes de commentaires non connectés depuis cette sortie réseau (contrôle anti-abus par IP). L’article reste accessible ; pour voir les réponses, utiliser « Ouvrir dans le navigateur », ou configurer le proxy pour faire passer reddit.com par une sortie de type résidentiel.";
+"error.forum.detail.v2ex"= "Réponse V2EX %lld";
+"error.forum.detail.reddit"= "La réponse Reddit n’est pas un tableau à deux éléments";
+"error.forum.detail.discourse"= "Sujet Discourse %@";
+"error.forum.detail.lobsters"= "La réponse Lobsters n’est pas un objet";
+"error.forum.detail.unexpected304"= "Réponse 304 inattendue";
+
+/* Document Markdown exporté */
+"export.markdown.action"= "Exporter en Markdown";
+"export.untitled"= "Sans titre";
+"export.translationPrefix"= "Traduction : ";
+"export.forum.heading"= "%1$@ (%2$lld)";
+
+/* Traduction automatique par flux (clic droit sur le flux → « Réglages de lecture… ») */
+"feed.reading.autoTranslate"= "Traduction automatique";
+"feed.reading.autoTranslate.note"= "« Suivre le réglage global » utilise l’interrupteur général des réglages ; seuls les articles en langue étrangère sont traduits.";
+"feed.autoTranslate.inherit"= "Suivre le réglage global";
+"feed.autoTranslate.always"= "Toujours";
+"feed.autoTranslate.never"= "Jamais";

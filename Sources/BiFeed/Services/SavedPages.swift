@@ -6,7 +6,7 @@ import GRDB
 enum SavedPages {
     /// 非 http(s) scheme：Feed.isFetchable 据此把这个源挡在抓取与 OPML 导出之外。
     static let feedURL = "bifeed://saved"
-    static let feedTitle = "手动保存"
+    static var feedTitle: String { L("feed.container.savedPages") }
 
     /// 保留策略的按源覆盖（v9 已有的机制）：保存的网页是用户主动留下的，purge 不该清掉它们。
     /// keepDays = 0 即不按时间清理，keepCount 给个够不着的大数。

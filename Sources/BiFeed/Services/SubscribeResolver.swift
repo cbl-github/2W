@@ -4,7 +4,7 @@ enum SubscribeError: LocalizedError {
     case noFeedFound
     var errorDescription: String? {
         switch self {
-        case .noFeedFound: return "这个地址里没有发现 feed"
+        case .noFeedFound: return L("error.subscribe.noFeedFound")
         }
     }
 }

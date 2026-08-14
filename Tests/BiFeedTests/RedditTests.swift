@@ -73,7 +73,7 @@ final class RedditTests: XCTestCase {
 
         // 样本里的 `<` 是 raw_json=1 的形态（不带该参数会是 `&lt;`）；解析器原样透传，不再解一次实体
         XCTAssertEqual(thread.posts[0].html, #"<div class="md"><p>if a < b { x }</p></div>"#)
-        XCTAssertTrue(thread.posts[2].html.contains("还有 7 条回复"))
+        XCTAssertTrue(thread.posts[2].html.contains("forum.more.reddit"))
         XCTAssertFalse(thread.posts[1].timeText.isEmpty)
     }
 
@@ -105,7 +105,7 @@ final class RedditTests: XCTestCase {
         XCTAssertFalse(out.contains("<td"))
         XCTAssertFalse(out.contains("submitted by"))
         XCTAssertFalse(out.contains("[comments]"))
-        XCTAssertTrue(out.contains(#"<p>链接：<a href="https://example.com/article">"#))
+        XCTAssertTrue(out.contains(#"<a href="https://example.com/article">"#))
         // href 不是图片、[link] 也不是图片：锚点原样保留，不丢缩略图
         XCTAssertTrue(out.contains("b.thumbs.redditmedia.com"))
         XCTAssertEqual(RedditContent.rewrite(html: out), out, "重排必须幂等")

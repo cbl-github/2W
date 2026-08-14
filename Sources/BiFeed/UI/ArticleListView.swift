@@ -133,22 +133,22 @@ struct ArticleListView: View {
                 } else if readFilter != "all" {
                     // 过滤态的空列表与"没有文章"分开，避免误以为没订阅
                     ContentUnavailableView {
-                        Label(readFilter == "unread" ? "没有未读文章" : "没有星标文章",
+                        Label(readFilter == "unread" ? L("list.empty.unread") : L("list.empty.starred"),
                               systemImage: readFilter == "unread" ? "checkmark.circle" : "star")
                     } description: {
-                        Text("切换回「全部」可查看所有文章。")
+                        Text(L("list.empty.filtered.description"))
                     }
                 } else if effectiveScope == .muted {
                     ContentUnavailableView {
-                        Label("没有已静音文章", systemImage: "speaker.slash")
+                        Label(L("list.empty.muted"), systemImage: "speaker.slash")
                     } description: {
-                        Text("静音规则命中的文章会出现在这里。")
+                        Text(L("list.empty.muted.description"))
                     }
                 } else {
                     ContentUnavailableView {
-                        Label("没有文章", systemImage: "tray")
+                        Label(L("list.empty.none"), systemImage: "tray")
                     } description: {
-                        Text("添加订阅或刷新后，文章会出现在这里。")
+                        Text(L("list.empty.none.description"))
                     }
                 }
             } else {
@@ -171,7 +171,7 @@ struct ArticleListView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .searchable(text: $searchText, placement: .toolbar, prompt: "搜索文章")
+        .searchable(text: $searchText, placement: .toolbar, prompt: L("search.prompt"))
         .onChange(of: searchText) { _, text in
             searchTask?.cancel()
             // 清空立即恢复原列表；输入走 200ms 防抖，避免每敲一键重启一次观察
@@ -196,17 +196,17 @@ struct ArticleListView: View {
                     Button {
                         env.undoMarkAllRead()
                     } label: {
-                        Label("撤销全部已读", systemImage: "arrow.uturn.backward")
+                        Label(L("list.toolbar.undoMarkAllRead"), systemImage: "arrow.uturn.backward")
                             .foregroundStyle(Color.accentColor)
                     }
-                    .help("撤销刚才的全部标为已读")
+                    .help(L("list.toolbar.undoMarkAllRead.help"))
                 } else {
                     Button {
                         markAllVisibleRead()
                     } label: {
-                        Label("全部标为已读", systemImage: "checkmark.circle")
+                        Label(L("list.toolbar.markAllRead"), systemImage: "checkmark.circle")
                     }
-                    .help("当前列表全部标为已读")
+                    .help(L("list.toolbar.markAllRead.help"))
                     .disabled(model.value.allSatisfy(\.isRead))
                 }
             }
@@ -223,12 +223,12 @@ struct ArticleListView: View {
         .onChange(of: searchWindow) { _, _ in
             model.apply(searchesAllFeeds: searchesAllFeeds, window: searchWindow)
         }
-        .alert("保存搜索", isPresented: $savingSearch) {
-            TextField("名称", text: $searchNameDraft)
-            Button("取消", role: .cancel) {}
-            Button("保存") { saveCurrentSearch() }
+        .alert(L("search.save.title"), isPresented: $savingSearch) {
+            TextField(L("common.name"), text: $searchNameDraft)
+            Button(L("common.cancel"), role: .cancel) {}
+            Button(L("common.save")) { saveCurrentSearch() }
         } message: {
-            Text("保存后出现在侧栏「保存的搜索」，点开即回到这次的词与范围。")
+            Text(L("search.save.message"))
         }
         // Space 到底后阅读器请求跳到下一篇未读（Space 按键本身由上面的监听器转成 bifeedSpaceAdvance）
         .onReceive(NotificationCenter.default.publisher(for: .bifeedNextUnread)) { _ in
@@ -255,19 +255,19 @@ struct ArticleListView: View {
     private var listTitle: String {
         if let savedSearchName { return savedSearchName }
         switch effectiveScope {
-        case .all: return "全部文章"
-        case .today: return "今天"
-        case .allUnread: return "全部未读"
-        case .starred: return "星标"
-        case .muted: return "已静音"
+        case .all: return L("sidebar.smart.all")
+        case .today: return L("sidebar.smart.today")
+        case .allUnread: return L("list.title.allUnread")
+        case .starred: return L("sidebar.smart.starred")
+        case .muted: return L("sidebar.smart.muted")
         case .folder, .feed, .savedSearch:
-            return model.value.first.map { scopeTitle(from: $0) } ?? "文章"
+            return model.value.first.map { scopeTitle(from: $0) } ?? L("list.title.articles")
         }
     }
 
     private func scopeTitle(from item: ArticleListItem) -> String {
         if case .feed = effectiveScope { return item.feedTitle }
-        return "文章"
+        return L("list.title.articles")
     }
 
     private var isSearching: Bool {
@@ -276,16 +276,16 @@ struct ArticleListView: View {
 
     @ViewBuilder
     private func rowMenu(_ item: ArticleListItem) -> some View {
-        Button(item.isRead ? "标为未读" : "标为已读") {
+        Button(item.isRead ? L("list.menu.markUnread") : L("list.menu.markRead")) {
             env.dbWrite { [db = env.db] in try await db.setRead(articleId: item.id, !item.isRead) }
         }
-        Button(item.isStarred ? "取消星标" : "加星标") {
+        Button(item.isStarred ? L("list.menu.unstar") : L("list.menu.star")) {
             env.dbWrite { [db = env.db] in try await db.setStarred(articleId: item.id, !item.isStarred) }
         }
         // 读到这里为止：按列表当前顺序（新→旧），把这一篇和它下面的全标已读
-        Button("这篇及以下标为已读") { markReadFrom(item) }
+        Button(L("list.menu.markReadFromHere")) { markReadFrom(item) }
         if item.isMuted {
-            Button("放行并加入规则例外") {
+            Button(L("list.menu.allowMuted")) {
                 env.dbWrite { [db = env.db] in
                     _ = try await MuteRules.allow(db, articleId: item.id)
                 }
@@ -293,8 +293,8 @@ struct ArticleListView: View {
         }
         Divider()
         if let urlString = item.url, let url = URL(string: urlString) {
-            Button("在浏览器打开") { NSWorkspace.shared.open(url) }
-            Button("复制链接") {
+            Button(L("common.openInBrowser")) { NSWorkspace.shared.open(url) }
+            Button(L("list.menu.copyLink")) {
                 NSPasteboard.general.clearContents()
                 NSPasteboard.general.setString(urlString, forType: .string)
             }
@@ -364,7 +364,7 @@ struct ArticleListView: View {
                     .foregroundStyle(readFilter == "unread" ? Color.accentColor : Color.secondary)
             }
             .buttonStyle(.plain)
-            .help(readFilter == "unread" ? "显示全部" : "只看未读")
+            .help(readFilter == "unread" ? L("list.filter.showAll") : L("list.filter.unreadOnly"))
         }
         .padding(.horizontal, DesignTokens.Spacing.lg)
         .padding(.vertical, 5)
@@ -375,15 +375,15 @@ struct ArticleListView: View {
     /// 搜索时才出现：限定范围与时间，并把当前这次搜索存成侧栏的智能源。
     private var searchScopeMenu: some View {
         Menu {
-            Picker("范围", selection: $searchesAllFeeds) {
+            Picker(L("search.scope"), selection: $searchesAllFeeds) {
                 Text(currentScopeLabel).tag(false)
-                Text("全部订阅").tag(true)
+                Text(L("common.allFeeds")).tag(true)
             }
-            Picker("时间", selection: $searchWindow) {
+            Picker(L("search.window"), selection: $searchWindow) {
                 ForEach(SearchWindow.allCases, id: \.self) { Text($0.label).tag($0) }
             }
             Divider()
-            Button("保存这次搜索…") {
+            Button(L("search.save.menu")) {
                 searchNameDraft = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
                 savingSearch = true
             }
@@ -398,21 +398,21 @@ struct ArticleListView: View {
         .buttonStyle(.plain)
         .menuIndicator(.hidden)
         .fixedSize()
-        .help("搜索范围与时间")
+        .help(L("search.scopeMenu.help"))
     }
 
     private var currentScopeLabel: String {
         switch effectiveScope {
-        case .all, .allUnread, .today, .starred, .muted, .savedSearch: "当前范围"
-        case .folder: "当前分组"
-        case .feed: "当前订阅"
+        case .all, .allUnread, .today, .starred, .muted, .savedSearch: L("search.scope.current")
+        case .folder: L("search.scope.currentFolder")
+        case .feed: L("search.scope.currentFeed")
         }
     }
 
     private var headerSummary: String {
         let unread = model.value.filter { !$0.isRead }.count
-        if readFilter == "unread" { return "只看未读 · \(model.value.count) 篇" }
-        return "\(model.value.count) 篇，\(unread) 未读"
+        if readFilter == "unread" { return L("list.header.unreadOnly", model.value.count) }
+        return L("list.header.summary", model.value.count, unread)
     }
 
     /// 「读到这里为止」以用户看到的顺序为准：列表已经按范围、过滤和搜索筛过，
@@ -523,18 +523,21 @@ private struct ArticleRow: View {
                             .foregroundStyle(.yellow)
                     }
                     if item.isCollapsed {
-                        Label("已折叠", systemImage: "rectangle.compress.vertical")
+                        Label(L("list.badge.collapsed"), systemImage: "rectangle.compress.vertical")
                             .font(.system(size: DesignTokens.Typography.micro))
                             .foregroundStyle(.secondary)
                     }
                     if PaywallDetector.isLikelyPaywalled(urlString: item.url) {
-                        Label("付费墙", systemImage: "lock")
+                        Label(L("list.badge.paywall"), systemImage: "lock")
                             .font(.system(size: DesignTokens.Typography.micro))
                             .foregroundStyle(.secondary)
-                            .help("该站点通常需要订阅才能读全文")
+                            .help(L("list.badge.paywall.help"))
                     }
                     if item.duplicateCount > 0 {
-                        Label("\(item.duplicateCount + 1) 个来源", systemImage: "square.stack.3d.up")
+                        Label(
+                            L("list.badge.duplicateSources", item.duplicateCount + 1),
+                            systemImage: "square.stack.3d.up"
+                        )
                             .font(.system(size: DesignTokens.Typography.micro))
                             .foregroundStyle(.secondary)
                     }
@@ -565,13 +568,13 @@ private struct ArticleRow: View {
 
     /// Paul 定的显示规则：今天=相对时间，昨天=「昨天」，更早同年 = 8/12，跨年 = 2025/8/12
     static func relative(_ date: Date?) -> String {
-        guard let date else { return "无日期" }
+        guard let date else { return L("list.date.none") }
         let cal = Calendar.current
         if cal.isDateInToday(date) {
-            if Date().timeIntervalSince(date) < 60 { return "刚刚" }
+            if Date().timeIntervalSince(date) < 60 { return L("list.date.justNow") }
             return formatter.localizedString(for: date, relativeTo: Date())
         }
-        if cal.isDateInYesterday(date) { return "昨天" }
+        if cal.isDateInYesterday(date) { return L("list.date.yesterday") }
         let c = cal.dateComponents([.year, .month, .day], from: date)
         if c.year == cal.component(.year, from: Date()) { return "\(c.month!)/\(c.day!)" }
         return "\(c.year!)/\(c.month!)/\(c.day!)"
