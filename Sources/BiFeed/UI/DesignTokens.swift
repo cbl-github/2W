@@ -31,7 +31,16 @@ enum DesignTokens {
     enum Icon {
         static let status: CGFloat = 10
         static let sidebar: CGFloat = 16 // 底栏加号/齿轮；12 时 Paul 反馈太小
-        static let control: CGFloat = 14
+        static let control: CGFloat = 15 // 列表头的过滤/搜索圆钮
+        /// 阅读器工具栏。ToolbarItemGroup 会把成员挤成一排，图标本身要够大、
+        /// 再靠 toolbarIcon() 补左右留白，否则五个图标糊成一团（Paul 反馈）。
+        static let toolbar: CGFloat = 16
+    }
+
+    /// 工具栏图标的统一尺寸与呼吸空间。间距走 padding 而不是 ToolbarItemGroup 的
+    /// 默认排布——后者在 macOS 上不给成员之间留空隙。
+    enum ToolbarMetrics {
+        static let iconSpacing: CGFloat = 5
     }
 
     enum Opacity {
@@ -52,5 +61,14 @@ enum DesignTokens {
         static func background(for colorScheme: ColorScheme) -> Color {
             colorScheme == .dark ? backgroundDark : backgroundLight
         }
+    }
+}
+
+extension View {
+    /// 阅读器工具栏按钮的统一外观：放大字形 + 左右留白。
+    /// 五个按钮原本紧贴在一起且偏小，看不清也点不准（Paul 反馈）。
+    func readerToolbarIcon() -> some View {
+        font(.system(size: DesignTokens.Icon.toolbar))
+            .padding(.horizontal, DesignTokens.ToolbarMetrics.iconSpacing)
     }
 }

@@ -147,6 +147,7 @@ private struct ReaderPane: View {
                             .foregroundStyle(article.isStarred ? .yellow : .secondary)
                     }
                     .buttonStyle(.borderless)
+                    .readerToolbarIcon()
                     .help("星标 (s)")
                     if let urlString = article.url, let url = URL(string: urlString) {
                         Button {
@@ -156,6 +157,7 @@ private struct ReaderPane: View {
                             Label("在浏览器打开", systemImage: "safari")
                         }
                         .buttonStyle(.borderless)
+                    .readerToolbarIcon()
                         .help("用默认浏览器打开原文")
                         // 论坛帖（V2EX/HN/Reddit）不给抓全文：feed 里正文本就完整、楼层另行渲染，
                         // 对论坛页跑提取只会抓到导航壳子（用户实测：点了就白板）。
@@ -170,6 +172,7 @@ private struct ReaderPane: View {
                                     Label("刷新回帖", systemImage: "bubble.left.and.text.bubble.right")
                                 }
                                 .buttonStyle(.borderless)
+                    .readerToolbarIcon()
                                 .help("拉取最新回帖（不改变阅读位置）")
                             }
                         } else {
@@ -183,6 +186,7 @@ private struct ReaderPane: View {
                     Label("导出 Markdown", systemImage: "square.and.arrow.up")
                 }
                 .buttonStyle(.borderless)
+                    .readerToolbarIcon()
                 .help("导出 Markdown")
             }
         }
@@ -240,6 +244,7 @@ private struct ReaderPane: View {
                         Label("下载翻译模型", systemImage: "arrow.down.circle")
                     }
                     .buttonStyle(.borderless)
+                    .readerToolbarIcon()
                     .help("需要下载翻译模型，点击下载")
                 case .failed(let reason):
                     retryButton(help: "翻译失败：\(reason)，点击重试")
@@ -251,6 +256,7 @@ private struct ReaderPane: View {
                             .foregroundStyle(translated ? Color.accentColor : Color.secondary)
                     }
                     .buttonStyle(.borderless)
+                    .readerToolbarIcon()
                     .help("双语对照 (T)")
                 }
             }
@@ -276,6 +282,7 @@ private struct ReaderPane: View {
             Label("重试翻译", systemImage: "exclamationmark.arrow.circlepath")
         }
         .buttonStyle(.borderless)
+                    .readerToolbarIcon()
         .help(help)
     }
 
@@ -317,6 +324,7 @@ private struct ReaderPane: View {
                     .foregroundStyle(showingFullText ? Color.accentColor : Color.secondary)
             }
             .buttonStyle(.borderless)
+                    .readerToolbarIcon()
             .help(showingFullText ? "恢复原文" : "抓取全文")
         }
     }
@@ -385,6 +393,7 @@ private struct ReaderPane: View {
             }
         }
         .buttonStyle(.borderless)
+                    .readerToolbarIcon()
         .padding(.horizontal, DesignTokens.Spacing.xl)
         .padding(.vertical, DesignTokens.Spacing.md)
         .background(.bar)

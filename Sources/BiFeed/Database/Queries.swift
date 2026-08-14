@@ -297,6 +297,12 @@ struct FeedHealthRow: Identifiable, Hashable {
         return "正常"
     }
 
+    /// 距今多少天没有新文章。从来没有过文章返回 nil（"从未更新"，比任何天数都糟）。
+    func staleDays(now: Date = Date()) -> Int? {
+        guard let lastPublishedAt else { return nil }
+        return max(0, Int(now.timeIntervalSince(lastPublishedAt) / 86400))
+    }
+
     /// 一条 GROUP BY 拿齐三个计数与最后发布时间，再与订阅表合并；没有文章的源也出现。
     static func fetchAll(_ db: Database,
                          since: Date = Date(timeIntervalSinceNow: -30 * 86400)) throws -> [FeedHealthRow] {

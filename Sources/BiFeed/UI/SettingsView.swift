@@ -5,7 +5,7 @@ import UniformTypeIdentifiers
 
 /// 设置分类；case 顺序即侧栏顺序。
 private enum SettingsCategory: String, CaseIterable, Identifiable {
-    case appearance, reading, shortcuts, translation, refresh, retention, mute, data
+    case appearance, reading, shortcuts, translation, refresh, retention, subscriptions, mute, data
 
     var id: Self { self }
 
@@ -17,6 +17,7 @@ private enum SettingsCategory: String, CaseIterable, Identifiable {
         case .translation: "翻译"
         case .refresh: "刷新"
         case .retention: "保留"
+        case .subscriptions: "订阅"
         case .mute: "静音"
         case .data: "数据"
         }
@@ -30,6 +31,7 @@ private enum SettingsCategory: String, CaseIterable, Identifiable {
         case .translation: "translate"
         case .refresh: "arrow.clockwise"
         case .retention: "archivebox"
+        case .subscriptions: "dot.radiowaves.up.forward"
         case .mute: "speaker.slash"
         case .data: "externaldrive"
         }
@@ -41,17 +43,28 @@ struct SettingsView: View {
 
     var body: some View {
         NavigationSplitView {
+            // 分类行默认行高很紧，九个分类挤成一坨（Paul 反馈）。
+            // 图标与文字都放大一档，再给每行上下留白，栏宽跟着放宽容纳。
             List(SettingsCategory.allCases, selection: $selection) { category in
-                Label(category.title, systemImage: category.icon)
+                Label {
+                    Text(category.title)
+                        .font(.system(size: DesignTokens.Typography.control))
+                } icon: {
+                    Image(systemName: category.icon)
+                        .font(.system(size: DesignTokens.Icon.sidebar))
+                        .frame(width: DesignTokens.Icon.sidebar + 4)
+                }
+                .padding(.vertical, DesignTokens.Spacing.sm)
             }
-            .navigationSplitViewColumnWidth(180)
+            .listStyle(.sidebar)
+            .navigationSplitViewColumnWidth(196)
             // 设置窗的分类栏没有收起的道理，摘掉系统自动加的侧栏按钮
             .toolbar(removing: .sidebarToggle)
         } detail: {
             detail
         }
         .navigationSplitViewStyle(.balanced)
-        .frame(width: 760, height: 540)
+        .frame(width: 820, height: 580)
     }
 
     @ViewBuilder
@@ -63,6 +76,7 @@ struct SettingsView: View {
         case .translation: TranslationSettings()
         case .refresh: RefreshSettings()
         case .retention: RetentionSettings()
+        case .subscriptions: SubscriptionSettings()
         case .mute: MuteSettings()
         case .data: DataSettings()
         }
