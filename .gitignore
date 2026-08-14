@@ -1,0 +1,10 @@
+.DS_Store
+/.build
+/dist
+/*.app
+.swiftpm/
+*.xcodeproj
+xcuserdata/
+
+# 设计文档、竞品调研、交接文档只留本地，不进公开仓库
+/docs/
