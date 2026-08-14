@@ -14,13 +14,7 @@ enum SavedPages {
 
     /// 惰性创建容器源。整段在一次写事务里做完，重复保存不会插出第二个容器。
     static func containerFeed(_ db: AppDatabase) async throws -> Feed {
-        try await db.pool.write { database in
-            if let existing = try Feed.filter(Column("url") == feedURL).fetchOne(database) { return existing }
-            var feed = Feed(id: nil, url: feedURL, title: feedTitle, siteURL: nil, folderId: nil,
-                            addedAt: Date(), keepCount: keepCount, keepDays: 0)
-            try feed.insert(database)
-            return feed
-        }
+        try await db.containerFeed(url: feedURL, title: feedTitle)
     }
 
     /// 抓页面 → 提正文 → 入库。

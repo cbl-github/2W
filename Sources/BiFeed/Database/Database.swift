@@ -262,11 +262,45 @@ extension AppDatabase {
         }
     }
 
-    func deleteFeed(id: Int64) async throws {
+    /// 惰性拿到一个本地容器源。`bifeed://` 开头即不参与抓取、不进 OPML 导出，
+    /// keepDays = 0 且 keepCount 给个够不着的大数，保留策略清不到它。
+    func containerFeed(url: String, title: String) async throws -> Feed {
+        try await pool.write { db in
+            if let existing = try Feed.filter(Column("url") == url).fetchOne(db) { return existing }
+            var feed = Feed(id: nil, url: url, title: title, siteURL: nil, folderId: nil,
+                            addedAt: Date(), keepCount: 100_000, keepDays: 0)
+            try feed.insert(db)
+            return feed
+        }
+    }
+
+    /// 退订。keepStarred = true 时把该源的星标文章移进「已退订的星标」容器源再删——
+    /// article 对 feed 是级联删除，不搬走就跟着没了。
+    /// 搬迁用 UPDATE OR IGNORE：容器里已有同 guid 的行会跳过（两个源发同一条目才会撞），
+    /// 跳过的那条随即被级联删掉，不会留下半搬迁状态。
+    func deleteFeed(id: Int64, keepStarred: Bool = false) async throws {
+        if keepStarred {
+            let hasStarred = try await pool.read { db in
+                try Int.fetchOne(db, sql: "SELECT COUNT(*) FROM article WHERE feedId = ? AND isStarred = 1",
+                                 arguments: [id]) ?? 0
+            }
+            if hasStarred > 0 {
+                let archive = try await containerFeed(
+                    url: Self.starredArchiveURL, title: Self.starredArchiveTitle)
+                try await pool.write { db in
+                    try db.execute(
+                        sql: "UPDATE OR IGNORE article SET feedId = ? WHERE feedId = ? AND isStarred = 1",
+                        arguments: [archive.id, id])
+                }
+            }
+        }
         try await pool.write { db in _ = try Feed.deleteOne(db, key: id) }
         // 退订即销毁凭据：钥匙串条目不随数据库行走，漏删就会永远留在系统里
         KeychainStore.set(account: KeychainStore.basicAccount(feedId: id), value: "")
     }
+
+    static let starredArchiveURL = "bifeed://starred-archive"
+    static let starredArchiveTitle = "已退订的星标"
 
     func renameFeed(id: Int64, to title: String) async throws {
         try await pool.write { db in

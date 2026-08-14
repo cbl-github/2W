@@ -283,6 +283,9 @@ struct FeedHealthRow: Identifiable, Hashable {
     var recentReadCount: Int = 0
     var mutedCount: Int = 0
     var lastPublishedAt: Date?
+    /// 最近一篇已读文章的发布时间。nil = 这个源一篇都没读过。
+    /// 有了它，「近期未读」的任意天数档位都能算出来，不必按档位各查一次。
+    var lastReadPublishedAt: Date?
 
     var id: Int64 { feed.id ?? -1 }
     var title: String { feed.title }
@@ -303,6 +306,12 @@ struct FeedHealthRow: Identifiable, Hashable {
         return max(0, Int(now.timeIntervalSince(lastPublishedAt) / 86400))
     }
 
+    /// 距今多少天没读过这个源的文章。一篇都没读过返回 nil（比任何天数都糟）。
+    func readIdleDays(now: Date = Date()) -> Int? {
+        guard let lastReadPublishedAt else { return nil }
+        return max(0, Int(now.timeIntervalSince(lastReadPublishedAt) / 86400))
+    }
+
     /// 一条 GROUP BY 拿齐三个计数与最后发布时间，再与订阅表合并；没有文章的源也出现。
     static func fetchAll(_ db: Database,
                          since: Date = Date(timeIntervalSinceNow: -30 * 86400)) throws -> [FeedHealthRow] {
@@ -312,7 +321,8 @@ struct FeedHealthRow: Identifiable, Hashable {
                 SUM(CASE WHEN isMuted = 0 AND publishedAt >= ? THEN 1 ELSE 0 END) AS recent,
                 SUM(CASE WHEN isMuted = 0 AND isRead = 1 AND publishedAt >= ? THEN 1 ELSE 0 END) AS recentRead,
                 SUM(isMuted) AS muted,
-                MAX(publishedAt) AS lastPublishedAt
+                MAX(publishedAt) AS lastPublishedAt,
+                MAX(CASE WHEN isRead = 1 THEN publishedAt END) AS lastReadPublishedAt
             FROM article GROUP BY feedId
             """, arguments: [since, since]) {
             stats[row["feedId"]] = row
@@ -322,7 +332,8 @@ struct FeedHealthRow: Identifiable, Hashable {
             guard let row = stats[feed.id ?? -1] else { return FeedHealthRow(feed: feed) }
             return FeedHealthRow(
                 feed: feed, recentCount: row["recent"], recentReadCount: row["recentRead"],
-                mutedCount: row["muted"], lastPublishedAt: row["lastPublishedAt"])
+                mutedCount: row["muted"], lastPublishedAt: row["lastPublishedAt"],
+                lastReadPublishedAt: row["lastReadPublishedAt"])
         }
     }
 }

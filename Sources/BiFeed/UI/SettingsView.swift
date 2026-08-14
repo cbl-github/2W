@@ -57,6 +57,10 @@ struct SettingsView: View {
                 .padding(.vertical, DesignTokens.Spacing.sm)
             }
             .listStyle(.sidebar)
+            // 第一行紧贴标题栏，看着像被顶住了；给顶部留一段呼吸空间（Paul 反馈）
+            .safeAreaInset(edge: .top, spacing: 0) {
+                Color.clear.frame(height: DesignTokens.Spacing.lg)
+            }
             .navigationSplitViewColumnWidth(196)
             // 设置窗的分类栏没有收起的道理，摘掉系统自动加的侧栏按钮
             .toolbar(removing: .sidebarToggle)
