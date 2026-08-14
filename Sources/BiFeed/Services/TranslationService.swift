@@ -1,5 +1,6 @@
 import CryptoKit
 import Foundation
+import NaturalLanguage
 
 /// 逐段文本块，i 与 ReaderTemplate 内 extract() 输出的段落序号对应。
 struct BlockText: Codable {
@@ -19,6 +20,9 @@ final class TranslationService: ObservableObject {
 
     @Published private(set) var state: State = .idle
 
+    /// 自动翻译发现模型没装时调用：把按钮切成「下载翻译模型」，但不替用户按下去。
+    func markNeedsDownload() { state = .needsDownload }
+
     /// 译文缓存表按 targetLang 分键，换目标语言后旧译文自然 miss，不需要清缓存。
     nonisolated static var targetLang: String {
         UserDefaults.standard.string(forKey: SettingsKey.translationTargetLang) ?? "zh-Hans"
@@ -27,6 +31,31 @@ final class TranslationService: ObservableObject {
     /// 源语言与目标语言同族 = 不必翻译（阅读器据此隐藏翻译按钮）。
     /// 目标是中文时沿用方言名单（NLLanguageRecognizer 会把粤语识别成 yue、吴语成 wuu）；
     /// 其他目标语言按 BCP-47 主标签比较，en-GB 对 en 算同族。
+    /// 从正文样本判断该不该翻译，以及源语言是什么。返回 nil = 不翻（同族、太短、识别不可信）。
+    ///
+    /// 不直接信 NLLanguageRecognizer 的三个理由，都是实测撞出来的：
+    /// 1. 中英混排的中文资讯（大量英文产品名 + 链接）会被判成荷兰语之类的小语种，
+    ///    于是拿一篇纯中文文章去下载「荷兰语」模型。所以先按汉字占比短路。
+    /// 2. 样本太短时识别基本是掷骰子，宁可不翻。
+    /// 3. 置信度低的结果同样不可用——翻错语言比不翻更烦人。
+    nonisolated static func detectSourceLanguage(sample: String, target: String) -> String? {
+        let letters = sample.unicodeScalars.filter { CharacterSet.letters.contains($0) }
+        guard letters.count >= 24 else { return nil }
+        // CJK 统一表意文字；汉字够多就是中文，不管识别器怎么说
+        let cjk = letters.filter { $0.value >= 0x4E00 && $0.value <= 0x9FFF }
+        let source: String
+        if Double(cjk.count) / Double(letters.count) >= 0.15 {
+            source = "zh"
+        } else {
+            let recognizer = NLLanguageRecognizer()
+            recognizer.processString(sample)
+            let best = recognizer.languageHypotheses(withMaximum: 1).max { $0.value < $1.value }
+            guard let best, best.value >= 0.5 else { return nil }
+            source = best.key.rawValue
+        }
+        return sameLanguageFamily(source: source, target: target) ? nil : source
+    }
+
     nonisolated static func sameLanguageFamily(source: String, target: String) -> Bool {
         let source = source.lowercased()
         let target = target.lowercased()

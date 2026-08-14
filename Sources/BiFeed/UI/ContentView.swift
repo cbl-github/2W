@@ -27,7 +27,10 @@ struct ContentView: View {
         // 翻译宿主：.translationTask 必须挂在可见视图层级里，用 1×1 隐藏视图承接
         .background(TranslationHost(engine: AppEnvironment.sharedTranslationEngine))
         .frame(minWidth: 920, minHeight: 560)
-        .onChange(of: sidebarSelection) { selectedArticleId = nil }
+        .onChange(of: sidebarSelection) {
+            selectedArticleId = nil
+            env.clearUndo() // 撤销名单属于上一个范围，换了源就别再提供
+        }
         .onReceive(NotificationCenter.default.publisher(for: .bifeedToggleImmersive)) { _ in
             setImmersive(!immersive)
         }

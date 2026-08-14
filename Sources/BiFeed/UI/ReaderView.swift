@@ -442,19 +442,23 @@ private struct ReaderPane: View {
             sourceLang = nil
             return
         }
-        let recognizer = NLLanguageRecognizer()
-        recognizer.processString(String(decoded.map(\.text).joined(separator: "\n").prefix(1000)))
-        guard let lang = recognizer.dominantLanguage?.rawValue,
-              !TranslationService.sameLanguageFamily(
-                  source: lang, target: TranslationService.targetLang) else {
+        let sample = String(decoded.map(\.text).joined(separator: "\n").prefix(1000))
+        guard let lang = TranslationService.detectSourceLanguage(
+            sample: sample, target: TranslationService.targetLang) else {
             sourceLang = nil
             return
         }
         sourceLang = lang
-        // 全局开关的默认值 true 由 SettingsKey 注册
-        if UserDefaults.standard.bool(forKey: SettingsKey.autoTranslateForeign) {
-            await enableTranslation(webView: webView, articleId: articleId)
+        // 自动翻译只在模型已经装好时进行。未装就停在这里——工具栏会显示「下载翻译模型」
+        // 按钮由用户决定。否则系统会为没装的语言对自己弹下载框，
+        // 用户等于被追着下载一堆自己根本用不到的语言（Paul 实测报的）。
+        guard UserDefaults.standard.bool(forKey: SettingsKey.autoTranslateForeign) else { return }
+        guard await AppEnvironment.currentEngine().availability(
+            source: lang, target: TranslationService.targetLang) == .installed else {
+            service.markNeedsDownload()
+            return
         }
+        await enableTranslation(webView: webView, articleId: articleId)
     }
 
     /// webView 参数给 didFinish 直达路径用（那一刻 coordinator @State 可能还没写入）

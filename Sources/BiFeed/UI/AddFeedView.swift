@@ -184,7 +184,7 @@ struct AddFeedView: View {
                 parsed.items, feedId: feed.id!, folderId: feed.folderId, rules: rules),
             initialPolicy: InitialReadPolicy.current())
         // 首批被策略标掉的文章挂到列表工具栏的撤销按钮上，与「全部标为已读」同一个入口
-        if !result.initialReadIds.isEmpty { env.undoableReadBatch = result.initialReadIds }
+        env.offerUndo(result.initialReadIds)
     }
 
     private func friendly(_ error: Error) -> String {

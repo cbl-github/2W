@@ -100,8 +100,30 @@ final class AppEnvironment: ObservableObject {
     @Published var isRefreshing = false
     @Published var showAddFeed = false
     @Published var showSavePage = false
-    /// 最近一次「全部标为已读」的名单；非 nil 时列表工具栏出现撤销按钮（手滑保险）
-    @Published var undoableReadBatch: [Int64]?
+    /// 最近一次「全部标为已读」的名单；非 nil 时列表工具栏出现撤销按钮（手滑保险）。
+    /// 一律经 offerUndo(_:) 设置——它负责过期，不要直接赋值。
+    @Published private(set) var undoableReadBatch: [Int64]?
+    private var undoExpiry: Task<Void, Never>?
+
+    /// 撤销按钮只该在"刚才那一下"之后出现。停在工具栏上不走，就成了长期占位的噪音，
+    /// 而且换到别的源之后再点它，撤销的是上一个源的批次——所以离开范围也要清掉。
+    func offerUndo(_ ids: [Int64]) {
+        guard !ids.isEmpty else { return }
+        undoableReadBatch = ids
+        undoExpiry?.cancel()
+        undoExpiry = Task { @MainActor [weak self] in
+            try? await Task.sleep(for: .seconds(5))
+            guard !Task.isCancelled else { return }
+            self?.undoableReadBatch = nil
+        }
+    }
+
+    /// 切换订阅/分组等范围时调用：撤销只对当前这一批有意义。
+    func clearUndo() {
+        undoExpiry?.cancel()
+        undoExpiry = nil
+        undoableReadBatch = nil
+    }
 
     lazy var scheduler: FetchScheduler = FetchScheduler(
         db: db, fetcher: fetcher,
@@ -109,7 +131,7 @@ final class AppEnvironment: ObservableObject {
             Task { @MainActor in self?.isRefreshing = refreshing }
         },
         onInitialReadBatch: { [weak self] ids in
-            Task { @MainActor in self?.undoableReadBatch = ids }
+            Task { @MainActor in self?.offerUndo(ids) }
         })
 
     init() {
@@ -136,7 +158,7 @@ final class AppEnvironment: ObservableObject {
     func markAllRead(scope: SidebarSelection) {
         Task { @MainActor in
             let ids = try! await db.markAllRead(scope: scope)
-            if !ids.isEmpty { undoableReadBatch = ids }
+            offerUndo(ids)
         }
     }
 
@@ -179,13 +201,13 @@ final class AppEnvironment: ObservableObject {
         guard !ids.isEmpty else { return }
         Task { @MainActor in
             let changed = try! await db.markRead(ids: ids)
-            if !changed.isEmpty { undoableReadBatch = changed }
+            offerUndo(changed)
         }
     }
 
     func undoMarkAllRead() {
         guard let ids = undoableReadBatch else { return }
-        undoableReadBatch = nil
+        clearUndo()
         Task { try! await db.markUnread(ids: ids) }
     }
 
