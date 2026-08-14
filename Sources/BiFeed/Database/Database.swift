@@ -277,6 +277,36 @@ extension AppDatabase {
     /// 死源改址（需求 7 第二级）：换地址，并清掉一切绑在旧地址上的状态——
     /// 条件请求头和内容指纹属于旧资源，留着会让新地址第一次抓取就被误判成"没变"。
     /// feedId 不变，历史文章原样留在这个源下。
+    /// 清掉条件请求与内容指纹，下次抓取必然拿全量正文而不是 304 / 指纹相同就跳过。
+    /// 顺带清错误与退避，让重载立刻能跑。文章不动——按 (feedId, guid) 去重，重抓不会产生副本。
+    func resetFetchState(feedId: Int64) async throws {
+        try await pool.write { db in
+            try db.execute(sql: """
+                UPDATE feed SET etag = NULL, lastModified = NULL, bodyHash = NULL,
+                    fetchError = NULL, lastHTTPStatus = NULL, nextFetchAt = NULL,
+                    failCount = 0, lastFetchedAt = NULL
+                WHERE id = ?
+                """, arguments: [feedId])
+        }
+    }
+
+    /// 清空一个源已入库的文章，为「清空并重新载入」用。星标默认豁免。
+    /// 正文、译文、楼层缓存随外键级联删除；FTS 索引没有外键，必须显式删同一批 rowid。
+    /// 返回删除条数。
+    @discardableResult
+    func clearArticles(feedId: Int64, keepStarred: Bool = true) async throws -> Int {
+        try await pool.write { db in
+            let condition = keepStarred ? "feedId = ? AND isStarred = 0" : "feedId = ?"
+            let doomed = try Int64.fetchAll(
+                db, sql: "SELECT id FROM article WHERE \(condition)", arguments: [feedId])
+            guard !doomed.isEmpty else { return 0 }
+            let list = doomed.map(String.init).joined(separator: ",")
+            try db.execute(sql: "DELETE FROM article WHERE id IN (\(list))")
+            try db.execute(sql: "DELETE FROM articleSearch WHERE rowid IN (\(list))")
+            return doomed.count
+        }
+    }
+
     func relocateFeed(id: Int64, to url: String) async throws {
         try await pool.write { db in
             try db.execute(sql: """

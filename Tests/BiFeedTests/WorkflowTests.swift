@@ -292,4 +292,59 @@ final class WorkflowTests: XCTestCase {
         let saved = try pool.read { try SavedSearches.fetchAll($0) }
         XCTAssertEqual(saved.map(\.filter), ["all"])
     }
+
+    // MARK: - 订阅重载
+
+    func testResetFetchStateForcesFullRefetch() async throws {
+        let db = try makeTempDB()
+        let feed = try await db.addFeed(url: "https://a.example/rss", title: "A", siteURL: nil, folderId: nil)
+        try await db.applyFetchSuccess(
+            feedId: feed.id!, etag: "e1", lastModified: "Mon, 01 Jan 2026 00:00:00 GMT",
+            items: [MuteEvaluation(item: item("a"), action: nil)])
+        try await db.applyFetchFailure(
+            feedId: feed.id!, message: "HTTP 500", status: 500,
+            nextFetchAt: Date(timeIntervalSinceNow: 3600), incrementFailure: true)
+
+        try await db.resetFetchState(feedId: feed.id!)
+
+        let fetched = try await db.feed(id: feed.id!)
+        let stored = try XCTUnwrap(fetched)
+        XCTAssertNil(stored.etag, "条件请求头必须清掉，否则服务器回 304 就白重载了")
+        XCTAssertNil(stored.lastModified)
+        XCTAssertNil(stored.bodyHash)
+        XCTAssertNil(stored.nextFetchAt)
+        XCTAssertNil(stored.lastHTTPStatus)
+        XCTAssertNil(stored.fetchError)
+        XCTAssertEqual(stored.failCount, 0)
+
+        let kept = try await db.pool.read { try Int.fetchOne($0, sql: "SELECT COUNT(*) FROM article") }
+        XCTAssertEqual(kept, 1, "重新载入不动已有文章")
+    }
+
+    func testClearArticlesKeepsStarredAndDropsIndex() async throws {
+        let db = try makeTempDB()
+        let feed = try await db.addFeed(url: "https://a.example/rss", title: "A", siteURL: nil, folderId: nil)
+        let other = try await db.addFeed(url: "https://b.example/rss", title: "B", siteURL: nil, folderId: nil)
+        try await db.applyFetchSuccess(
+            feedId: feed.id!, etag: nil, lastModified: nil,
+            items: [MuteEvaluation(item: item("keep", title: "留下"), action: nil),
+                    MuteEvaluation(item: item("drop", title: "删掉"), action: nil)])
+        try await db.applyFetchSuccess(
+            feedId: other.id!, etag: nil, lastModified: nil,
+            items: [MuteEvaluation(item: item("other", title: "别的源"), action: nil)])
+        let starred = try await db.pool.read {
+            try Int64.fetchOne($0, sql: "SELECT id FROM article WHERE title = '留下'")!
+        }
+        try await db.setStarred(articleId: starred, true)
+
+        let removed = try await db.clearArticles(feedId: feed.id!)
+        XCTAssertEqual(removed, 1)
+
+        let (titles, indexed) = try await db.pool.read { d in
+            (try String.fetchAll(d, sql: "SELECT title FROM article ORDER BY title"),
+             try Int.fetchOne(d, sql: "SELECT COUNT(*) FROM articleSearch") ?? -1)
+        }
+        XCTAssertEqual(titles, ["别的源", "留下"], "星标留下，别的源不受影响")
+        XCTAssertEqual(indexed, 2, "索引行跟着删，不留孤儿")
+    }
 }

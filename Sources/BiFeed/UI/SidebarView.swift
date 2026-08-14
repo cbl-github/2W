@@ -16,6 +16,7 @@ struct SidebarView: View {
     @State private var readingSettingsFeed: Feed?
     @State private var fetchSettingsFeed: Feed?
     @State private var relocatingFeed: Feed?
+    @State private var reloadingFeed: Feed?
 
     init(selection: Binding<SidebarSelection?>, columnVisibility: Binding<NavigationSplitViewVisibility>) {
         _selection = selection
@@ -140,6 +141,21 @@ struct SidebarView: View {
                     try await db.setFilterShorts(feedId: feed.id!, draft.filterShorts)
                 }
             }
+        }
+        .alert("清空并重新载入", isPresented: .constant(reloadingFeed != nil)) {
+            Button("取消", role: .cancel) { reloadingFeed = nil }
+            Button("清空并重新载入", role: .destructive) {
+                guard let feed = reloadingFeed, let id = feed.id else { return }
+                reloadingFeed = nil
+                Task {
+                    try? await env.db.clearArticles(feedId: id)
+                    try? await env.db.resetFetchState(feedId: id)
+                    await env.scheduler.refresh(feedId: id)
+                }
+            }
+        } message: {
+            Text("删除「\(reloadingFeed?.title ?? "")」已入库的文章，然后从头抓一遍。"
+                 + "星标文章会保留；源里已经滚出去的旧文章不会回来。")
         }
         .sheet(item: $relocatingFeed) { feed in
             FeedRelocationSheet(feed: feed, fetcher: env.fetcher) { newURL in
@@ -316,6 +332,16 @@ struct SidebarView: View {
         Button("刷新此源") {
             Task { await env.scheduler.refresh(feedId: feed.id!) }
         }
+        // 重新载入 = 丢掉条件请求头与内容指纹再抓，服务器一定给全量。
+        // 「刷新此源」在 feed 内容没变时会被 304 或指纹短路，改完全文策略、
+        // 或者怀疑正文抓错了的时候，需要的是这个而不是刷新。
+        Button("重新载入") {
+            Task {
+                try? await env.db.resetFetchState(feedId: feed.id!)
+                await env.scheduler.refresh(feedId: feed.id!)
+            }
+        }
+        Button("清空并重新载入…") { reloadingFeed = feed }
         Button("标记全部已读") {
             env.markAllRead(scope: .feed(feed.id!))
         }

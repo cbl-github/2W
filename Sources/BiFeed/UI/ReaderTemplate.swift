@@ -108,22 +108,29 @@ enum ReaderTemplate {
         --line: #333336; --code-bg: #2A2A2D;
       }
     }
-    /* feed 正文经常自带内联深色（公众号、老博客尤其多 `style="color:#000"` 和 `<font color>`），
-       深色主题下就是黑底黑字。带 !important 的作者样式能压过无 !important 的内联声明，
-       这是不改动正文 HTML 的唯一办法。
-       两条收窄：只接管近黑的几种写法（别人特意标的红字蓝字要留着）；
-       元素自己带背景时不动它——自带白底黑字的表格是自洽的，只改前景反而糊。 */
+    /* feed 正文常自带内联配色（公众号、老博客大量 `style="color:#000;background:#fff"`），
+       深色主题下要么黑底黑字，要么在深色页面里糊一块白板。
+       处理原则：**让字变亮，不让背景变白**——纸面底色由模板统一给，正文不该自己刷背景。
+       带 !important 的作者样式能压过无 !important 的内联声明，这是不改正文 HTML 的唯一办法。 */
     @media (prefers-color-scheme: dark) {
-      [style*="color:#000"]:not([style*="background"]),
-      [style*="color: #000"]:not([style*="background"]),
-      [style*="color:black"]:not([style*="background"]),
-      [style*="color: black"]:not([style*="background"]),
-      [style*="color:rgb(0,0,0)"]:not([style*="background"]),
-      [style*="color: rgb(0, 0, 0)"]:not([style*="background"]),
-      [style*="color:#111"]:not([style*="background"]),
-      [style*="color:#222"]:not([style*="background"]),
-      [style*="color:#333"]:not([style*="background"]),
-      [style*="color: #333"]:not([style*="background"]),
+      /* 1. 正文里的一切背景一律取消，落回模板底色。
+         例外是代码块和模板自己的 bf- 元素（它们的背景是本模板画的，不是 feed 带的）。 */
+      article *:not(pre):not(code):not([class^="bf-"]) {
+        background-color: transparent !important;
+        background-image: none !important;
+      }
+      /* 2. 近黑到中灰的字改成前景色。
+         前缀匹配会误伤 #33ccff 这类以相同两位开头的彩色字——它们会变成亮前景色，
+         在深色下仍然可读；反过来漏掉一个深色就是一片看不见的字，所以宁可多接管。 */
+      [style*="color:#0"], [style*="color: #0"],
+      [style*="color:#1"], [style*="color: #1"],
+      [style*="color:#2"], [style*="color: #2"],
+      [style*="color:#3"], [style*="color: #3"],
+      [style*="color:#4"], [style*="color: #4"],
+      [style*="color:#5"], [style*="color: #5"],
+      [style*="color:#6"], [style*="color: #6"],
+      [style*="color:black"], [style*="color: black"],
+      [style*="color:rgb(0"], [style*="color: rgb(0"],
       font[color="#000000"], font[color="#000"], font[color="black"] {
         color: var(--fg) !important;
       }
