@@ -413,7 +413,7 @@
 "data.backup.done"= "Backed up to %@.";
 "data.backup.failed"= "Backup failed: %@";
 "data.backup.summary"= "%1$lld feeds, %2$lld articles";
-"data.backup.note"= "A backup is a consistent snapshot and can be made while the app is running. The feed list is also backed up automatically as OPML once a day, keeping the most recent 7 copies.";
+"data.backup.note"= "Backups are consistent snapshots and can be made while 2W is running. Back Up Now writes to the app's backup folder. The subscription list is backed up daily as OPML, keeping the last 7 — but automatic backups do not include articles.";
 
 /* Restore from backup */
 "data.restore.menu"= "Restore from Backup…";
@@ -509,3 +509,11 @@
 "settings.language.interface.note"= "Requires a restart. System languages not listed here fall back to English.";
 "settings.language.restart.title"= "Restart Required";
 "settings.language.restart.message"= "The interface language changes the next time 2W starts.";
+
+/* Data: one-click backup */
+"data.backup.now"= "Back Up Everything";
+"data.backup.doneWithSize"= "Backed up to %1$@ (%2$@).";
+
+/* 数据：单独备份订阅列表 */
+"data.backup.feedsNow"= "Back Up Feeds";
+"data.backup.feedsDone"= "Feeds backed up to %@.";

@@ -413,7 +413,7 @@
 "data.backup.done"= "已备份到 %@。";
 "data.backup.failed"= "备份失败：%@";
 "data.backup.summary"= "%1$lld 个订阅，%2$lld 篇文章";
-"data.backup.note"= "备份是一致性快照，可在应用运行时进行。订阅列表每天自动备份一份 OPML，保留最近 7 份。";
+"data.backup.note"= "备份是一致性快照，可在应用运行时进行。「立即备份」存到应用的备份文件夹；订阅列表每天自动备份一份 OPML，保留最近 7 份，但**自动备份不含文章**。";
 
 /* 从备份恢复 */
 "data.restore.menu"= "从备份恢复…";
@@ -509,3 +509,11 @@
 "settings.language.interface.note"= "更改后需要重启应用。不在列表中的系统语言会使用英语。";
 "settings.language.restart.title"= "重启后生效";
 "settings.language.restart.message"= "界面语言在应用下次启动时切换。";
+
+/* 数据：一键备份 */
+"data.backup.now"= "备份全部数据";
+"data.backup.doneWithSize"= "已备份到 %1$@（%2$@）。";
+
+/* 数据：单独备份订阅列表 */
+"data.backup.feedsNow"= "备份订阅列表";
+"data.backup.feedsDone"= "订阅列表已备份到 %@。";

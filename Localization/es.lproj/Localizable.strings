@@ -413,7 +413,7 @@
 "data.backup.done"= "Copia de seguridad guardada en %@.";
 "data.backup.failed"= "Error al crear la copia de seguridad: %@";
 "data.backup.summary"= "%1$lld fuentes, %2$lld artículos";
-"data.backup.note"= "La copia de seguridad es una instantánea coherente y puede hacerse con la aplicación en funcionamiento. Cada día se genera automáticamente una copia OPML de la lista de fuentes, conservando las últimas 7.";
+"data.backup.note"= "Las copias son instantáneas consistentes y pueden crearse con la aplicación en marcha. «Crear copia ahora» guarda en la carpeta de copias de la aplicación. La lista de suscripciones se guarda a diario en OPML, conservando las 7 últimas, pero las copias automáticas no incluyen los artículos.";
 
 /* Restaurar desde una copia de seguridad */
 "data.restore.menu"= "Restaurar desde una copia de seguridad…";
@@ -509,3 +509,11 @@
 "settings.language.interface.note"= "Requiere reiniciar. Los idiomas del sistema que no aparecen aquí usan el inglés.";
 "settings.language.restart.title"= "Requiere reiniciar";
 "settings.language.restart.message"= "El idioma de la interfaz cambia al iniciar 2W de nuevo.";
+
+/* Datos: copia de seguridad inmediata */
+"data.backup.now"= "Copiar todo";
+"data.backup.doneWithSize"= "Copia creada en %1$@ (%2$@).";
+
+/* 数据：单独备份订阅列表 */
+"data.backup.feedsNow"= "Copiar suscripciones";
+"data.backup.feedsDone"= "Suscripciones copiadas en %@.";

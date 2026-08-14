@@ -62,6 +62,44 @@ enum Backup {
         }
     }
 
+    /// 立刻备份订阅列表到备份目录，不弹选择框、不管当天是否已备过。
+    /// 与每天自动那份分开命名（带时分），手动备份不会被日备覆盖。
+    /// 返回落盘的文件。
+    @discardableResult
+    static func manualOPML(_ db: AppDatabase, into root: URL = Backup.directory,
+                           now: Date = Date()) async throws -> URL {
+        let dir = root.appendingPathComponent("opml")
+        try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        let stamp = DateFormatter()
+        stamp.dateFormat = "yyyy-MM-dd-HHmm"
+        let target = dir.appendingPathComponent("2W-\(stamp.string(from: now)).opml")
+        let (folders, feeds) = try await db.pool.read { db in
+            (try Folder.fetchAll(db), try Feed.fetchAll(db))
+        }
+        try OPML.export(folders: folders, feeds: feeds)
+            .write(to: target, atomically: true, encoding: .utf8)
+        return target
+    }
+
+    /// 一键备份到应用自己的备份目录，不弹选择框。
+    /// 自动备份只存订阅列表（OPML，体积小、每天一份），文章不在其中——
+    /// 想连文章一起留一份，就得靠这个手动快照。
+    /// 返回落盘的文件与它的字节数。
+    @discardableResult
+    static func manualSnapshot(_ db: AppDatabase, into root: URL = Backup.directory,
+                               now: Date = Date()) async throws -> (url: URL, bytes: Int64) {
+        let dir = root.appendingPathComponent("db")
+        try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        let stamp = DateFormatter()
+        stamp.dateFormat = "yyyy-MM-dd-HHmm"
+        let target = dir.appendingPathComponent("2W-\(stamp.string(from: now)).sqlite")
+        try await snapshot(db, to: target)
+        // 顺手把订阅列表也存一份：数据库损坏时 OPML 是最后一根救命稻草，体积可以忽略
+        try? await autoOPML(db, into: root, now: now)
+        let bytes = (try? FileManager.default.attributesOfItem(atPath: target.path)[.size] as? Int64) ?? nil
+        return (target, bytes ?? 0)
+    }
+
     // MARK: - 自动 OPML 备份
 
     /// 每天一份订阅列表，保留最近 keep 份。文件名带日期，当天已有就不重复写。

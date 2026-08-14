@@ -569,6 +569,8 @@ private struct DataSettings: View {
                         .foregroundStyle(.secondary)
                 }
                 HStack {
+                    Button(L("data.backup.feedsNow")) { backupFeedsNow() }
+                    Button(L("data.backup.now")) { backupNow() }
                     Button(L("data.backup.menu")) { backupDatabase() }
                     Button(L("data.restore.menu")) { restoreDatabase() }
                     Spacer()
@@ -619,6 +621,32 @@ private struct DataSettings: View {
     }
 
     // MARK: - 备份与恢复
+
+    /// 只备份订阅列表。体积极小、恢复最容易，别的阅读器也认得（OPML 是通用格式）。
+    private func backupFeedsNow() {
+        Task {
+            do {
+                let url = try await Backup.manualOPML(AppEnvironment.sharedDB)
+                dataStatus = L("data.backup.feedsDone", url.lastPathComponent)
+            } catch {
+                dataStatus = L("data.backup.failed", error.localizedDescription)
+            }
+        }
+    }
+
+    /// 一键备份：不弹选择框，直接落到应用的备份目录。
+    private func backupNow() {
+        dataStatus = L("data.backup.running")
+        Task {
+            do {
+                let result = try await Backup.manualSnapshot(AppEnvironment.sharedDB)
+                let size = ByteCountFormatter.string(fromByteCount: result.bytes, countStyle: .file)
+                dataStatus = L("data.backup.doneWithSize", result.url.lastPathComponent, size)
+            } catch {
+                dataStatus = L("data.backup.failed", error.localizedDescription)
+            }
+        }
+    }
 
     private func backupDatabase() {
         let panel = NSSavePanel()

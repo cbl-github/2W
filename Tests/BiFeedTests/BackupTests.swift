@@ -110,4 +110,48 @@ final class BackupTests: XCTestCase {
         XCTAssertEqual(files.count, 7)
         XCTAssertTrue(files.allSatisfy { $0.hasSuffix(".opml") })
     }
+
+    /// 一键备份要落到固定位置、能被恢复流程认出来，并且顺手存一份订阅列表——
+    /// 自动备份只有 OPML，文章只能靠这条路留存。
+    func testManualSnapshotWritesDatabaseAndOPML() async throws {
+        let dir = try tempDir()
+        defer { try? FileManager.default.removeItem(at: dir) }
+        let db = try AppDatabase(path: dir.appendingPathComponent("bifeed.sqlite").path)
+        try await seed(db)
+
+        let root = dir.appendingPathComponent("Backups")
+        let result = try await Backup.manualSnapshot(db, into: root)
+
+        XCTAssertTrue(FileManager.default.fileExists(atPath: result.url.path))
+        XCTAssertGreaterThan(result.bytes, 0, "要报出真实体积，界面上显示给用户")
+        XCTAssertEqual(result.url.pathExtension, "sqlite")
+        XCTAssertTrue(result.url.path.contains("/db/"), "数据库快照与 OPML 分目录放")
+
+        // 恢复流程必须认得它
+        let info = try Backup.inspect(result.url)
+        XCTAssertEqual(info.feedCount, 1)
+        XCTAssertEqual(info.articleCount, 1)
+
+        // 顺带存下的订阅列表
+        let opml = root.appendingPathComponent("opml")
+        let files = try FileManager.default.contentsOfDirectory(atPath: opml.path)
+        XCTAssertEqual(files.filter { $0.hasSuffix(".opml") }.count, 1)
+    }
+
+    /// 同一天多次手动备份不能互相覆盖——按分钟命名，且已存在时 snapshot 会先删再写。
+    func testManualSnapshotsDoNotCollideWithinTheSameDay() async throws {
+        let dir = try tempDir()
+        defer { try? FileManager.default.removeItem(at: dir) }
+        let db = try AppDatabase(path: dir.appendingPathComponent("bifeed.sqlite").path)
+        try await seed(db)
+        let root = dir.appendingPathComponent("Backups")
+
+        let morning = Date(timeIntervalSince1970: 1_800_000_000)
+        let first = try await Backup.manualSnapshot(db, into: root, now: morning)
+        let second = try await Backup.manualSnapshot(
+            db, into: root, now: morning.addingTimeInterval(3600))
+
+        XCTAssertNotEqual(first.url, second.url, "隔一小时的两次备份不能是同一个文件")
+        XCTAssertTrue(FileManager.default.fileExists(atPath: first.url.path), "先前那份仍在")
+    }
 }

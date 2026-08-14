@@ -413,7 +413,7 @@
 "data.backup.done"= "Sauvegardé dans %@.";
 "data.backup.failed"= "Échec de la sauvegarde : %@";
 "data.backup.summary"= "%1$lld flux, %2$lld articles";
-"data.backup.note"= "La sauvegarde est un instantané cohérent, réalisable pendant l’exécution de l’app. La liste des flux est sauvegardée automatiquement chaque jour au format OPML, avec conservation des 7 dernières.";
+"data.backup.note"= "Les sauvegardes sont des instantanés cohérents, réalisables pendant l’exécution. « Sauvegarder maintenant » écrit dans le dossier de sauvegarde de l’application. La liste des flux est sauvegardée chaque jour en OPML, avec conservation des 7 dernières, mais les sauvegardes automatiques n’incluent pas les articles.";
 
 /* Restaurer depuis une sauvegarde */
 "data.restore.menu"= "Restaurer depuis une sauvegarde…";
@@ -509,3 +509,11 @@
 "settings.language.interface.note"= "Nécessite un redémarrage. Les langues système absentes de cette liste utilisent l’anglais.";
 "settings.language.restart.title"= "Redémarrage nécessaire";
 "settings.language.restart.message"= "La langue de l’interface change au prochain démarrage de 2W.";
+
+/* Données : sauvegarde immédiate */
+"data.backup.now"= "Tout sauvegarder";
+"data.backup.doneWithSize"= "Sauvegardé dans %1$@ (%2$@).";
+
+/* 数据：单独备份订阅列表 */
+"data.backup.feedsNow"= "Sauvegarder les flux";
+"data.backup.feedsDone"= "Flux sauvegardés dans %@.";

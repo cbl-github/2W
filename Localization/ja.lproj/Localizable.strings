@@ -413,7 +413,7 @@
 "data.backup.done"= "%@ にバックアップしました。";
 "data.backup.failed"= "バックアップに失敗：%@";
 "data.backup.summary"= "フィード %1$lld 件、記事 %2$lld 件";
-"data.backup.note"= "バックアップは整合性のとれたスナップショットで、アプリの実行中でも作成できます。フィード一覧は毎日自動で OPML としてバックアップされ、直近7件が保持されます。";
+"data.backup.note"= "バックアップは一貫性のあるスナップショットで、実行中でも作成できます。「今すぐバックアップ」はアプリのバックアップフォルダに保存します。購読リストは毎日 OPML として自動保存し、直近 7 件を保持しますが、自動バックアップに記事は含まれません。";
 
 /* バックアップから復元 */
 "data.restore.menu"= "バックアップから復元…";
@@ -509,3 +509,11 @@
 "settings.language.interface.note"= "変更後は再起動が必要です。一覧にないシステム言語では英語を使用します。";
 "settings.language.restart.title"= "再起動後に反映";
 "settings.language.restart.message"= "表示言語は次回起動時に切り替わります。";
+
+/* データ：ワンクリックバックアップ */
+"data.backup.now"= "すべてをバックアップ";
+"data.backup.doneWithSize"= "%1$@（%2$@）にバックアップしました。";
+
+/* 数据：单独备份订阅列表 */
+"data.backup.feedsNow"= "購読リストをバックアップ";
+"data.backup.feedsDone"= "購読リストを %@ にバックアップしました。";
