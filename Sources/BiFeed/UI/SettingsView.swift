@@ -14,7 +14,7 @@ private enum SettingsCategory: String, CaseIterable, Identifiable {
         case .appearance: L("settings.appearance.title")
         case .reading: L("settings.reading.title")
         case .shortcuts: L("settings.shortcuts.title")
-        case .translation: L("settings.translation.title")
+        case .translation: L("settings.language.title")
         case .refresh: L("settings.refresh.title")
         case .retention: L("settings.retention.title")
         case .subscriptions: L("common.feeds")
@@ -28,7 +28,7 @@ private enum SettingsCategory: String, CaseIterable, Identifiable {
         case .appearance: "paintbrush"
         case .reading: "book"
         case .shortcuts: "keyboard"
-        case .translation: "translate"
+        case .translation: "globe"
         case .refresh: "arrow.clockwise"
         case .retention: "archivebox"
         case .subscriptions: "dot.radiowaves.up.forward"
@@ -275,9 +275,25 @@ private struct TranslationSettings: View {
 
     /// Key 存钥匙串不进 UserDefaults，用 @State 中转：显示时读出，编辑时写回。
     @State private var apiKey = KeychainStore.get(account: "api-key") ?? ""
+    @State private var appLanguage = AppLanguage.current
+    @State private var askingRestart = false
 
     var body: some View {
         Form {
+            // 界面语言与译文语言是两件事，同一页里分节摆清楚：
+            // 前者决定应用自己说什么话，后者决定文章被翻成什么话。
+            Section(L("settings.language.interface")) {
+                Picker(L("settings.language.interface"), selection: $appLanguage) {
+                    ForEach(AppLanguage.allCases) { Text($0.label).tag($0) }
+                }
+                .onChange(of: appLanguage) { _, new in
+                    new.apply()
+                    askingRestart = true
+                }
+                Text(L("settings.language.interface.note"))
+                    .font(.system(size: DesignTokens.Typography.caption))
+                    .foregroundStyle(.secondary)
+            }
             Section(L("settings.translation.title")) {
                 Picker(L("settings.translation.engine"), selection: $translationEngine) {
                     Text(L("settings.translation.engine.apple")).tag("apple")
@@ -307,6 +323,12 @@ private struct TranslationSettings: View {
             }
         }
         .formStyle(.grouped)
+        .alert(L("settings.language.restart.title"), isPresented: $askingRestart) {
+            Button(L("data.restore.later"), role: .cancel) {}
+            Button(L("data.restore.now")) { relaunchApp() }
+        } message: {
+            Text(L("settings.language.restart.message"))
+        }
     }
 }
 
@@ -562,7 +584,7 @@ private struct DataSettings: View {
             Button(L("data.restore.later")) { pendingRestore = nil }
             Button(L("data.restore.now")) {
                 pendingRestore = nil
-                relaunch()
+                relaunchApp()
             }
         } message: {
             Text(pendingRestore ?? "")
@@ -603,13 +625,6 @@ private struct DataSettings: View {
         }
     }
 
-    private func relaunch() {
-        let config = NSWorkspace.OpenConfiguration()
-        config.createsNewApplicationInstance = true
-        NSWorkspace.shared.openApplication(at: Bundle.main.bundleURL, configuration: config) { _, _ in
-            DispatchQueue.main.async { NSApp.terminate(nil) }
-        }
-    }
 }
 
 // MARK: - 静音规则编辑器

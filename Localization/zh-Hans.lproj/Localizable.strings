@@ -501,3 +501,11 @@
 "feed.autoTranslate.inherit"= "跟随全局";
 "feed.autoTranslate.always"= "始终";
 "feed.autoTranslate.never"= "从不";
+
+/* 语言与翻译：界面语言 */
+"settings.language.title"= "语言与翻译";
+"settings.language.interface"= "界面语言";
+"settings.language.system"= "跟随系统";
+"settings.language.interface.note"= "更改后需要重启应用。不在列表中的系统语言会使用英语。";
+"settings.language.restart.title"= "重启后生效";
+"settings.language.restart.message"= "界面语言在应用下次启动时切换。";

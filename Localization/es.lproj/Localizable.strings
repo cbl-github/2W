@@ -501,3 +501,11 @@
 "feed.autoTranslate.inherit"= "Igual que el ajuste global";
 "feed.autoTranslate.always"= "Siempre";
 "feed.autoTranslate.never"= "Nunca";
+
+/* Idioma y traducción: idioma de la interfaz */
+"settings.language.title"= "Idioma y traducción";
+"settings.language.interface"= "Idioma de la interfaz";
+"settings.language.system"= "Seguir el sistema";
+"settings.language.interface.note"= "Requiere reiniciar. Los idiomas del sistema que no aparecen aquí usan el inglés.";
+"settings.language.restart.title"= "Requiere reiniciar";
+"settings.language.restart.message"= "El idioma de la interfaz cambia al iniciar 2W de nuevo.";

@@ -501,3 +501,11 @@
 "feed.autoTranslate.inherit"= "Follow Global";
 "feed.autoTranslate.always"= "Always";
 "feed.autoTranslate.never"= "Never";
+
+/* Language & Translation: interface language */
+"settings.language.title"= "Language & Translation";
+"settings.language.interface"= "Interface Language";
+"settings.language.system"= "Follow System";
+"settings.language.interface.note"= "Requires a restart. System languages not listed here fall back to English.";
+"settings.language.restart.title"= "Restart Required";
+"settings.language.restart.message"= "The interface language changes the next time 2W starts.";
