@@ -49,6 +49,9 @@ struct SettingsView: View {
                 Label {
                     Text(category.title)
                         .font(.system(size: DesignTokens.Typography.control))
+                        // 兜底：以后加的语言若比现在都长，宁可字号缩一点也不要出省略号
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.85)
                 } icon: {
                     Image(systemName: category.icon)
                         .font(.system(size: DesignTokens.Icon.sidebar))
@@ -61,15 +64,34 @@ struct SettingsView: View {
             .safeAreaInset(edge: .top, spacing: 0) {
                 Color.clear.frame(height: DesignTokens.Spacing.lg)
             }
-            .navigationSplitViewColumnWidth(196)
+            .navigationSplitViewColumnWidth(Self.sidebarWidth)
             // 设置窗的分类栏没有收起的道理，摘掉系统自动加的侧栏按钮
             .toolbar(removing: .sidebarToggle)
         } detail: {
             detail
         }
         .navigationSplitViewStyle(.balanced)
-        .frame(width: 820, height: 580)
+        // 右侧表单宽度与语言无关，所以窗口跟着侧栏一起变宽，而不是挤压内容区
+        .frame(width: Self.sidebarWidth + Self.detailWidth, height: 580)
     }
+
+    /// 分类栏宽度按当前语言里最长的那个分类名实测。
+    /// 写死宽度只在中文下成立——「语言与翻译」六个字，换成 Langue et traduction
+    /// 或 Idioma y traducción 就截断了。以后加语言也不用回来调这个数。
+    private static var sidebarWidth: CGFloat {
+        let font = NSFont.systemFont(ofSize: DesignTokens.Typography.control)
+        let widest = SettingsCategory.allCases
+            .map { ($0.title as NSString).size(withAttributes: [.font: font]).width }
+            .max() ?? 0
+        // 文字之外的全部开销：图标列、图标与文字间距、行内左右缩进、选中胶囊的外边距。
+        // 112 是实测反推的——列宽 220 时英文「Language & Translation」（文字 151pt）
+        // 仍被截断，说明开销 > 69pt；macOS sidebar 行的内缩比看上去大得多。
+        // 估小了就是截断，估大了只是侧栏宽一点，所以往大了取。
+        let chrome: CGFloat = 112
+        return min(320, max(200, ceil(widest + chrome)))
+    }
+
+    private static let detailWidth: CGFloat = 624
 
     @ViewBuilder
     private var detail: some View {
@@ -288,6 +310,9 @@ private struct TranslationSettings: View {
                 }
                 .onChange(of: appLanguage) { _, new in
                     new.apply()
+                    // 译文语言跟着界面语言走：切了界面就是想用那门语言读东西。
+                    // 想让两者不同的人，改完界面再单独改译文语言即可。
+                    targetLang = new.translationTarget
                     askingRestart = true
                 }
                 Text(L("settings.language.interface.note"))
@@ -312,6 +337,8 @@ private struct TranslationSettings: View {
                     Text(verbatim: "繁體中文").tag("zh-Hant")
                     Text(verbatim: "English").tag("en")
                     Text(verbatim: "日本語").tag("ja")
+                    Text(verbatim: "Español").tag("es")
+                    Text(verbatim: "Français").tag("fr")
                 }
                 Text(L("settings.translation.targetLang.note"))
                     .font(.system(size: 11))

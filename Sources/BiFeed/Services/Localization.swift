@@ -49,6 +49,26 @@ enum AppLanguage: String, CaseIterable, Identifiable {
         }
     }
 
+    /// 对应的译文目标语言。换界面语言时译文语言跟着走——
+    /// 一个人把界面切成日语，多半也是想把外文文章翻成日语。
+    var translationTarget: String {
+        switch self {
+        case .system:
+            // 跟随系统时按系统偏好里第一个我们支持的语言；都不支持就英语。
+            // 此刻 bundle 还没切换（要重启），所以直接问系统而不是问 bundle。
+            let supported = ["zh-Hans", "en", "ja", "es", "fr"]
+            for preferred in Locale.preferredLanguages {
+                let base = preferred.split(separator: "-").first.map(String.init) ?? preferred
+                if let hit = supported.first(where: { $0 == preferred || $0.hasPrefix(base) }) {
+                    return hit
+                }
+            }
+            return "en"
+        default:
+            return rawValue
+        }
+    }
+
     /// 写进 AppleLanguages。bundle 的 .lproj 在启动时就已选定，所以改完要重启才生效。
     func apply() {
         let defaults = UserDefaults.standard

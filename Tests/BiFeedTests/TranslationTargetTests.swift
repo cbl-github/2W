@@ -104,4 +104,30 @@ final class TranslationTargetTests: XCTestCase {
         XCTAssertEqual(TranslationService.detectSourceLanguage(sample: thread, target: "zh-Hans"), "en",
                        "楼层文字足够长，识别得出来")
     }
+
+    // MARK: - 界面语言与译文语言联动
+
+    func testInterfaceLanguageMapsToTranslationTarget() {
+        XCTAssertEqual(AppLanguage.zhHans.translationTarget, "zh-Hans")
+        XCTAssertEqual(AppLanguage.english.translationTarget, "en")
+        XCTAssertEqual(AppLanguage.japanese.translationTarget, "ja")
+        XCTAssertEqual(AppLanguage.spanish.translationTarget, "es")
+        XCTAssertEqual(AppLanguage.french.translationTarget, "fr")
+    }
+
+    /// 跟随系统时要落到一个我们真的有译文表的语言上，不能返回 de 这种没支持的。
+    func testSystemLanguageResolvesToASupportedTarget() {
+        let supported = ["zh-Hans", "en", "ja", "es", "fr"]
+        XCTAssertTrue(supported.contains(AppLanguage.system.translationTarget),
+                      "跟随系统必须落在受支持的目标语言里，实际为 \(AppLanguage.system.translationTarget)")
+    }
+
+    /// 联动之后目标语言与界面同族，同族不翻的规则会让本语言文章不再显示翻译按钮。
+    func testFollowingInterfaceMeansOwnLanguageIsNotTranslated() {
+        for language in AppLanguage.allCases where language != .system {
+            let target = language.translationTarget
+            XCTAssertTrue(TranslationService.sameLanguageFamily(source: target, target: target),
+                          "\(target) 对自己必须判为同族")
+        }
+    }
 }
