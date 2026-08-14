@@ -1,43 +1,82 @@
 # 2W
 
-一款RSS阅读器。
+macOS RSS 阅读器，支持逐段双语对照与论坛回帖。
 
-![macOS 15+](https://img.shields.io/badge/macOS-15%2B-black) ![Universal](https://img.shields.io/badge/binary-universal-black) ![SwiftUI](https://img.shields.io/badge/SwiftUI-%2B%20GRDB-black)
+![macOS 15+](https://img.shields.io/badge/macOS-15%2B-black) ![Universal](https://img.shields.io/badge/binary-universal-black) ![GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-black)
 
-## 背景
+## 安装
 
-我一直认为质量低的vibe软件不配收费，所以做出来了这一款阅读器狙击同类竞品。软件开发过程参考了reddit上用户的痛点和需求，以及我个人的一些想法。
+从 [Releases](https://github.com/cbl-github/2W/releases) 下载 `2W.dmg`，拖入「应用程序」。
 
+首次打开被 Gatekeeper 拦截时：系统设置 → 隐私与安全性 → 仍要打开。应用为 ad-hoc 签名。
 
-## 功能实现
+要求 macOS 15 或更高。二进制为 universal，Apple Silicon 与 Intel 均原生运行。
 
-### 双语对照
+## 功能
 
-- 段落翻译，本地orAI
-- 外文文章可设为自动进入对照模式
+### 翻译
 
-### 论坛特殊适配
+- 逐段插入译文，代码块跳过
+- 引擎：系统翻译（离线）或 OpenAI 兼容 API
+- 目标语言：简体中文、繁體中文、English、日本語
+- 译文按段落、引擎与原文哈希缓存
+- 外文文章可自动进入对照模式
 
-抓取论坛例如V2EX的评论：
+### 论坛
 
-- **V2EX**（官方 API）、**Hacker News**（Algolia，嵌套评论树）
-- **Reddit**（评论树 + RSS 正文重排）
-- **所有 Discourse 站点**——按引擎识别而不是域名白名单，`linux.do`、Rust/Swift 官方论坛开箱即用；
-- **Lobsters**
-- 「刷新回帖」原地更新楼层，阅读位置不动
+- V2EX、Hacker News、Reddit、Lobsters
+- 全部 Discourse 站点，按引擎识别而非域名白名单
+- 回帖参与逐段翻译
+- 原地刷新回帖，不改变阅读位置
 
-### 订阅与抓取
+### 抓取
 
-- RSS / Atom / JSON Feed；
-- YouTube 频道页或 `@handle` 可以直接订阅；可按源过滤 Shorts
-- 同域名串行抓取、跨域并发，遵守 `Retry-After`
-- 拖拽整理分组，OPML 导入导出
+- RSS、Atom、JSON Feed
+- 网页地址自动发现 feed，多个候选可选择
+- YouTube 频道页与 `@handle`，可按源过滤 Shorts
+- 条件请求与正文指纹
+- 按源设置 User-Agent、刷新间隔、HTTP Basic 凭据
+- 同域串行，遵守 `Retry-After`
+- 死源可查找新地址并替换
 
-### 静音规则
+### 整理
 
-- **静音规则**：包含或正则 × 标题/正文/作者/URL/分类 × 全局/分组/单源 × 隐藏/标已读/折叠，可加例外词。
-- **跨源去重**：不同订阅的同一篇文章在聚合视图里只出现一次，标注来源数。
-- **未读徽标可按源或按分组关闭**，高频源不再淹没未读总数
-- **保留策略**可全局设也可按源覆盖，星标永久保留
-- **源健康面板**：可批量退订阅读量少的源
+- 静音规则：匹配方式、字段、范围、动作四段可配，保存后回扫历史
+- 跨源去重，按规范化 URL
+- 未读徽标按源或分组关闭
+- 保留策略按源覆盖
+- 批量退订，按未更新时长与近期未读筛选
 
+### 阅读
+
+- 全键盘操作，键位可改
+- 摘要源自动抓取全文，可指定 CSS 选择器
+- 全文搜索含正文，可限定范围与时间，可保存为智能源
+- 保存单篇网页
+- 导出 Markdown，含译文与回帖
+
+### 数据
+
+- SQLite，全部本地
+- 一致性快照备份与恢复
+- 每日 OPML 自动备份
+- 无账号，无云端，无遥测
+
+## 构建
+
+```bash
+./build.sh --universal
+scripts/make-dmg.sh
+```
+
+产物为 `dist/2W.app` 与 `dist/2W.dmg`。仅编译当前架构时 `./build.sh` 即可，只需 Command Line Tools；`--universal` 需要完整 Xcode。
+
+测试：
+
+```bash
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test
+```
+
+## 许可证
+
+GPL-3.0
