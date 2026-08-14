@@ -57,6 +57,8 @@ extension SettingsKey {
     static let appearanceMode = "appearanceMode"             // "system" | "light" | "dark"，默认 "light"
     static let autoTranslateForeign = "autoTranslateForeign" // 外文文章自动开双语，默认 true
     static let translationTargetLang = "translationTargetLang" // 译文目标语言，默认 "zh-Hans"
+    static let checkUpdatesOnLaunch = "checkUpdatesOnLaunch"   // 启动时检查更新，默认 true
+    static let skippedUpdateVersion = "skippedUpdateVersion"   // 用户点过「跳过」的版本号
 
     /// register(defaults:) 可重复调用，键合并进同一注册域。
     static func registerTranslationDefaults() {
@@ -67,6 +69,8 @@ extension SettingsKey {
             appearanceMode: "light",
             autoTranslateForeign: true,
             translationTargetLang: "zh-Hans",
+            checkUpdatesOnLaunch: true,
+            skippedUpdateVersion: "",
         ])
     }
 }
@@ -114,6 +118,9 @@ final class AppEnvironment: ObservableObject {
         // DB 打不开 = 环境坏了，直接崩（工程原则：fail fast）。
         db = Self.sharedDB
         Task { await scheduler.startAutoRefresh() }
+        if UserDefaults.standard.bool(forKey: SettingsKey.checkUpdatesOnLaunch) {
+            checkForUpdates(manual: false)
+        }
     }
 
     /// UI 触发的写操作：错误不静默——debug 断言，release 打日志。
@@ -131,6 +138,40 @@ final class AppEnvironment: ObservableObject {
             let ids = try! await db.markAllRead(scope: scope)
             if !ids.isEmpty { undoableReadBatch = ids }
         }
+    }
+
+    // MARK: - 更新
+
+    /// 非 nil = 有比当前版本新的 release，界面弹提示。
+    @Published var availableUpdate: UpdateInfo?
+    @Published var checkingUpdate = false
+    /// 手动检查时即使已是最新也要给个回应，自动检查则安静。
+    @Published var updateStatus: String?
+
+    func checkForUpdates(manual: Bool) {
+        guard !checkingUpdate else { return }
+        checkingUpdate = true
+        Task { @MainActor in
+            defer { checkingUpdate = false }
+            do {
+                let found = try await UpdateChecker.check()
+                guard let found else {
+                    if manual { updateStatus = "已是最新版本（\(UpdateChecker.currentVersion)）。" }
+                    return
+                }
+                // 自动检查尊重「跳过此版本」；手动检查是用户主动问，一律回答
+                let skipped = UserDefaults.standard.string(forKey: SettingsKey.skippedUpdateVersion)
+                if !manual, skipped == found.version { return }
+                availableUpdate = found
+            } catch {
+                if manual { updateStatus = "检查更新失败：\(error.localizedDescription)" }
+            }
+        }
+    }
+
+    func skipUpdate(_ info: UpdateInfo) {
+        UserDefaults.standard.set(info.version, forKey: SettingsKey.skippedUpdateVersion)
+        availableUpdate = nil
     }
 
     /// 「这篇及以下标为已读」与保存搜索的全标已读共用；撤销按钮与 markAllRead 同一入口。
@@ -193,6 +234,10 @@ struct AppCommands: Commands {
             Divider()
             Button("导入 OPML…") { env.importOPML() }
             Button("导出 OPML…") { env.exportOPML() }
+        }
+        CommandGroup(after: .appInfo) {
+            Button("检查更新…") { env.checkForUpdates(manual: true) }
+                .disabled(env.checkingUpdate)
         }
         // 系统默认的「BiFeed 帮助」没有内容，整组换成快捷键总表入口
         CommandGroup(replacing: .help) {

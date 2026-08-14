@@ -478,6 +478,8 @@ private struct MuteSettings: View {
 // MARK: - 数据
 
 private struct DataSettings: View {
+    @AppStorage(SettingsKey.checkUpdatesOnLaunch) private var checkUpdatesOnLaunch = true
+    @AppStorage(SettingsKey.skippedUpdateVersion) private var skippedUpdateVersion = ""
     @State private var dataStatus: String?
     /// 非 nil = 待恢复文件已就位，弹窗问要不要立刻重启
     @State private var pendingRestore: String?
@@ -509,6 +511,24 @@ private struct DataSettings: View {
                 Text("备份是一致性快照，可在应用运行时进行。订阅列表每天自动备份一份 OPML，保留最近 7 份。")
                     .font(.system(size: DesignTokens.Typography.caption))
                     .foregroundStyle(.secondary)
+            }
+            Section("更新") {
+                Toggle("启动时检查更新", isOn: $checkUpdatesOnLaunch)
+                LabeledContent("当前版本") {
+                    Text(UpdateChecker.currentVersion).foregroundStyle(.secondary)
+                }
+                Text("只检查并提示，不会自动下载或安装。跳过的版本可在这里清除。")
+                    .font(.system(size: DesignTokens.Typography.caption))
+                    .foregroundStyle(.secondary)
+                if !skippedUpdateVersion.isEmpty {
+                    HStack {
+                        Text("已跳过 \(skippedUpdateVersion)")
+                            .font(.system(size: DesignTokens.Typography.caption))
+                            .foregroundStyle(.secondary)
+                        Spacer()
+                        Button("不再跳过") { skippedUpdateVersion = "" }
+                    }
+                }
             }
         }
         .formStyle(.grouped)

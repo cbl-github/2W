@@ -108,6 +108,26 @@ enum ReaderTemplate {
         --line: #333336; --code-bg: #2A2A2D;
       }
     }
+    /* feed 正文经常自带内联深色（公众号、老博客尤其多 `style="color:#000"` 和 `<font color>`），
+       深色主题下就是黑底黑字。带 !important 的作者样式能压过无 !important 的内联声明，
+       这是不改动正文 HTML 的唯一办法。
+       两条收窄：只接管近黑的几种写法（别人特意标的红字蓝字要留着）；
+       元素自己带背景时不动它——自带白底黑字的表格是自洽的，只改前景反而糊。 */
+    @media (prefers-color-scheme: dark) {
+      [style*="color:#000"]:not([style*="background"]),
+      [style*="color: #000"]:not([style*="background"]),
+      [style*="color:black"]:not([style*="background"]),
+      [style*="color: black"]:not([style*="background"]),
+      [style*="color:rgb(0,0,0)"]:not([style*="background"]),
+      [style*="color: rgb(0, 0, 0)"]:not([style*="background"]),
+      [style*="color:#111"]:not([style*="background"]),
+      [style*="color:#222"]:not([style*="background"]),
+      [style*="color:#333"]:not([style*="background"]),
+      [style*="color: #333"]:not([style*="background"]),
+      font[color="#000000"], font[color="#000"], font[color="black"] {
+        color: var(--fg) !important;
+      }
+    }
     * { box-sizing: border-box; }
     html { background: var(--bg); }
     body {

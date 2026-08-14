@@ -94,4 +94,42 @@ final class FetchReliabilityTests: XCTestCase {
     private func feed(_ url: String) -> Feed {
         Feed(id: nil, url: url, title: url, siteURL: nil, folderId: nil, addedAt: Date())
     }
+
+    // MARK: - 手动刷新不受任何拦截（Paul 实测：退避中的源必须逐个右键刷新）
+
+    func testManualRefreshNeverSkips() {
+        let future = Date(timeIntervalSinceNow: 3600)
+        // 退避中
+        XCTAssertFalse(FetchScheduler.shouldSkip(
+            manual: true, host: "a.example", lastHTTPStatus: 500,
+            failCount: 3, nextFetchAt: future))
+        // 硬错误
+        XCTAssertFalse(FetchScheduler.shouldSkip(
+            manual: true, host: "a.example", lastHTTPStatus: 404,
+            failCount: 9, nextFetchAt: nil))
+        // 两者同时
+        XCTAssertFalse(FetchScheduler.shouldSkip(
+            manual: true, host: "a.example", lastHTTPStatus: 410,
+            failCount: 9, nextFetchAt: future))
+    }
+
+    func testAutomaticRefreshRespectsBackoffAndHardErrors() {
+        let future = Date(timeIntervalSinceNow: 3600)
+        let past = Date(timeIntervalSinceNow: -3600)
+        XCTAssertTrue(FetchScheduler.shouldSkip(
+            manual: false, host: "a.example", lastHTTPStatus: 500,
+            failCount: 3, nextFetchAt: future), "退避未到期不刷")
+        XCTAssertTrue(FetchScheduler.shouldSkip(
+            manual: false, host: "a.example", lastHTTPStatus: 404,
+            failCount: 9, nextFetchAt: nil), "硬错误停自动重试")
+        XCTAssertFalse(FetchScheduler.shouldSkip(
+            manual: false, host: "a.example", lastHTTPStatus: 500,
+            failCount: 3, nextFetchAt: past), "退避到期了就刷")
+        XCTAssertFalse(FetchScheduler.shouldSkip(
+            manual: false, host: "a.example", lastHTTPStatus: 200,
+            failCount: 0, nextFetchAt: nil), "健康源照常刷")
+        XCTAssertFalse(FetchScheduler.shouldSkip(
+            manual: false, host: "www.youtube.com", lastHTTPStatus: 404,
+            failCount: 1, nextFetchAt: nil), "YouTube 的 404 在容忍期内不算硬错误")
+    }
 }

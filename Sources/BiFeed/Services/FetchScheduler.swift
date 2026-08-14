@@ -118,12 +118,12 @@ actor FetchScheduler {
             var iterator = Self.hostGroups(feeds).makeIterator()
             var inFlight = 0
             while inFlight < 4, let hostFeeds = iterator.next() {
-                group.addTask { await self.refreshHostGroup(hostFeeds, spacing: spacing) }
+                group.addTask { await self.refreshHostGroup(hostFeeds, spacing: spacing, manual: manual) }
                 inFlight += 1
             }
             while await group.next() != nil {
                 if let hostFeeds = iterator.next() {
-                    group.addTask { await self.refreshHostGroup(hostFeeds, spacing: spacing) }
+                    group.addTask { await self.refreshHostGroup(hostFeeds, spacing: spacing, manual: manual) }
                 }
             }
         }
@@ -154,12 +154,13 @@ actor FetchScheduler {
         await refreshOne(feed, manual: true)
     }
 
-    /// 同域组内串行 + 可选间隔。整组走 manual: false：⌘R 只放行到期判定，
-    /// 退避与 404/410 仍然挡着（与本批之前的行为一致，单源刷新才是真正的无条件重试）。
-    private func refreshHostGroup(_ feeds: [Feed], spacing: Int) async {
+    /// 同域组内串行 + 可选间隔。manual 一路透传到 refreshOne：
+    /// 用户点「刷新全部」就是要现在全刷一遍，退避和 404/410 只该挡自动轮询。
+    /// （曾经这里写死 manual: false，结果退避中的源必须逐个右键刷新，Paul 实测报的 bug。）
+    private func refreshHostGroup(_ feeds: [Feed], spacing: Int, manual: Bool) async {
         for (index, feed) in feeds.enumerated() {
             if index > 0, spacing > 0 { try? await Task.sleep(for: .seconds(spacing)) }
-            await refreshOne(feed, manual: false)
+            await refreshOne(feed, manual: manual)
         }
     }
 
@@ -168,12 +169,8 @@ actor FetchScheduler {
     private func refreshOne(_ feed: Feed, manual: Bool) async {
         // 非 http(s) 的源（手动保存的容器源）永不发请求，见 Feed.isFetchable
         guard let feedId = feed.id, feed.isFetchable, let url = URL(string: feed.url) else { return }
-        if !manual {
-            if let status = feed.lastHTTPStatus,
-               Self.failureKind(host: url.host(), code: status,
-                                failCount: feed.failCount) == .hard { return }
-            if let nextFetchAt = feed.nextFetchAt, nextFetchAt > Date() { return }
-        }
+        if Self.shouldSkip(manual: manual, host: url.host(), lastHTTPStatus: feed.lastHTTPStatus,
+                           failCount: feed.failCount, nextFetchAt: feed.nextFetchAt) { return }
         do {
             let password = feed.basicUser == nil
                 ? nil : KeychainStore.get(account: KeychainStore.basicAccount(feedId: feedId))
@@ -281,6 +278,18 @@ actor FetchScheduler {
         guard code == 404 || code == 410 else { return .backoff }
         if code == 404, host?.lowercased() == "www.youtube.com", failCount < 4 { return .backoff }
         return .hard
+    }
+
+    /// 跳过判定。**manual 为真时永远不跳过**——用户点了刷新就是要现在发请求，
+    /// 硬错误和退避都只该挡自动轮询。这条不变量被写死的 `manual: false` 破坏过一次，
+    /// 所以抽成纯函数并单独立测试。
+    static func shouldSkip(manual: Bool, host: String?, lastHTTPStatus: Int?, failCount: Int,
+                           nextFetchAt: Date?, now: Date = Date()) -> Bool {
+        guard !manual else { return false }
+        if let lastHTTPStatus,
+           failureKind(host: host, code: lastHTTPStatus, failCount: failCount) == .hard { return true }
+        if let nextFetchAt, nextFetchAt > now { return true }
+        return false
     }
 
     /// 暂时错误从 5 分钟开始指数退避，封顶 6 小时。

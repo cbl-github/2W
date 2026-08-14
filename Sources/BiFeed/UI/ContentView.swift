@@ -1,3 +1,4 @@
+import AppKit
 import SwiftUI
 
 struct ContentView: View {
@@ -30,6 +31,26 @@ struct ContentView: View {
         .onReceive(NotificationCenter.default.publisher(for: .bifeedToggleImmersive)) { _ in
             setImmersive(!immersive)
         }
+        .alert("有新版本 \(env.availableUpdate?.version ?? "")",
+               isPresented: .constant(env.availableUpdate != nil)) {
+            Button("下载") {
+                if let info = env.availableUpdate {
+                    NSWorkspace.shared.open(info.downloadURL ?? info.pageURL)
+                }
+                env.availableUpdate = nil
+            }
+            Button("跳过此版本") {
+                if let info = env.availableUpdate { env.skipUpdate(info) }
+            }
+            Button("稍后", role: .cancel) { env.availableUpdate = nil }
+        } message: {
+            Text(updateMessage)
+        }
+        .alert("检查更新", isPresented: .constant(env.updateStatus != nil)) {
+            Button("好") { env.updateStatus = nil }
+        } message: {
+            Text(env.updateStatus ?? "")
+        }
         .sheet(isPresented: $env.showAddFeed) {
             AddFeedView()
                 .environmentObject(env)
@@ -38,6 +59,14 @@ struct ContentView: View {
             SavePageView()
                 .environmentObject(env)
         }
+    }
+
+    /// release 说明可能很长，弹窗里只给前几行；完整内容在下载页。
+    private var updateMessage: String {
+        guard let info = env.availableUpdate else { return "" }
+        let head = info.notes.split(separator: "\n").prefix(8).joined(separator: "\n")
+        let current = "当前版本 \(UpdateChecker.currentVersion)。"
+        return head.isEmpty ? current : current + "\n\n" + head
     }
 
     private func setImmersive(_ on: Bool) {
