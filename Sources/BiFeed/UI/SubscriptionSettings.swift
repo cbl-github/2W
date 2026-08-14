@@ -72,7 +72,7 @@ struct SubscriptionSettings: View {
             Section("退订") {
                 Toggle("保留星标文章", isOn: $keepStarred)
                 Text(keepStarred
-                     ? "星标文章移入「\(AppDatabase.starredArchiveTitle)」，其余文章随订阅删除。"
+                     ? "星标文章继续保留在「星标」中，其余文章随订阅删除。"
                      : "订阅及其全部文章一并删除，星标不保留。")
                     .font(.system(size: DesignTokens.Typography.caption))
                     .foregroundStyle(.secondary)

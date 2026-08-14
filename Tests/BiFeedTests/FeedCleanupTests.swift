@@ -117,6 +117,12 @@ final class FeedCleanupTests: XCTestCase {
         XCTAssertEqual(titles, ["keep"], "星标搬走保留，未标记的随订阅删除")
         XCTAssertEqual(feedTitles, [AppDatabase.starredArchiveTitle], "原订阅已删，归档容器源已建")
 
+        // 归档容器不该出现在侧栏订阅列表，也不该进健康表被误退订
+        let sidebar = try await db.pool.read { try SidebarData.fetch($0) }
+        XCTAssertTrue(sidebar.visibleFeeds.isEmpty, "归档容器不出现在订阅列表")
+        let health = try await db.pool.read { try FeedHealthRow.fetchAll($0) }
+        XCTAssertTrue(health.isEmpty, "容器源不进健康表")
+
         // 正文没跟丢：搬迁只改 feedId，articleContent 按 articleId 关联
         let body = try await db.pool.read {
             try String.fetchOne($0, sql: "SELECT html FROM articleContent WHERE articleId = ?",
@@ -144,5 +150,20 @@ final class FeedCleanupTests: XCTestCase {
         }
         XCTAssertEqual(articles, 0, "不保留星标就是全删")
         XCTAssertEqual(feeds, 0, "也不该顺手建出归档容器源")
+    }
+
+    /// 手动保存的容器源永远不会"更新"，一旦进了批量退订面板，
+    /// 按「未更新 30 天」一筛就会被列出来——勾错一次用户存的网页全没。
+    func testContainerFeedsAreNotOfferedForUnsubscribe() async throws {
+        let db = try makeTempDB()
+        _ = try await db.addFeed(url: "https://real.example/rss", title: "真实源", siteURL: nil, folderId: nil)
+        _ = try await SavedPages.containerFeed(db)
+
+        let health = try await db.pool.read { try FeedHealthRow.fetchAll($0) }
+        XCTAssertEqual(health.map(\.title), ["真实源"], "容器源不进批量退订的候选列表")
+
+        let sidebar = try await db.pool.read { try SidebarData.fetch($0) }
+        XCTAssertEqual(sidebar.visibleFeeds.map(\.title).sorted(), ["手动保存", "真实源"],
+                       "手动保存仍然显示在侧栏，那是用户主动放东西的地方")
     }
 }

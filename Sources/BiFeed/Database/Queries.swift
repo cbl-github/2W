@@ -258,8 +258,13 @@ struct SidebarData {
         return folders.first { $0.id == folderId }?.showsUnreadBadge ?? true
     }
 
-    var feedsWithoutFolder: [Feed] { feeds.filter { $0.folderId == nil } }
-    func feeds(inFolder folderId: Int64) -> [Feed] { feeds.filter { $0.folderId == folderId } }
+    /// 侧栏显示用的订阅列表。星标归档容器不在其中——它只是星标文章在数据库里的
+    /// 落脚点（文章必须属于某个源），内容照常从「星标」进入，不该在订阅列表里多出一行。
+    /// 「手动保存」不同，那是用户主动放东西的地方，要显示。
+    var visibleFeeds: [Feed] { feeds.filter { $0.url != AppDatabase.starredArchiveURL } }
+
+    var feedsWithoutFolder: [Feed] { visibleFeeds.filter { $0.folderId == nil } }
+    func feeds(inFolder folderId: Int64) -> [Feed] { visibleFeeds.filter { $0.folderId == folderId } }
 
     func staleDays(for feed: Feed) -> Int? {
         Self.staleDays(latestPublishedAt: latestPublishedByFeed[feed.id ?? -1])
@@ -327,7 +332,10 @@ struct FeedHealthRow: Identifiable, Hashable {
             """, arguments: [since, since]) {
             stats[row["feedId"]] = row
         }
-        let feeds = try Feed.order(Column("title").collating(.localizedCaseInsensitiveCompare)).fetchAll(db)
+        // 只统计真正抓取的源。bifeed:// 容器（手动保存、星标归档）永远不更新，
+        // 放进来会被「未更新 30 天」筛出来，勾错一下用户存的东西就没了。
+        let feeds = try Feed.order(Column("title").collating(.localizedCaseInsensitiveCompare))
+            .fetchAll(db).filter(\.isFetchable)
         return feeds.map { feed in
             guard let row = stats[feed.id ?? -1] else { return FeedHealthRow(feed: feed) }
             return FeedHealthRow(

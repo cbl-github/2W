@@ -266,7 +266,15 @@ extension AppDatabase {
     /// keepDays = 0 且 keepCount 给个够不着的大数，保留策略清不到它。
     func containerFeed(url: String, title: String) async throws -> Feed {
         try await pool.write { db in
-            if let existing = try Feed.filter(Column("url") == url).fetchOne(db) { return existing }
+            if var existing = try Feed.filter(Column("url") == url).fetchOne(db) {
+                // 容器改过名时顺手更新，免得老库里留着旧标题
+                if existing.title != title {
+                    try db.execute(sql: "UPDATE feed SET title = ? WHERE id = ?",
+                                   arguments: [title, existing.id])
+                    existing.title = title
+                }
+                return existing
+            }
             var feed = Feed(id: nil, url: url, title: title, siteURL: nil, folderId: nil,
                             addedAt: Date(), keepCount: 100_000, keepDays: 0)
             try feed.insert(db)
@@ -300,7 +308,7 @@ extension AppDatabase {
     }
 
     static let starredArchiveURL = "bifeed://starred-archive"
-    static let starredArchiveTitle = "已退订的星标"
+    static let starredArchiveTitle = "已退订"
 
     func renameFeed(id: Int64, to title: String) async throws {
         try await pool.write { db in
